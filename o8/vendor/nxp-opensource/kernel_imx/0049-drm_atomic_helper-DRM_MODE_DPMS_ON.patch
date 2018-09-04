@@ -1,0 +1,27 @@
+From 56fcbfedecf07c8cd24ecfa2951b21dd08fa8c2c Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Wed, 7 Feb 2018 16:21:20 +0200
+Subject: [PATCH 49/71] drm_atomic_helper: DRM_MODE_DPMS_ON
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ drivers/gpu/drm/drm_atomic_helper.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+index 8b5d9ff..096f77d 100644
+--- a/drivers/gpu/drm/drm_atomic_helper.c
++++ b/drivers/gpu/drm/drm_atomic_helper.c
+@@ -2903,6 +2903,9 @@ int drm_atomic_helper_connector_dpms(struct drm_connector *connector,
+ 	bool active = false;
+ 	int old_mode = connector->dpms;
+ 
++	/* Always on */
++	mode = DRM_MODE_DPMS_ON;
++
+ 	if (mode != DRM_MODE_DPMS_ON)
+ 		mode = DRM_MODE_DPMS_OFF;
+ 
+-- 
+2.7.4
+

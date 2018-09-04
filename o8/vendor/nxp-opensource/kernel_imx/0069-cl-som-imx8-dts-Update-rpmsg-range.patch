@@ -1,0 +1,30 @@
+From b1e1d6a177caa36d405e14a6c9a6b5d330533d01 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sat, 1 Sep 2018 01:10:21 +0300
+Subject: [PATCH 69/71] cl-som-imx8: dts: Update rpmsg range
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ arch/arm64/boot/dts/compulab/cl-som-imx8.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/compulab/cl-som-imx8.dts b/arch/arm64/boot/dts/compulab/cl-som-imx8.dts
+index a69e9f8..baa4bcf 100644
+--- a/arch/arm64/boot/dts/compulab/cl-som-imx8.dts
++++ b/arch/arm64/boot/dts/compulab/cl-som-imx8.dts
+@@ -832,10 +832,10 @@
+ &rpmsg {
+ 	/*
+ 	 * 64K for one rpmsg instance:
+-	 * --0xb8000000~0xb800ffff: pingpong
++	 * --0x98000000~0x9800ffff: pingpong
+ 	 */
+ 	vdev-nums = <1>;
+-	reg = <0x0 0xb8000000 0x0 0x10000>;
++	reg = <0x0 0x98000000 0x0 0x10000>;
+ 	status = "okay";
+ };
+ 
+-- 
+2.7.4
+

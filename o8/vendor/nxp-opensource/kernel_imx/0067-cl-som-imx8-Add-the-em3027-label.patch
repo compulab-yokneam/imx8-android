@@ -1,0 +1,28 @@
+From 073af00849319049cd2bb1646e146a8d3a7fb58d Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Mon, 13 Aug 2018 16:55:40 +0300
+Subject: [PATCH 67/71] cl-som-imx8: Add the em3027 label
+
+Add the em3027 label, that allows switching the device off.
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ arch/arm64/boot/dts/compulab/cl-som-imx8.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/compulab/cl-som-imx8.dts b/arch/arm64/boot/dts/compulab/cl-som-imx8.dts
+index daa80e2..a69e9f8 100644
+--- a/arch/arm64/boot/dts/compulab/cl-som-imx8.dts
++++ b/arch/arm64/boot/dts/compulab/cl-som-imx8.dts
+@@ -599,7 +599,7 @@
+ 		pagesize = <16>;
+ 	};
+ 
+-	rtc@56 {
++	em3027: rtc@56 {
+ 		compatible = "emmicro,em3027";
+ 		reg = <0x56>;
+ 	};
+-- 
+2.7.4
+

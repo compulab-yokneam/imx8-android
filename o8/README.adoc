@@ -1,0 +1,52 @@
+# Prepare build environment
+
+* Download https://www.nxp.com/docs/en/supporting-information/android_O8.1.0_1.3.0_8M_docs.tar.gz[`android_O8.1.0_1.3.0_8M_docs.tar.gz`]
+
+* Follow the instructions of the `android_O8.1.0_1.3.0_8M_docs/Android_User's_Guide.pdf` and stop on the step 3.2.
+* Set an environment variable `A`
+[source,console]
+export A=~/android_build
+
+# Clone this repository
+[source,console]
+mkdir ~/compulab-imx8
+git clone https://github.com/compulab-yokneam/imx8.git ~/compulab-imx8
+cd ~/compulab-imx8/o8
+export C=$(pwd)
+
+# Add `CompuLab imx8` board support
+## Apply the patches:
+* U-boot
+[source,console]
+git -C ${A}/vendor/nxp-opensource/uboot-imx checkout -b compulab-imx8 2537522
+git -C ${A}/vendor/nxp-opensource/uboot-imx am ${C}/vendor/nxp-opensource/uboot-imx/*.patch
+
+* Kernel
+[source,console]
+git -C ${A}/vendor/nxp-opensource/kernel_imx checkout -b compulab-imx8 7e45d57
+git -C ${A}/vendor/nxp-opensource/kernel_imx am ${C}/vendor/nxp-opensource/kernel_imx/*.patch
+
+* Board
+[source,console]
+git -C ${A}/device/fsl checkout -b compulab-imx8 3327a32
+git -C ${A}/device/fsl am ${C}/device/fsl/*.patch
+
+# Create the image
+* Set a desire machine configuration
+** `export MACHINE=cl-som-imx8`
+
+* Goto `~/myandroid` and issue the sequence:
+[source,console]
+cd ${A}
+source build/envsetup.sh
+lunch ${MACHINE}-eng
+make -j 8
+
+* Wait for this message:
+[source,console]
+#### build completed successfully (01:12 (mm:ss)) ####
+
+* Goto the target output directory and flash an sd-card:
+[source,console]
+cd out/target/product/${MACHINE}
+sudo ${C}/device/fsl/common/tools/fsl-sdcard-partition.sh -f imx8mq -c 7 /dev/sdX

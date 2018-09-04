@@ -1,0 +1,116 @@
+From ab913daf0447207d47da738f702fdda7bb94baf7 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Mon, 13 Aug 2018 17:00:08 +0300
+Subject: [PATCH 68/71] ucm-imx8: Add the initial device support
+
+---
+ arch/arm64/boot/dts/compulab/Makefile         |  2 ++
+ arch/arm64/boot/dts/compulab/sb-ucm-imx8.dtsi | 32 +++++++++++++++++++++++++++
+ arch/arm64/boot/dts/compulab/sbc-ucm-imx8.dts |  7 ++++++
+ arch/arm64/boot/dts/compulab/ucm-imx8.dts     | 28 +++++++++++++++++++++++
+ 4 files changed, 69 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/compulab/sb-ucm-imx8.dtsi
+ create mode 100644 arch/arm64/boot/dts/compulab/sbc-ucm-imx8.dts
+ create mode 100644 arch/arm64/boot/dts/compulab/ucm-imx8.dts
+
+diff --git a/arch/arm64/boot/dts/compulab/Makefile b/arch/arm64/boot/dts/compulab/Makefile
+index ed639bd..f97c97b 100644
+--- a/arch/arm64/boot/dts/compulab/Makefile
++++ b/arch/arm64/boot/dts/compulab/Makefile
+@@ -2,6 +2,8 @@ dtb-$(CONFIG_ARCH_FSL_IMX8MQ) += cl-som-imx8.dtb
+ dtb-$(CONFIG_ARCH_FSL_IMX8MQ) += cl-som-imx8-lvds-dcss.dtb
+ dtb-$(CONFIG_ARCH_FSL_IMX8MQ) += cl-som-imx8-lvds-lcdif.dtb
+ dtb-$(CONFIG_ARCH_FSL_IMX8MQ) += cl-som-imx8-dual.dtb
++dtb-$(CONFIG_ARCH_FSL_IMX8MQ) += ucm-imx8.dtb
++dtb-$(CONFIG_ARCH_FSL_IMX8MQ) += sbc-ucm-imx8.dtb
+ 
+ always		:= $(dtb-y)
+ subdir-y	:= $(dts-dirs)
+diff --git a/arch/arm64/boot/dts/compulab/sb-ucm-imx8.dtsi b/arch/arm64/boot/dts/compulab/sb-ucm-imx8.dtsi
+new file mode 100644
+index 0000000..dc8dd06
+--- /dev/null
++++ b/arch/arm64/boot/dts/compulab/sb-ucm-imx8.dtsi
+@@ -0,0 +1,32 @@
++&iomuxc {
++	sb-ucm-imx8 {
++		pinctrl_i2c4: i2c4grp {
++			fsl,pins = <
++				MX8MQ_IOMUXC_I2C4_SCL_I2C4_SCL	0x4000007f
++				MX8MQ_IOMUXC_I2C4_SDA_I2C4_SDA	0x4000007f
++			>;
++		};
++    };
++};
++
++&pwm2 {
++    status = "disabled";
++};
++
++&wm8731 {
++    status = "disabled";
++};
++
++&i2c4 {
++    clock-frequency = <400000>;
++    pinctrl-names = "default";
++    pinctrl-0 = <&pinctrl_i2c4>;
++    status = "okay";
++
++	wm8731@1a {
++		#sound-dai-cells = <0>;
++		compatible = "wlf,wm8731";
++		reg = <0x1a>;
++		status = "okay";
++	};
++};
+diff --git a/arch/arm64/boot/dts/compulab/sbc-ucm-imx8.dts b/arch/arm64/boot/dts/compulab/sbc-ucm-imx8.dts
+new file mode 100644
+index 0000000..4caae35
+--- /dev/null
++++ b/arch/arm64/boot/dts/compulab/sbc-ucm-imx8.dts
+@@ -0,0 +1,7 @@
++#include "ucm-imx8.dts"
++#include "sb-ucm-imx8.dtsi"
++
++/ {
++    model = "CompuLab SBC-UCM-iMX8";
++    compatible = "compulab,sbc-ucm-imx8", "fsl,imx8mq";
++};
+diff --git a/arch/arm64/boot/dts/compulab/ucm-imx8.dts b/arch/arm64/boot/dts/compulab/ucm-imx8.dts
+new file mode 100644
+index 0000000..bb71ffa
+--- /dev/null
++++ b/arch/arm64/boot/dts/compulab/ucm-imx8.dts
+@@ -0,0 +1,28 @@
++#include "cl-som-imx8.dts"
++
++/ {
++	model = "CompuLab UCM-iMX8";
++	compatible = "compulab,ucm-imx8", "fsl,imx8mq";
++};
++
++&iomuxc {
++	ucm-imx8 {
++
++    };
++};
++
++&pcie1 {
++	status = "disabled";
++};
++
++&em3027 {
++	status = "disabled";
++};
++
++&i2c2 {
++    rtc@69 {
++        compatible = "ab1805";
++        reg = <0x69>;
++        pagesize = <16>;
++    };
++};
+-- 
+2.7.4
+
