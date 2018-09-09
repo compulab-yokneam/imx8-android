@@ -1,0 +1,55 @@
+#!/bin/bash
+
+WD=$(dirname $0)
+WS='cpl-sdcard-partition.sh -f imx8mq '
+
+id=$(id -u)
+
+if [[ ${id} -ne 0 ]];then
+bn=$(basename $0)
+cat << eom
+    Administrative credentials must be granted.
+    Issue the file this way: sudo ${bn}
+eom
+exit
+fi
+
+if [[ ! -e android-info.txt ]];then
+cat << eom
+	!WARNING!
+Missing android-info.txt file
+Make sure that the "`pwd`" is the device target directory.
+eom
+exit 2
+fi
+
+export $(cat android-info.txt)
+if [[ -z ${board} ]];then
+cat << eom
+	!WARNING!
+The android-info.txt file contains no board information.
+File : `cat android-info.txt`
+eom
+exit 3
+fi
+
+OPT=" -c 7"; size=7;
+file=/tmp/image-${board,,}-${size}G-$(date +%Y_%m_%d-%H_%M_%S)
+dd if=/dev/zero of=${file} bs=1G count=${size}
+device=$(losetup --show --find ${file})
+
+cat << eom
+Issue: 
+${WD}/${WS} ${OPT} ${device}
+eom
+
+${WD}/${WS} ${OPT} ${device}
+
+device=$(losetup -j ${file} | awk -F":" '$0=$1')
+losetup -d ${device}
+
+cat << eom
+Image file: ${file} created successfully
+eom
+
+exit 
