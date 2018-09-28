@@ -67,7 +67,7 @@ How to connect: PC-USB <==> `USB 2.0 Type A ------ USB 2.0 Micro-B 5 Pin` <==> P
 # Known issues
 ## Empty Serial Number
 * This `Pre-Built Development Image` has an issue by reporting an empty string as the device serial number.
-As a result the board can't get connected a desktop PC using `adb shell`.
+As a result Windows' desktops can't get connected to the board using `adb shell`.
 In order to address this issue apply one of the followed solutions:
 
 ### Solution 1
