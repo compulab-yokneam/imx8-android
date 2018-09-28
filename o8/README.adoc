@@ -65,9 +65,9 @@ The device USB1 configured as a `peripheral` device, that allows connecting the 
 How to connect: PC-USB <==> `USB 2.0 Type A ------ USB 2.0 Micro-B 5 Pin` <==> P9-SB-iMX8
 
 # Known issues
-* This `Pre-Built Development Image` has an issue by reporting the empty serial number.
-This fact rpduces a kind of problem by connecting to the device using `adb shell`.
-In ordet to fix this problem follow this procedure:
+* This `Pre-Built Development Image` has an issue by reporting an empty string as the device serial number.
+As a result the board can't get connected a desktop PC using `adb shell`.
+In order to address this issue follow this procedure:
 ** Get connected to the device throught the serial console, then issue:
 [source,console]
 su
