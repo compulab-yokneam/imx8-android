@@ -65,12 +65,17 @@ The device USB1 configured as a `peripheral` device, that allows connecting the 
 How to connect: PC-USB <==> `USB 2.0 Type A ------ USB 2.0 Micro-B 5 Pin` <==> P9-SB-iMX8
 
 # Known issues
+## Empty Serial Number
 * This `Pre-Built Development Image` has an issue by reporting an empty string as the device serial number.
 As a result the board can't get connected a desktop PC using `adb shell`.
-In order to address this issue:
-** Get connected to the device throught the serial console, then issue:
+In order to address this issue apply one of the followed solutions:
+
+### Solution 1
+Get connected to the device throught the serial console, then issue:
 [source,console]
 su
 echo 'cl-som-imx8' > /config/usb_gadget/g1/strings/0x409/serialnumber
 pkill -9 adbd
-** Rebuild the image. The latest patch fixes the issue.
+
+### Solution 2
+Rebuild the image. The patch https://github.com/compulab-yokneam/imx8/commit/ea00f2a56def567a450f7ce0d2c525042689a2ee[`ea00f2a56def567a450f7ce0d2c525042689a2ee`] fixes the issue.
