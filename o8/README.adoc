@@ -67,9 +67,10 @@ How to connect: PC-USB <==> `USB 2.0 Type A ------ USB 2.0 Micro-B 5 Pin` <==> P
 # Known issues
 * This `Pre-Built Development Image` has an issue by reporting an empty string as the device serial number.
 As a result the board can't get connected a desktop PC using `adb shell`.
-In order to address this issue follow this procedure:
+In order to address this issue:
 ** Get connected to the device throught the serial console, then issue:
 [source,console]
 su
 echo 'cl-som-imx8' > /config/usb_gadget/g1/strings/0x409/serialnumber
 pkill -9 adbd
+** Rebuild the image. The latest patch fixes the issue.
