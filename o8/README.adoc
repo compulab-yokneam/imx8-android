@@ -58,3 +58,18 @@ pv /tmp/image-cl-som-imx8-7G-2018_09_12-16_10_50 | sudo dd of=/dev/sdX bs=1M
 
 # Pre-Built Development Image
 https://drive.google.com/open?id=1vuhfFb9F58t3i71zXvGekWL7rKglRXEa[cl-som-imx8 Oreo 8 Image]
+
+# ADB
+The device USB1 configured as a `peripheral` device, that allows connecting the device to a desktop PC using `adb shell`.
+
+How to connect: PC-USB <==> `USB 2.0 Type A ------ USB 2.0 Micro-B 5 Pin` <==> P9-SB-iMX8
+
+# Known issues
+* This `Pre-Built Development Image` has an issue by reporting the empty serial number.
+This fact rpduces a kind of problem by connecting to the device using `adb shell`.
+In ordet to fix this problem follow this procedure:
+** Get connected to the device throught the serial console, then issue:
+[source,console]
+su
+echo 'cl-som-imx8' > /config/usb_gadget/g1/strings/0x409/serialnumber
+pkill -9 adbd
