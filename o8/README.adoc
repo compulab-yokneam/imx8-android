@@ -59,6 +59,12 @@ pv /tmp/image-cl-som-imx8-7G-2018_09_12-16_10_50 | sudo dd of=/dev/sdX bs=1M
 # Pre-Built Development Image
 https://drive.google.com/open?id=1vuhfFb9F58t3i71zXvGekWL7rKglRXEa[cl-som-imx8 Oreo 8 Image]
 
+# Boot from SD-card
+* Insert a created SD card into the SD socket `P13` (SB-iMX8 print side).
+* Power on the board
+* Press and hold `SW5` and `SW6`
+* Release `SW5` and then `SW6`
+
 # ADB
 The device USB1 configured as a `peripheral` device, that allows connecting the device to a desktop PC using `adb shell`.
 
