@@ -15,16 +15,16 @@ export PATH=${PATH}:~/bin
 
 # Deploy the NXP documentation
 [source,console]
-tar -C ~/ -xzvf ${C}/NXP/doc/android_O8.1.0_1.3.0_8M_docs.tar.gz
+tar xzvf ${C}/NXP/doc/android_O8.1.0_1.3.0_8M_docs.tar.gz
 
 # Prepare build environment
-* Set up your computer as described in the `~/android_O8.1.0_1.3.0_8M_docs/Android_User's_Guide.pdf`.
+* Set up your computer as described in the `android_O8.1.0_1.3.0_8M_docs/Android_User's_Guide.pdf`.
 
 # Deploy the NXP Source Code
 [source,console]
-tar -C ~/ -xzvf ${C}/NXP/src/imx-o8.1.0_1.3.0_8m.tar.gz
-source ~/imx-o8.1.0_1.3.0_8m/imx_android_setup.sh
-export A=~/android_build
+tar xzvf ${C}/NXP/src/imx-o8.1.0_1.3.0_8m.tar.gz
+source ${C}/imx-o8.1.0_1.3.0_8m/imx_android_setup.sh
+export A=$(pwd)
 
 # Add `CompuLab imx8` board support
 ## Apply the patches:
