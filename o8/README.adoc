@@ -1,9 +1,5 @@
-# Prepare build environment
-
-* Download https://www.nxp.com/docs/en/supporting-information/android_O8.1.0_1.3.0_8M_docs.tar.gz[`android_O8.1.0_1.3.0_8M_docs.tar.gz`]
-* Set up your computer as described in the `android_O8.1.0_1.3.0_8M_docs/Android_User's_Guide.pdf`.
-
 # Clone this repository
+
 [source,console]
 mkdir ~/compulab-imx8
 git clone https://github.com/compulab-yokneam/imx8.git ~/compulab-imx8
@@ -16,6 +12,13 @@ mkdir ~/bin
 curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
 chmod a+x ~/bin/repo
 export PATH=${PATH}:~/bin
+
+# Deploy the NXP documentation
+[source,console]
+tar -C ~/ -xzvf ${C}/NXP/doc/android_O8.1.0_1.3.0_8M_docs.tar.gz
+
+# Prepare build environment
+* Set up your computer as described in the `~/android_O8.1.0_1.3.0_8M_docs/Android_User's_Guide.pdf`.
 
 # Deploy the NXP Source Code
 [source,console]
