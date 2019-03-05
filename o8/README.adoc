@@ -1,11 +1,7 @@
 # Prepare build environment
 
 * Download https://www.nxp.com/docs/en/supporting-information/android_O8.1.0_1.3.0_8M_docs.tar.gz[`android_O8.1.0_1.3.0_8M_docs.tar.gz`]
-
-* Follow the instructions of the `android_O8.1.0_1.3.0_8M_docs/Android_User's_Guide.pdf` and stop on the step 3.2.
-* Set an environment variable `A`
-[source,console]
-export A=~/android_build
+* Set up your computer as described in the `android_O8.1.0_1.3.0_8M_docs/Android_User's_Guide.pdf`.
 
 # Clone this repository
 [source,console]
@@ -13,6 +9,19 @@ mkdir ~/compulab-imx8
 git clone https://github.com/compulab-yokneam/imx8.git ~/compulab-imx8
 cd ~/compulab-imx8/o8
 export C=$(pwd)
+
+# Set up the Android `repo` utility
+[source,console]
+mkdir ~/bin
+curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+chmod a+x ~/bin/repo
+export PATH=${PATH}:~/bin
+
+# Deploy the NXP Source Code
+[source,console]
+tar -C ~/ -xzvf ${C}/NXP/src/imx-o8.1.0_1.3.0_8m.tar.gz
+source ~/imx-o8.1.0_1.3.0_8m/imx_android_setup.sh
+export A=~/android_build
 
 # Add `CompuLab imx8` board support
 ## Apply the patches:
