@@ -58,12 +58,25 @@ make -j 8
 [source,console]
 #### build completed successfully (01:12 (mm:ss)) ####
 
-* Goto the target output directory and generate the image.
+# Create a bootable SD-card
+## NXP Method
+NXP deploys the image to an SD-Card directly. The method covered by the `android_O8.1.0_1.3.0_8M_docs/Android_User's_Guide.pdf`
+page #50.
+
+* Issue these command:
 [source,console]
-cd out/target/product/${MACHINE}
+cd ${A}/out/target/product/${MACHINE}
+sudo ${A}/device/fsl/common/tools/fsl-sdcard-partition.sh -f imx8mq /dev/sdX
+
+## CompuLab Method
+CopuLab method creates an SD-card image first. After that the image gets flashed onto an SD-Card.
+
+* Issue these command:
+[source,console]
+cd ${A}/out/target/product/${MACHINE}
 sudo ${C}/tools/create-image
 
-# Create a bootable SD-card
+* Deploy a created imagae onto the SD-card
 An 7G image gets created at `/tmp` directory with the `/tmp/image-${MACHINE}-7G-$(date +%Y_%m_%d-%H_%M_%S)` name. Create a bootable SD-card this way:
 [source,console]
 pv /tmp/image-cl-som-imx8-7G-2018_09_12-16_10_50 | sudo dd of=/dev/sdX bs=1M
