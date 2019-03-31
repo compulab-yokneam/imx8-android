@@ -1,4 +1,4 @@
-# imx8
+# CompuLab iMX8 Andoid
 
 ## https://github.com/compulab-yokneam/imx8/tree/master/o8[Oreo 8]
 Supported  machines:
