@@ -59,7 +59,7 @@ Set a desire machine configuration:
 
 IMPORTANT: Underscore in the `MACHINE` name is not a typo mistake.
 
-* In Android buid directory and issue:
+* Goto Android buid directory and issue:
 [source,console]
 cd ${A}
 source build/envsetup.sh
