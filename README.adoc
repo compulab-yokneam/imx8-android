@@ -9,4 +9,4 @@ Supported  machines:
 Supported  machines:
 
 * cl-som-imx8
-* ucm-mx8m-mini
+* ucm-imx8m-mini
