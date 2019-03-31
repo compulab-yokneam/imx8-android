@@ -1,0 +1,92 @@
+# CompuLab Android Pie 9
+
+* Set up the Android `repo` utility
+[source,console]
+mkdir ~/bin
+curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+chmod a+x ~/bin/repo
+export PATH=${PATH}:~/bin
+
+# NXP Sources
+* Download the nxp Android sources from this location:
+https://www.nxp.com/webapp/sps/download/license.jsp?colCode=P9.0.0_1.0.0_GA_ANDROID_SOURCE&appType=file2&DOWNLOAD_ID=null&lang_cd=en[imx-p9.0.0_1.0.0-ga.tar.gz]
+
+* Untar it this way:
+[source,console]
+tar -C ~/ xf /path/to/imx-p9.0.0_1.0.0-ga.tar.gz
+
+* Download and Setup Source:
+[source,console]
+source ./imx-p9.0.0_1.0.0-ga/imx_android_setup.sh
+export A=$(pwd)
+
+* Follow the instructions of the `~/imx-p9.0.0_1.0.0-ga/README` and make sure that the build environment is ready
+
+IMPORTANT: It is up to developers to make sure that NXP procedure works and an NXP example image can be created.
+Refer to the `imx-p9.0.0_1.0.0-ga/README` for details.
+
+# CompuLab Sources
+* Clone this repository
+[source,console]
+mkdir ~/compulab-imx8
+git clone https://github.com/compulab-yokneam/imx8.git ~/compulab-imx8
+export C=~/compulab-imx8/p9
+
+# Apply the patches:
+* U-boot
+[source,console]
+git -C ${A}/vendor/nxp-opensource/uboot-imx checkout -b compulab-imx8 4a8d27cbb3eaf7f90fd4f6c98013f549a4adadae
+git -C ${A}/vendor/nxp-opensource/uboot-imx am ${C}/vendor/nxp-opensource/uboot-imx/*.patch
+
+* Kernel
+[source,console]
+git -C ${A}/vendor/nxp-opensource/kernel_imx checkout -b compulab-imx8 4a75c31bbfddc60f62d0cbc00e463a19552454ca
+git -C ${A}/vendor/nxp-opensource/kernel_imx am ${C}/vendor/nxp-opensource/kernel_imx/*.patch
+
+* Board
+[source,console]
+git -C ${A}/device/fsl checkout -b compulab-imx8 0ff2d73ccb484f946580270bfbbc0f61ab902832
+git -C ${A}/device/fsl am ${C}/device/fsl/*.patch
+
+# Create the image
+Set a desire machine configuration:
+
+* `cl-som-imx8`
+** `export MACHINE=cl_som_imx8`
+
+* `ucm-imx8m-mini`
+** `export MACHINE=ucm_imx8m_mini`
+
+IMPORTANT: Underscore in the `MACHINE` name is not a typo mistake.
+
+* Goto `~/myandroid` and issue the sequence:
+[source,console]
+cd ${A}
+source build/envsetup.sh
+lunch ${MACHINE}-userdebug
+make -j 8
+
+* Wait for this message:
+[source,console]
+#### build completed successfully (01:12 (mm:ss)) ####
+
+# Create a bootable SD-card
+
+* Issue these command:
+[source,console]
+cd ${A}/out/target/product/${MACHINE}
+sudo sudo ./fsl-sdcard-partition.sh -f imx8mq /dev/sdX
+
+# Boot from the SD-card
+
+* `cl-som-imx8`
+** Insert a created SD card into the SD socket `P13`
+** Power on the board
+** Press and hold `SW5` and `SW6`
+** Release `SW5` and then `SW6`
+
+* `usm-imx8m-mini`
+** Insert a created uSD card into the uSD socket `P23`
+** Power on the board
+** Press and hold `SW6` and `SW7`
+** Release `SW6` and then `SW7`
