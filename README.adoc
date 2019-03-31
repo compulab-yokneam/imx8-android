@@ -1,1 +1,12 @@
 # imx8
+
+## https://github.com/compulab-yokneam/imx8/tree/master/o8[Oreo 8]
+Supported  machines:
+
+* cl-som-imx8
+
+## https://github.com/compulab-yokneam/imx8/tree/master/p9[Pie 9]
+Supported  machines:
+
+* cl-som-imx8
+* ucm-mx8m-mini
