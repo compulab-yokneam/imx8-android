@@ -59,16 +59,14 @@ Set a desire machine configuration:
 
 IMPORTANT: Underscore in the `MACHINE` name is not a typo mistake.
 
-* Goto `~/myandroid` and issue the sequence:
+* In Android buid directory and issue:
 [source,console]
 cd ${A}
 source build/envsetup.sh
 lunch ${MACHINE}-userdebug
-make -j 8
+make 2>&1 | tee build-log.txt
 
-* Wait for this message:
-[source,console]
-#### build completed successfully (01:12 (mm:ss)) ####
+When the make command is complete, the build-log.txt file contains the execution output. Check for any errors.
 
 # Create a bootable SD-card
 
