@@ -1,17 +1,18 @@
-# Clone this repository
+# CompuLab Android Oreo 8
 
-[source,console]
-mkdir ~/compulab-imx8
-git clone https://github.com/compulab-yokneam/imx8.git ~/compulab-imx8
-cd ~/compulab-imx8/o8
-export C=$(pwd)
-
-# Set up the Android `repo` utility
+* Set up the Android `repo` utility
 [source,console]
 mkdir ~/bin
 curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
 chmod a+x ~/bin/repo
 export PATH=${PATH}:~/bin
+
+# Clone this repository
+[source,console]
+mkdir ~/compulab-imx8
+git clone https://github.com/compulab-yokneam/imx8.git ~/compulab-imx8
+cd ~/compulab-imx8/o8
+export C=$(pwd)
 
 # Deploy the NXP documentation
 [source,console]
