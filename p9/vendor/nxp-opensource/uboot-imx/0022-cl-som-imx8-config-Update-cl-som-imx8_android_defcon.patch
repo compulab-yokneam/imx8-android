@@ -1,0 +1,54 @@
+From 0610c25ff2cdc6974ef620b48852e3fef4ea9585 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sun, 24 Mar 2019 10:50:12 +0200
+Subject: [PATCH 22/22] cl-som-imx8: config: Update
+ cl-som-imx8_android_defconfig
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ configs/cl-som-imx8_android_defconfig | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/configs/cl-som-imx8_android_defconfig b/configs/cl-som-imx8_android_defconfig
+index 8315fe55ff..c855fc8a69 100644
+--- a/configs/cl-som-imx8_android_defconfig
++++ b/configs/cl-som-imx8_android_defconfig
+@@ -9,11 +9,19 @@ CONFIG_LOCALVERSION="-cl-som-imx8-1.1"
+ CONFIG_FIT=y
+ CONFIG_SPL_LOAD_FIT=y
+ CONFIG_SYS_EXTRA_OPTIONS="IMX_CONFIG=arch/arm/mach-imx/spl_sd.cfg,ANDROID_SUPPORT"
++CONFIG_BOOTDELAY=1
+ CONFIG_DEFAULT_FDT_FILE="sbc-imx8.dtb"
+ CONFIG_ARCH_MISC_INIT=y
+ CONFIG_SPL=y
+ CONFIG_SPL_BOARD_INIT=y
+ CONFIG_HUSH_PARSER=y
++CONFIG_FASTBOOT=y
++CONFIG_FSL_FASTBOOT=y
++CONFIG_BCB_SUPPORT=y
++CONFIG_FASTBOOT_BUF_ADDR=0x42800000
++CONFIG_FASTBOOT_BUF_SIZE=0x40000000
++CONFIG_FASTBOOT_FLASH=y
++CONFIG_FASTBOOT_FLASH_MMC_DEV=0
+ CONFIG_CMD_MEMINFO=y
+ CONFIG_CMD_MEMTEST=y
+ CONFIG_CMD_GPIO=y
+@@ -28,7 +36,6 @@ CONFIG_CMD_FAT=y
+ CONFIG_CMD_FS_GENERIC=y
+ CONFIG_EFI_PARTITION=y
+ # CONFIG_SPL_EFI_PARTITION is not set
+-# CONFIG_PARTITION_UUIDS is not set
+ CONFIG_OF_CONTROL=y
+ CONFIG_ENV_IS_IN_MMC=y
+ CONFIG_SAVED_DRAM_TIMING_BASE=0x40000000
+@@ -59,7 +66,6 @@ CONFIG_USB_GADGET_MANUFACTURER="FSL"
+ CONFIG_USB_GADGET_VENDOR_NUM=0x0525
+ CONFIG_USB_GADGET_PRODUCT_NUM=0xa4a5
+ CONFIG_SDP_LOADADDR=0x40400000
+-CONFIG_USB_GADGET_DOWNLOAD=y
+ CONFIG_VIDEO=y
+ CONFIG_VIDEO_IMX8_HDMI=y
+ CONFIG_LZ4=y
+-- 
+2.11.0
+

@@ -1,0 +1,33 @@
+From 1bcf4573b058729f5e0ce133aa9fd1937d3e3217 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sun, 17 Mar 2019 13:53:34 +0200
+Subject: [PATCH 12/19] ucm-imx8m-mini: BoardConfig: Remove unused stuff
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ imx8m/ucm_imx8m_mini/BoardConfig.mk | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/imx8m/ucm_imx8m_mini/BoardConfig.mk b/imx8m/ucm_imx8m_mini/BoardConfig.mk
+index d8c99ed2..914f3b9e 100644
+--- a/imx8m/ucm_imx8m_mini/BoardConfig.mk
++++ b/imx8m/ucm_imx8m_mini/BoardConfig.mk
+@@ -80,15 +80,8 @@ TARGET_SELECT_KEY := 28
+ # we don't support sparse image.
+ TARGET_USERIMAGES_SPARSE_EXT_DISABLED := false
+ 
+-# Qcom 1PJ(QCA9377) BT
+ BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(IMX_DEVICE_PATH)/bluetooth
+-BOARD_HAVE_BLUETOOTH_QCOM := true
+-BOARD_HAS_QCA_BT_ROME := true
+ BOARD_HAVE_BLUETOOTH_BLUEZ := false
+-QCOM_BT_USE_SIBS := true
+-ifeq ($(QCOM_BT_USE_SIBS), true)
+-    WCNSS_FILTER_USES_SIBS := true
+-endif
+ 
+ UBOOT_POST_PROCESS := true
+ 
+-- 
+2.11.0
+

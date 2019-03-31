@@ -1,0 +1,317 @@
+From 3ede479e266b2036757c990f3ae90e19041f95d4 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Fri, 15 Mar 2019 13:43:22 +0200
+Subject: [PATCH 05/19] ucm-imx8m-mini to ucm_imx8m_mini
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/AndroidBoard.mk    |   0
+ imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/AndroidTee.mk      |   0
+ imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/AndroidUboot.mk    |   0
+ imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/BoardConfig.mk     |   4 ++--
+ .../android_addition_defconfig                              |   0
+ imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/app_whitelist.xml  |   0
+ imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/audio_effects.xml  |   0
+ .../audio_policy_configuration.xml                          |   0
+ .../bluetooth/bdroid_buildcfg.h                             |   0
+ imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/build_id.mk        |   0
+ .../compatibility_matrix.xml                                |   0
+ imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/early.init.cfg     |   0
+ imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/fstab.freescale    |   0
+ .../init.freescale.emmc.rc                                  |   0
+ .../{ucm-imx8m-mini => ucm_imx8m_mini}/init.freescale.sd.rc |   0
+ imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/init.imx8mm.drm.rc |   0
+ imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/init.imx8mm.rc     |   0
+ imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/init.rc            |   0
+ imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/init.usb.rc        |   0
+ imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/manifest.xml       |   0
+ .../base/core/res/res/drawable-nodpi/default_wallpaper.png  | Bin
+ .../res/res/drawable-sw600dp-nodpi/default_wallpaper.png    | Bin
+ .../res/res/drawable-sw720dp-nodpi/default_wallpaper.png    | Bin
+ .../overlay/frameworks/base/core/res/res/values/config.xml  |   0
+ .../frameworks/base/core/res/res/xml/power_profile.xml      |   0
+ .../base/packages/SettingsProvider/res/values/defaults.xml  |   0
+ .../frameworks/base/packages/SystemUI/res/values/dimens.xml |   0
+ .../overlay/packages/apps/Settings/res/values/bools.xml     |   0
+ .../overlay/packages/apps/Settings/res/values/config.xml    |   0
+ .../overlay/packages/apps/Settings/res/values/strings.xml   |   0
+ .../privapp-permissions-imx.xml                             |   0
+ .../required_hardware.xml                                   |   0
+ .../seccomp/mediacodec-seccomp.policy                       |   0
+ .../seccomp/mediaextractor-seccomp.policy                   |   0
+ .../sepolicy/file_contexts                                  |   0
+ .../sepolicy/genfs_contexts                                 |   0
+ .../sepolicy_drm/file_contexts                              |   0
+ .../sepolicy_drm/hal_drm_default.te                         |   0
+ .../sepolicy_drm/mediadrmserver.te                          |   0
+ .../{ucm-imx8m-mini => ucm_imx8m_mini}/sepolicy_drm/netd.te |   0
+ .../sepolicy_drm/shell.te                                   |   0
+ .../{ucm-imx8m-mini => ucm_imx8m_mini}/sepolicy_drm/tee.te  |   0
+ .../ucm-imx8m-mini.mk => ucm_imx8m_mini/ucm_imx8m_mini.mk}  |   4 ++--
+ .../ucm_imx8m_mini_drm.mk}                                  |   0
+ .../{ucm-imx8m-mini => ucm_imx8m_mini}/ueventd.freescale.rc |   0
+ 45 files changed, 4 insertions(+), 4 deletions(-)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/AndroidBoard.mk (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/AndroidTee.mk (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/AndroidUboot.mk (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/BoardConfig.mk (97%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/android_addition_defconfig (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/app_whitelist.xml (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/audio_effects.xml (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/audio_policy_configuration.xml (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/bluetooth/bdroid_buildcfg.h (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/build_id.mk (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/compatibility_matrix.xml (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/early.init.cfg (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/fstab.freescale (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/init.freescale.emmc.rc (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/init.freescale.sd.rc (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/init.imx8mm.drm.rc (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/init.imx8mm.rc (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/init.rc (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/init.usb.rc (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/manifest.xml (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/overlay/frameworks/base/core/res/res/drawable-nodpi/default_wallpaper.png (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/overlay/frameworks/base/core/res/res/drawable-sw600dp-nodpi/default_wallpaper.png (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/overlay/frameworks/base/core/res/res/drawable-sw720dp-nodpi/default_wallpaper.png (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/overlay/frameworks/base/core/res/res/values/config.xml (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/overlay/frameworks/base/core/res/res/xml/power_profile.xml (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/overlay/frameworks/base/packages/SettingsProvider/res/values/defaults.xml (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/overlay/frameworks/base/packages/SystemUI/res/values/dimens.xml (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/overlay/packages/apps/Settings/res/values/bools.xml (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/overlay/packages/apps/Settings/res/values/config.xml (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/overlay/packages/apps/Settings/res/values/strings.xml (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/privapp-permissions-imx.xml (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/required_hardware.xml (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/seccomp/mediacodec-seccomp.policy (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/seccomp/mediaextractor-seccomp.policy (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/sepolicy/file_contexts (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/sepolicy/genfs_contexts (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/sepolicy_drm/file_contexts (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/sepolicy_drm/hal_drm_default.te (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/sepolicy_drm/mediadrmserver.te (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/sepolicy_drm/netd.te (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/sepolicy_drm/shell.te (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/sepolicy_drm/tee.te (100%)
+ rename imx8m/{ucm-imx8m-mini/ucm-imx8m-mini.mk => ucm_imx8m_mini/ucm_imx8m_mini.mk} (99%)
+ rename imx8m/{ucm-imx8m-mini/ucm-imx8m-mini_drm.mk => ucm_imx8m_mini/ucm_imx8m_mini_drm.mk} (100%)
+ rename imx8m/{ucm-imx8m-mini => ucm_imx8m_mini}/ueventd.freescale.rc (100%)
+
+diff --git a/imx8m/ucm-imx8m-mini/AndroidBoard.mk b/imx8m/ucm_imx8m_mini/AndroidBoard.mk
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/AndroidBoard.mk
+rename to imx8m/ucm_imx8m_mini/AndroidBoard.mk
+diff --git a/imx8m/ucm-imx8m-mini/AndroidTee.mk b/imx8m/ucm_imx8m_mini/AndroidTee.mk
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/AndroidTee.mk
+rename to imx8m/ucm_imx8m_mini/AndroidTee.mk
+diff --git a/imx8m/ucm-imx8m-mini/AndroidUboot.mk b/imx8m/ucm_imx8m_mini/AndroidUboot.mk
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/AndroidUboot.mk
+rename to imx8m/ucm_imx8m_mini/AndroidUboot.mk
+diff --git a/imx8m/ucm-imx8m-mini/BoardConfig.mk b/imx8m/ucm_imx8m_mini/BoardConfig.mk
+similarity index 97%
+rename from imx8m/ucm-imx8m-mini/BoardConfig.mk
+rename to imx8m/ucm_imx8m_mini/BoardConfig.mk
+index e9acc778..09dc8001 100644
+--- a/imx8m/ucm-imx8m-mini/BoardConfig.mk
++++ b/imx8m/ucm_imx8m_mini/BoardConfig.mk
+@@ -25,7 +25,7 @@ ENABLE_CFI=false
+ # Product-specific compile-time definitions.
+ #
+ 
+-IMX_DEVICE_PATH := device/fsl/imx8m/ucm-imx8m-mini
++IMX_DEVICE_PATH := device/fsl/imx8m/ucm_imx8m_mini
+ 
+ include $(IMX_DEVICE_PATH)/build_id.mk
+ include device/fsl/imx8m/BoardConfigCommon.mk
+@@ -123,7 +123,7 @@ $(error "TARGET_USERIMAGES_USE_UBIFS and TARGET_USERIMAGES_USE_EXT4 config open
+ endif
+ endif
+ 
+-BOARD_PREBUILT_DTBOIMAGE := out/target/product/ucm-imx8m-mini/dtbo-imx8mm.img
++BOARD_PREBUILT_DTBOIMAGE := out/target/product/ucm_imx8m_mini/dtbo-imx8mm.img
+ ifeq ($(PRODUCT_IMX_TRUSTY),true)
+ TARGET_BOOTLOADER_CONFIG := imx8mm:ucm-imx8m-mini-android_trusty_defconfig
+ TARGET_BOARD_DTS_CONFIG ?= imx8mm:ucm-imx8m-mini.dtb
+diff --git a/imx8m/ucm-imx8m-mini/android_addition_defconfig b/imx8m/ucm_imx8m_mini/android_addition_defconfig
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/android_addition_defconfig
+rename to imx8m/ucm_imx8m_mini/android_addition_defconfig
+diff --git a/imx8m/ucm-imx8m-mini/app_whitelist.xml b/imx8m/ucm_imx8m_mini/app_whitelist.xml
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/app_whitelist.xml
+rename to imx8m/ucm_imx8m_mini/app_whitelist.xml
+diff --git a/imx8m/ucm-imx8m-mini/audio_effects.xml b/imx8m/ucm_imx8m_mini/audio_effects.xml
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/audio_effects.xml
+rename to imx8m/ucm_imx8m_mini/audio_effects.xml
+diff --git a/imx8m/ucm-imx8m-mini/audio_policy_configuration.xml b/imx8m/ucm_imx8m_mini/audio_policy_configuration.xml
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/audio_policy_configuration.xml
+rename to imx8m/ucm_imx8m_mini/audio_policy_configuration.xml
+diff --git a/imx8m/ucm-imx8m-mini/bluetooth/bdroid_buildcfg.h b/imx8m/ucm_imx8m_mini/bluetooth/bdroid_buildcfg.h
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/bluetooth/bdroid_buildcfg.h
+rename to imx8m/ucm_imx8m_mini/bluetooth/bdroid_buildcfg.h
+diff --git a/imx8m/ucm-imx8m-mini/build_id.mk b/imx8m/ucm_imx8m_mini/build_id.mk
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/build_id.mk
+rename to imx8m/ucm_imx8m_mini/build_id.mk
+diff --git a/imx8m/ucm-imx8m-mini/compatibility_matrix.xml b/imx8m/ucm_imx8m_mini/compatibility_matrix.xml
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/compatibility_matrix.xml
+rename to imx8m/ucm_imx8m_mini/compatibility_matrix.xml
+diff --git a/imx8m/ucm-imx8m-mini/early.init.cfg b/imx8m/ucm_imx8m_mini/early.init.cfg
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/early.init.cfg
+rename to imx8m/ucm_imx8m_mini/early.init.cfg
+diff --git a/imx8m/ucm-imx8m-mini/fstab.freescale b/imx8m/ucm_imx8m_mini/fstab.freescale
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/fstab.freescale
+rename to imx8m/ucm_imx8m_mini/fstab.freescale
+diff --git a/imx8m/ucm-imx8m-mini/init.freescale.emmc.rc b/imx8m/ucm_imx8m_mini/init.freescale.emmc.rc
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/init.freescale.emmc.rc
+rename to imx8m/ucm_imx8m_mini/init.freescale.emmc.rc
+diff --git a/imx8m/ucm-imx8m-mini/init.freescale.sd.rc b/imx8m/ucm_imx8m_mini/init.freescale.sd.rc
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/init.freescale.sd.rc
+rename to imx8m/ucm_imx8m_mini/init.freescale.sd.rc
+diff --git a/imx8m/ucm-imx8m-mini/init.imx8mm.drm.rc b/imx8m/ucm_imx8m_mini/init.imx8mm.drm.rc
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/init.imx8mm.drm.rc
+rename to imx8m/ucm_imx8m_mini/init.imx8mm.drm.rc
+diff --git a/imx8m/ucm-imx8m-mini/init.imx8mm.rc b/imx8m/ucm_imx8m_mini/init.imx8mm.rc
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/init.imx8mm.rc
+rename to imx8m/ucm_imx8m_mini/init.imx8mm.rc
+diff --git a/imx8m/ucm-imx8m-mini/init.rc b/imx8m/ucm_imx8m_mini/init.rc
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/init.rc
+rename to imx8m/ucm_imx8m_mini/init.rc
+diff --git a/imx8m/ucm-imx8m-mini/init.usb.rc b/imx8m/ucm_imx8m_mini/init.usb.rc
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/init.usb.rc
+rename to imx8m/ucm_imx8m_mini/init.usb.rc
+diff --git a/imx8m/ucm-imx8m-mini/manifest.xml b/imx8m/ucm_imx8m_mini/manifest.xml
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/manifest.xml
+rename to imx8m/ucm_imx8m_mini/manifest.xml
+diff --git a/imx8m/ucm-imx8m-mini/overlay/frameworks/base/core/res/res/drawable-nodpi/default_wallpaper.png b/imx8m/ucm_imx8m_mini/overlay/frameworks/base/core/res/res/drawable-nodpi/default_wallpaper.png
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/overlay/frameworks/base/core/res/res/drawable-nodpi/default_wallpaper.png
+rename to imx8m/ucm_imx8m_mini/overlay/frameworks/base/core/res/res/drawable-nodpi/default_wallpaper.png
+diff --git a/imx8m/ucm-imx8m-mini/overlay/frameworks/base/core/res/res/drawable-sw600dp-nodpi/default_wallpaper.png b/imx8m/ucm_imx8m_mini/overlay/frameworks/base/core/res/res/drawable-sw600dp-nodpi/default_wallpaper.png
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/overlay/frameworks/base/core/res/res/drawable-sw600dp-nodpi/default_wallpaper.png
+rename to imx8m/ucm_imx8m_mini/overlay/frameworks/base/core/res/res/drawable-sw600dp-nodpi/default_wallpaper.png
+diff --git a/imx8m/ucm-imx8m-mini/overlay/frameworks/base/core/res/res/drawable-sw720dp-nodpi/default_wallpaper.png b/imx8m/ucm_imx8m_mini/overlay/frameworks/base/core/res/res/drawable-sw720dp-nodpi/default_wallpaper.png
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/overlay/frameworks/base/core/res/res/drawable-sw720dp-nodpi/default_wallpaper.png
+rename to imx8m/ucm_imx8m_mini/overlay/frameworks/base/core/res/res/drawable-sw720dp-nodpi/default_wallpaper.png
+diff --git a/imx8m/ucm-imx8m-mini/overlay/frameworks/base/core/res/res/values/config.xml b/imx8m/ucm_imx8m_mini/overlay/frameworks/base/core/res/res/values/config.xml
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/overlay/frameworks/base/core/res/res/values/config.xml
+rename to imx8m/ucm_imx8m_mini/overlay/frameworks/base/core/res/res/values/config.xml
+diff --git a/imx8m/ucm-imx8m-mini/overlay/frameworks/base/core/res/res/xml/power_profile.xml b/imx8m/ucm_imx8m_mini/overlay/frameworks/base/core/res/res/xml/power_profile.xml
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/overlay/frameworks/base/core/res/res/xml/power_profile.xml
+rename to imx8m/ucm_imx8m_mini/overlay/frameworks/base/core/res/res/xml/power_profile.xml
+diff --git a/imx8m/ucm-imx8m-mini/overlay/frameworks/base/packages/SettingsProvider/res/values/defaults.xml b/imx8m/ucm_imx8m_mini/overlay/frameworks/base/packages/SettingsProvider/res/values/defaults.xml
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/overlay/frameworks/base/packages/SettingsProvider/res/values/defaults.xml
+rename to imx8m/ucm_imx8m_mini/overlay/frameworks/base/packages/SettingsProvider/res/values/defaults.xml
+diff --git a/imx8m/ucm-imx8m-mini/overlay/frameworks/base/packages/SystemUI/res/values/dimens.xml b/imx8m/ucm_imx8m_mini/overlay/frameworks/base/packages/SystemUI/res/values/dimens.xml
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/overlay/frameworks/base/packages/SystemUI/res/values/dimens.xml
+rename to imx8m/ucm_imx8m_mini/overlay/frameworks/base/packages/SystemUI/res/values/dimens.xml
+diff --git a/imx8m/ucm-imx8m-mini/overlay/packages/apps/Settings/res/values/bools.xml b/imx8m/ucm_imx8m_mini/overlay/packages/apps/Settings/res/values/bools.xml
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/overlay/packages/apps/Settings/res/values/bools.xml
+rename to imx8m/ucm_imx8m_mini/overlay/packages/apps/Settings/res/values/bools.xml
+diff --git a/imx8m/ucm-imx8m-mini/overlay/packages/apps/Settings/res/values/config.xml b/imx8m/ucm_imx8m_mini/overlay/packages/apps/Settings/res/values/config.xml
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/overlay/packages/apps/Settings/res/values/config.xml
+rename to imx8m/ucm_imx8m_mini/overlay/packages/apps/Settings/res/values/config.xml
+diff --git a/imx8m/ucm-imx8m-mini/overlay/packages/apps/Settings/res/values/strings.xml b/imx8m/ucm_imx8m_mini/overlay/packages/apps/Settings/res/values/strings.xml
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/overlay/packages/apps/Settings/res/values/strings.xml
+rename to imx8m/ucm_imx8m_mini/overlay/packages/apps/Settings/res/values/strings.xml
+diff --git a/imx8m/ucm-imx8m-mini/privapp-permissions-imx.xml b/imx8m/ucm_imx8m_mini/privapp-permissions-imx.xml
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/privapp-permissions-imx.xml
+rename to imx8m/ucm_imx8m_mini/privapp-permissions-imx.xml
+diff --git a/imx8m/ucm-imx8m-mini/required_hardware.xml b/imx8m/ucm_imx8m_mini/required_hardware.xml
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/required_hardware.xml
+rename to imx8m/ucm_imx8m_mini/required_hardware.xml
+diff --git a/imx8m/ucm-imx8m-mini/seccomp/mediacodec-seccomp.policy b/imx8m/ucm_imx8m_mini/seccomp/mediacodec-seccomp.policy
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/seccomp/mediacodec-seccomp.policy
+rename to imx8m/ucm_imx8m_mini/seccomp/mediacodec-seccomp.policy
+diff --git a/imx8m/ucm-imx8m-mini/seccomp/mediaextractor-seccomp.policy b/imx8m/ucm_imx8m_mini/seccomp/mediaextractor-seccomp.policy
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/seccomp/mediaextractor-seccomp.policy
+rename to imx8m/ucm_imx8m_mini/seccomp/mediaextractor-seccomp.policy
+diff --git a/imx8m/ucm-imx8m-mini/sepolicy/file_contexts b/imx8m/ucm_imx8m_mini/sepolicy/file_contexts
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/sepolicy/file_contexts
+rename to imx8m/ucm_imx8m_mini/sepolicy/file_contexts
+diff --git a/imx8m/ucm-imx8m-mini/sepolicy/genfs_contexts b/imx8m/ucm_imx8m_mini/sepolicy/genfs_contexts
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/sepolicy/genfs_contexts
+rename to imx8m/ucm_imx8m_mini/sepolicy/genfs_contexts
+diff --git a/imx8m/ucm-imx8m-mini/sepolicy_drm/file_contexts b/imx8m/ucm_imx8m_mini/sepolicy_drm/file_contexts
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/sepolicy_drm/file_contexts
+rename to imx8m/ucm_imx8m_mini/sepolicy_drm/file_contexts
+diff --git a/imx8m/ucm-imx8m-mini/sepolicy_drm/hal_drm_default.te b/imx8m/ucm_imx8m_mini/sepolicy_drm/hal_drm_default.te
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/sepolicy_drm/hal_drm_default.te
+rename to imx8m/ucm_imx8m_mini/sepolicy_drm/hal_drm_default.te
+diff --git a/imx8m/ucm-imx8m-mini/sepolicy_drm/mediadrmserver.te b/imx8m/ucm_imx8m_mini/sepolicy_drm/mediadrmserver.te
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/sepolicy_drm/mediadrmserver.te
+rename to imx8m/ucm_imx8m_mini/sepolicy_drm/mediadrmserver.te
+diff --git a/imx8m/ucm-imx8m-mini/sepolicy_drm/netd.te b/imx8m/ucm_imx8m_mini/sepolicy_drm/netd.te
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/sepolicy_drm/netd.te
+rename to imx8m/ucm_imx8m_mini/sepolicy_drm/netd.te
+diff --git a/imx8m/ucm-imx8m-mini/sepolicy_drm/shell.te b/imx8m/ucm_imx8m_mini/sepolicy_drm/shell.te
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/sepolicy_drm/shell.te
+rename to imx8m/ucm_imx8m_mini/sepolicy_drm/shell.te
+diff --git a/imx8m/ucm-imx8m-mini/sepolicy_drm/tee.te b/imx8m/ucm_imx8m_mini/sepolicy_drm/tee.te
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/sepolicy_drm/tee.te
+rename to imx8m/ucm_imx8m_mini/sepolicy_drm/tee.te
+diff --git a/imx8m/ucm-imx8m-mini/ucm-imx8m-mini.mk b/imx8m/ucm_imx8m_mini/ucm_imx8m_mini.mk
+similarity index 99%
+rename from imx8m/ucm-imx8m-mini/ucm-imx8m-mini.mk
+rename to imx8m/ucm_imx8m_mini/ucm_imx8m_mini.mk
+index 30f9108e..c053963f 100644
+--- a/imx8m/ucm-imx8m-mini/ucm-imx8m-mini.mk
++++ b/imx8m/ucm_imx8m_mini/ucm_imx8m_mini.mk
+@@ -11,8 +11,8 @@ $(shell touch $(IMX_DEVICE_PATH)/fstab.freescale)
+ endif
+ 
+ # Overrides
+-PRODUCT_NAME := ucm-imx8m-mini
+-PRODUCT_DEVICE := ucm-imx8m-mini
++PRODUCT_NAME := ucm_imx8m_mini
++PRODUCT_DEVICE := ucm_imx8m_mini
+ 
+ PRODUCT_FULL_TREBLE_OVERRIDE := true
+ 
+diff --git a/imx8m/ucm-imx8m-mini/ucm-imx8m-mini_drm.mk b/imx8m/ucm_imx8m_mini/ucm_imx8m_mini_drm.mk
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/ucm-imx8m-mini_drm.mk
+rename to imx8m/ucm_imx8m_mini/ucm_imx8m_mini_drm.mk
+diff --git a/imx8m/ucm-imx8m-mini/ueventd.freescale.rc b/imx8m/ucm_imx8m_mini/ueventd.freescale.rc
+similarity index 100%
+rename from imx8m/ucm-imx8m-mini/ueventd.freescale.rc
+rename to imx8m/ucm_imx8m_mini/ueventd.freescale.rc
+-- 
+2.11.0
+

@@ -1,0 +1,26 @@
+From 1568f1081144d0a0bdb8c5b4c9b526c785f2f7a1 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sat, 16 Mar 2019 18:02:24 +0200
+Subject: [PATCH 25/39] ucm-imx8m-mini: dts: tmp: uart4 off
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ arch/arm64/boot/dts/compulab/ucm-imx8m-mini.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/compulab/ucm-imx8m-mini.dts b/arch/arm64/boot/dts/compulab/ucm-imx8m-mini.dts
+index a23bd0bb4a0a..cfb868a34c74 100644
+--- a/arch/arm64/boot/dts/compulab/ucm-imx8m-mini.dts
++++ b/arch/arm64/boot/dts/compulab/ucm-imx8m-mini.dts
+@@ -673,7 +673,7 @@
+ 	assigned-clock-parents = <&clk IMX8MM_SYS_PLL1_80M>;
+ 	fsl,uart-has-rtscts;
+ 	dma-names = "","tx";
+-	status = "okay";
++	status = "disabled";
+ };
+ 
+ &usdhc1 {
+-- 
+2.11.0
+

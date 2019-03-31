@@ -1,0 +1,43 @@
+From 74a3d3fce97d694be374db94c9407a9953655bb6 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Fri, 15 Mar 2019 14:11:27 +0200
+Subject: [PATCH 07/19] ucm-imx8m-mini to ucm_imx8m_mini + path #2
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ imx8m/ucm_imx8m_mini/BoardConfig.mk    | 4 ++--
+ imx8m/ucm_imx8m_mini/ucm_imx8m_mini.mk | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/imx8m/ucm_imx8m_mini/BoardConfig.mk b/imx8m/ucm_imx8m_mini/BoardConfig.mk
+index 09dc8001..e863e02c 100644
+--- a/imx8m/ucm_imx8m_mini/BoardConfig.mk
++++ b/imx8m/ucm_imx8m_mini/BoardConfig.mk
+@@ -126,9 +126,9 @@ endif
+ BOARD_PREBUILT_DTBOIMAGE := out/target/product/ucm_imx8m_mini/dtbo-imx8mm.img
+ ifeq ($(PRODUCT_IMX_TRUSTY),true)
+ TARGET_BOOTLOADER_CONFIG := imx8mm:ucm-imx8m-mini-android_trusty_defconfig
+-TARGET_BOARD_DTS_CONFIG ?= imx8mm:ucm-imx8m-mini.dtb
++TARGET_BOARD_DTS_CONFIG ?= imx8mm:../compulab/ucm-imx8m-mini.dtb
+ else
+-TARGET_BOARD_DTS_CONFIG ?= imx8mm:ucm-imx8m-mini.dtb
++TARGET_BOARD_DTS_CONFIG ?= imx8mm:../compulab/ucm-imx8m-mini.dtb
+ TARGET_BOOTLOADER_CONFIG := imx8mm:ucm-imx8m-mini-android_defconfig
+ endif
+ TARGET_KERNEL_DEFCONFIG := ucm-imx8m-mini-android_defconfig
+diff --git a/imx8m/ucm_imx8m_mini/ucm_imx8m_mini.mk b/imx8m/ucm_imx8m_mini/ucm_imx8m_mini.mk
+index c053963f..a83098f9 100644
+--- a/imx8m/ucm_imx8m_mini/ucm_imx8m_mini.mk
++++ b/imx8m/ucm_imx8m_mini/ucm_imx8m_mini.mk
+@@ -1,7 +1,7 @@
+ # This is a FSL Android Reference Design platform based on i.MX8QP ARD board
+ # It will inherit from FSL core product which in turn inherit from Google generic
+ 
+-IMX_DEVICE_PATH := device/fsl/imx8m/ucm-imx8m-mini
++IMX_DEVICE_PATH := device/fsl/imx8m/ucm_imx8m_mini
+ 
+ -include device/fsl/common/imx_path/ImxPathConfig.mk
+ $(call inherit-product, device/fsl/imx8m/ProductConfigCommon.mk)
+-- 
+2.11.0
+

@@ -1,0 +1,109 @@
+From fb849989f58f78570fe3800b6356d64e8bbf0bf6 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Fri, 15 Mar 2019 13:15:45 +0200
+Subject: [PATCH 02/19] ucm-imx8m-mini: Add common uuu
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ .../tools/uuu/uuu-android-ucm-imx8m-mini-emmc.lst  | 42 ++++++++++++++++++++++
+ common/tools/uuu/uuu-android-ucm-imx8m-mini-sd.lst | 39 ++++++++++++++++++++
+ 2 files changed, 81 insertions(+)
+ create mode 100755 common/tools/uuu/uuu-android-ucm-imx8m-mini-emmc.lst
+ create mode 100755 common/tools/uuu/uuu-android-ucm-imx8m-mini-sd.lst
+
+diff --git a/common/tools/uuu/uuu-android-ucm-imx8m-mini-emmc.lst b/common/tools/uuu/uuu-android-ucm-imx8m-mini-emmc.lst
+new file mode 100755
+index 00000000..ae42cdd0
+--- /dev/null
++++ b/common/tools/uuu/uuu-android-ucm-imx8m-mini-emmc.lst
+@@ -0,0 +1,42 @@
++uuu_version 1.1.81
++
++# uuu scripts for imx8mm Android maddev_pi9.0 eMMC
++
++SDP: boot -f u-boot-ucm-imx8m-mini-uuu.imx
++# This command will be run when use SPL
++SDPU: delay 1000
++SDPU: write -f u-boot-ucm-imx8m-mini-uuu.imx -offset 0x57c00
++SDPU: jump
++# This command will be run when ROM support stream mode
++# SDPS: boot -f u-boot-imx8mm.imx
++
++FB: ucmd setenv fastboot_dev mmc
++FB: ucmd setenv mmcdev 1
++FB: ucmd mmc dev 1
++FB[-t 600000]: flash gpt partition-table.img
++FB: flash bootloader0 u-boot-imx8mm.imx
++
++# erase environment variables of uboot
++FB: ucmd mmc dev 1 0
++FB: ucmd mmc erase 0x2000 8
++
++FB: ucmd mmc partconf 1 0 1 0
++
++FB: flash boot_a boot.img
++FB: flash boot_b boot.img
++FB[-t 100000]: flash system_a system.img
++FB[-t 100000]: flash system_b system.img
++FB: flash vbmeta_a vbmeta-imx8mm.img
++FB: flash vbmeta_b vbmeta-imx8mm.img
++FB: flash vendor_a vendor.img
++FB: flash vendor_b vendor.img
++FB: flash dtbo_a dtbo-imx8mm.img
++FB: flash dtbo_b dtbo-imx8mm.img
++
++# erase userdata and misc partition
++FB[-t 600000]: ERASE userdata
++FB: ERASE misc
++FB[-t 100000]: ERASE presistdata
++FB[-t 100000]: ERASE fbmisc
++
++FB: done
+diff --git a/common/tools/uuu/uuu-android-ucm-imx8m-mini-sd.lst b/common/tools/uuu/uuu-android-ucm-imx8m-mini-sd.lst
+new file mode 100755
+index 00000000..750e2d92
+--- /dev/null
++++ b/common/tools/uuu/uuu-android-ucm-imx8m-mini-sd.lst
+@@ -0,0 +1,39 @@
++uuu_version 1.1.81
++
++# uuu scripts for imx8mm Android maddev_pi9.0 sd card
++
++SDP: boot -f u-boot-ucm-imx8m-mini-uuu.imx
++# This command will be run when use SPL
++SDPU: delay 1000
++SDPU: write -f u-boot-ucm-imx8m-mini-uuu.imx -offset 0x57c00
++SDPU: jump
++# This command will be run when ROM support stream mode
++SDPS: boot -f u-boot-imx8mm.imx
++
++FB: ucmd setenv fastboot_dev mmc
++FB: ucmd setenv mmcdev 0
++FB: ucmd mmc dev 0
++FB[-t 600000]: flash gpt partition-table.img
++FB: flash bootloader0 u-boot-imx8mm.imx
++
++# erase environment variables of uboot
++FB: ucmd mmc erase 0x2000 8
++
++FB: flash boot_a boot.img
++FB: flash boot_b boot.img
++FB[-t 100000]: flash system_a system.img
++FB[-t 100000]: flash system_b system.img
++FB: flash vbmeta_a vbmeta-imx8mm.img
++FB: flash vbmeta_b vbmeta-imx8mm.img
++FB: flash vendor_a vendor.img
++FB: flash vendor_b vendor.img
++FB: flash dtbo_a dtbo-imx8mm.img
++FB: flash dtbo_b dtbo-imx8mm.img
++
++# erase userdata and misc partition
++FB[-t 600000]: ERASE userdata
++FB: ERASE misc
++FB[-t 100000]: ERASE presistdata
++FB[-t 100000]: ERASE fbmisc
++
++FB: done
+-- 
+2.11.0
+

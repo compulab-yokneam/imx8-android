@@ -1,0 +1,27 @@
+From a7df397acdfbfe641316e2411b065a1fb6ee0bf3 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Fri, 22 Mar 2019 22:15:35 +0200
+Subject: [PATCH 17/19] cl-som-imx8: AndroidUboot.mk: copy cl-som-imx8.dtb as
+ fsl-imx8mq-evk.dtb
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ imx8m/cl_som_imx8/AndroidUboot.mk | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/imx8m/cl_som_imx8/AndroidUboot.mk b/imx8m/cl_som_imx8/AndroidUboot.mk
+index 8cb7a1bd..bd25806f 100644
+--- a/imx8m/cl_som_imx8/AndroidUboot.mk
++++ b/imx8m/cl_som_imx8/AndroidUboot.mk
+@@ -8,7 +8,7 @@ define build_imx_uboot
+ 	cp $(UBOOT_OUT)/u-boot-nodtb.$(strip $(1)) $(IMX_MKIMAGE_PATH)/imx-mkimage/iMX8M/.; \
+ 	cp $(UBOOT_OUT)/spl/u-boot-spl.bin  $(IMX_MKIMAGE_PATH)/imx-mkimage/iMX8M/.; \
+ 	cp $(UBOOT_OUT)/tools/mkimage  $(IMX_MKIMAGE_PATH)/imx-mkimage/iMX8M/mkimage_uboot; \
+-	cp $(UBOOT_OUT)/arch/arm/dts/cl-som-imx8.dtb  $(IMX_MKIMAGE_PATH)/imx-mkimage/iMX8M/.; \
++	cp $(UBOOT_OUT)/arch/arm/dts/cl-som-imx8.dtb  $(IMX_MKIMAGE_PATH)/imx-mkimage/iMX8M/fsl-imx8mq-evk.dtb; \
+ 	cp $(FSL_PROPRIETARY_PATH)/fsl-proprietary/uboot-firmware/imx8m/signed_hdmi_imx8m.bin  $(IMX_MKIMAGE_PATH)/imx-mkimage/iMX8M/.; \
+ 	cp $(FSL_PROPRIETARY_PATH)/fsl-proprietary/uboot-firmware/imx8m/lpddr4_pmu_train_1d_dmem.bin $(IMX_MKIMAGE_PATH)/imx-mkimage/iMX8M/.; \
+ 	cp $(FSL_PROPRIETARY_PATH)/fsl-proprietary/uboot-firmware/imx8m/lpddr4_pmu_train_1d_imem.bin $(IMX_MKIMAGE_PATH)/imx-mkimage/iMX8M/.; \
+-- 
+2.11.0
+

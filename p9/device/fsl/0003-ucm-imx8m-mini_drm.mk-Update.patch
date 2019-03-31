@@ -1,0 +1,26 @@
+From 3eae3c8db5e8d001e05adb83a9d541b647a20043 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Fri, 15 Mar 2019 13:27:07 +0200
+Subject: [PATCH 03/19] ucm-imx8m-mini_drm.mk: Update
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ imx8m/ucm-imx8m-mini/ucm-imx8m-mini_drm.mk | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/imx8m/ucm-imx8m-mini/ucm-imx8m-mini_drm.mk b/imx8m/ucm-imx8m-mini/ucm-imx8m-mini_drm.mk
+index 6e89ff2a..2befe527 100644
+--- a/imx8m/ucm-imx8m-mini/ucm-imx8m-mini_drm.mk
++++ b/imx8m/ucm-imx8m-mini/ucm-imx8m-mini_drm.mk
+@@ -15,7 +15,7 @@ PRODUCT_COPY_FILES += \
+ $(call inherit-product, $(TOPDIR)device/fsl/imx8m/optee-packages.mk)
+ $(call inherit-product, $(TOPDIR)$(IMX_DEVICE_PATH)/ucm-imx8m-mini.mk)
+ 
+-TARGET_KERNEL_DEFCONFIG := android_defconfig
++TARGET_KERNEL_DEFCONFIG := ucm-imx8m-mini-android_defconfig
+ 
+ 
+ # Overrides
+-- 
+2.11.0
+

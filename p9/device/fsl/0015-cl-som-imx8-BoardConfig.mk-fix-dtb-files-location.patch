@@ -1,0 +1,28 @@
+From 2fc8804aa9aaa106dba793294376cfa79e4275fb Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Fri, 22 Mar 2019 20:54:51 +0200
+Subject: [PATCH 15/19] cl-som-imx8: BoardConfig.mk fix dtb files location
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ imx8m/cl_som_imx8/BoardConfig.mk | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/imx8m/cl_som_imx8/BoardConfig.mk b/imx8m/cl_som_imx8/BoardConfig.mk
+index a5ca275c..c6a1d60e 100644
+--- a/imx8m/cl_som_imx8/BoardConfig.mk
++++ b/imx8m/cl_som_imx8/BoardConfig.mk
+@@ -122,7 +122,9 @@ endif
+ endif
+ 
+ BOARD_PREBUILT_DTBOIMAGE := out/target/product/cl_som_imx8/dtbo-imx8mq.img
+-TARGET_BOARD_DTS_CONFIG ?= imx8mq:compulab/sbc-imx8.dtb imx8mq:compulab/sbc-imx8-lvds-lcdif.dtb imx8mq:compulab/sbc-imx8-bluetooth.dtb
++TARGET_BOARD_DTS_CONFIG := imx8mq:../compulab/sbc-imx8.dtb
++TARGET_BOARD_DTS_CONFIG += imx8mq:../compulab/sbc-imx8-lvds-lcdif.dtb
++TARGET_BOARD_DTS_CONFIG += imx8mq:../compulab/sbc-imx8-bluetooth.dtb
+ TARGET_BOOTLOADER_CONFIG := cl-som-imx8:cl-som-imx8_android_defconfig
+ 
+ TARGET_KERNEL_DEFCONFIG := cl-som-imx8_android_defconfig
+-- 
+2.11.0
+

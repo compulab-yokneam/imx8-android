@@ -1,0 +1,47 @@
+From 69c70c4cde58e1623e9b0a9173012c031d46da13 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Fri, 22 Mar 2019 22:13:35 +0200
+Subject: [PATCH 16/19] cl-som-imx8: BoardConfig.mk Fix U-Boot config
+ declaration
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ imx8m/cl_som_imx8/BoardConfig.mk | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/imx8m/cl_som_imx8/BoardConfig.mk b/imx8m/cl_som_imx8/BoardConfig.mk
+index c6a1d60e..c5fa8e25 100644
+--- a/imx8m/cl_som_imx8/BoardConfig.mk
++++ b/imx8m/cl_som_imx8/BoardConfig.mk
+@@ -70,9 +70,9 @@ BOARD_WPA_SUPPLICANT_PRIVATE_LIB        := lib_driver_cmd_$(BOARD_WLAN_DEVICE)
+ WIFI_HIDL_FEATURE_DUAL_INTERFACE := true
+ 
+ BOARD_VENDOR_KERNEL_MODULES += \
+-        $(KERNEL_OUT)/kernel/drivers/net/wireless/intel/iwlwifi/mvm/iwlmvm.ko \
+-        $(KERNEL_OUT)/kernel/drivers/net/wireless/intel/iwlwifi/iwlwifi.ko \
+-        $(KERNEL_OUT)/kernel/drivers/input/touchscreen/goodix.ko
++        $(KERNEL_OUT)/drivers/net/wireless/intel/iwlwifi/mvm/iwlmvm.ko \
++        $(KERNEL_OUT)/drivers/net/wireless/intel/iwlwifi/iwlwifi.ko \
++        $(KERNEL_OUT)/drivers/input/touchscreen/goodix.ko
+ 
+ BOARD_USE_SENSOR_FUSION := true
+ 
+@@ -125,13 +125,13 @@ BOARD_PREBUILT_DTBOIMAGE := out/target/product/cl_som_imx8/dtbo-imx8mq.img
+ TARGET_BOARD_DTS_CONFIG := imx8mq:../compulab/sbc-imx8.dtb
+ TARGET_BOARD_DTS_CONFIG += imx8mq:../compulab/sbc-imx8-lvds-lcdif.dtb
+ TARGET_BOARD_DTS_CONFIG += imx8mq:../compulab/sbc-imx8-bluetooth.dtb
+-TARGET_BOOTLOADER_CONFIG := cl-som-imx8:cl-som-imx8_android_defconfig
++TARGET_BOOTLOADER_CONFIG := imx8mq:cl-som-imx8_android_defconfig
+ 
+ TARGET_KERNEL_DEFCONFIG := cl-som-imx8_android_defconfig
+ # TARGET_KERNEL_ADDITION_DEFCONF ?= android_addition_defconfig
+ 
+ # set TARGET_BOOTLOADER_CONFIG for u-boot used by uuu
+-TARGET_BOOTLOADER_CONFIG += cl-som-imx8-uuu:cl-som-imx8:cl-som-imx8_android_defconfig
++TARGET_BOOTLOADER_CONFIG += imx8mq-uuu:cl-som-imx8_android_defconfig
+ 
+ BOARD_SEPOLICY_DIRS := \
+        device/fsl/imx8m/sepolicy \
+-- 
+2.11.0
+

@@ -1,0 +1,45 @@
+From 0f3aa0a4c70cecabab584ea5f4e59b792c276ea9 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sat, 16 Mar 2019 18:14:11 +0200
+Subject: [PATCH 26/39] ucm-imx8m-mini: Enable SELinux, IPV6
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ arch/arm64/configs/ucm-imx8m-mini-android_defconfig | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/configs/ucm-imx8m-mini-android_defconfig b/arch/arm64/configs/ucm-imx8m-mini-android_defconfig
+index 619039a7d8a2..0263f154dd9b 100644
+--- a/arch/arm64/configs/ucm-imx8m-mini-android_defconfig
++++ b/arch/arm64/configs/ucm-imx8m-mini-android_defconfig
+@@ -104,7 +104,6 @@ CONFIG_IP_PNP_BOOTP=y
+ CONFIG_NET_IPVTI=y
+ CONFIG_INET_ESP=y
+ CONFIG_INET_DIAG_DESTROY=y
+-CONFIG_IPV6=m
+ CONFIG_IPV6_ROUTER_PREF=y
+ CONFIG_IPV6_ROUTE_INFO=y
+ CONFIG_IPV6_OPTIMISTIC_DAD=y
+@@ -112,7 +111,11 @@ CONFIG_INET6_AH=m
+ CONFIG_INET6_ESP=m
+ CONFIG_INET6_IPCOMP=m
+ CONFIG_IPV6_MIP6=m
++CONFIG_INET6_XFRM_MODE_TRANSPORT=m
++CONFIG_INET6_XFRM_MODE_TUNNEL=m
++CONFIG_INET6_XFRM_MODE_BEET=m
+ CONFIG_IPV6_VTI=m
++CONFIG_IPV6_SIT=m
+ CONFIG_IPV6_MULTIPLE_TABLES=y
+ CONFIG_NETFILTER=y
+ CONFIG_NF_CONNTRACK=y
+@@ -718,7 +721,6 @@ CONFIG_SECURITY=y
+ CONFIG_SECURITY_NETWORK=y
+ CONFIG_HARDENED_USERCOPY=y
+ CONFIG_SECURITY_SELINUX=y
+-CONFIG_DEFAULT_SECURITY_DAC=y
+ CONFIG_CRYPTO_TEST=m
+ CONFIG_CRYPTO_CHACHA20POLY1305=y
+ CONFIG_CRYPTO_LRW=y
+-- 
+2.11.0
+

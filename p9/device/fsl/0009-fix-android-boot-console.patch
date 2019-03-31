@@ -1,0 +1,26 @@
+From 6557688cacb88c9851c545b266aa80545645a623 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sat, 16 Mar 2019 13:50:48 +0200
+Subject: [PATCH 09/19] fix android boot console
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ imx8m/ucm_imx8m_mini/BoardConfig.mk | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/imx8m/ucm_imx8m_mini/BoardConfig.mk b/imx8m/ucm_imx8m_mini/BoardConfig.mk
+index e2e7d0a6..d8c99ed2 100644
+--- a/imx8m/ucm_imx8m_mini/BoardConfig.mk
++++ b/imx8m/ucm_imx8m_mini/BoardConfig.mk
+@@ -118,7 +118,7 @@ CMASIZE=800M
+ endif
+ 
+ KERNEL_NAME := Image
+-BOARD_KERNEL_CMDLINE := init=/init androidboot.console=ttymxc1 androidboot.hardware=freescale cma=$(CMASIZE) androidboot.primary_display=imx-drm firmware_class.path=/vendor/firmware transparent_hugepage=never
++BOARD_KERNEL_CMDLINE := init=/init androidboot.console=ttymxc2 androidboot.hardware=freescale cma=$(CMASIZE) androidboot.primary_display=imx-drm firmware_class.path=/vendor/firmware transparent_hugepage=never
+ 
+ ifeq ($(TARGET_USERIMAGES_USE_UBIFS),true)
+ ifeq ($(TARGET_USERIMAGES_USE_EXT4),true)
+-- 
+2.11.0
+

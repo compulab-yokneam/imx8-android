@@ -1,0 +1,21 @@
+From f8d1d3552650c6bca5c78ca4825102e33542beab Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sun, 24 Mar 2019 17:14:12 +0200
+Subject: [PATCH 19/19] cl-som-imx8: eraly.init.cfg: Load Intel wifi drivers
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ imx8m/cl_som_imx8/early.init.cfg | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/imx8m/cl_som_imx8/early.init.cfg b/imx8m/cl_som_imx8/early.init.cfg
+index a98bd4fc..097ed40f 100644
+--- a/imx8m/cl_som_imx8/early.init.cfg
++++ b/imx8m/cl_som_imx8/early.init.cfg
+@@ -1 +1,2 @@
+-insmod vendor/lib/modules/wlan.ko
++insmod vendor/lib/modules/iwlwifi.ko
++insmod vendor/lib/modules/iwlmvm.ko
+-- 
+2.11.0
+

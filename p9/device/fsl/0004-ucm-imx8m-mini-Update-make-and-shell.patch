@@ -1,0 +1,36 @@
+From 8bfb9feb404e303249425c4ee8a10abe8a6ede90 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Fri, 15 Mar 2019 13:27:42 +0200
+Subject: [PATCH 04/19] ucm-imx8m-mini: Update make and shell
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ imx8m/AndroidProducts.mk | 4 ++--
+ imx8m/vendorsetup.sh     | 2 ++
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/imx8m/AndroidProducts.mk b/imx8m/AndroidProducts.mk
+index eab2b9d3..3bcb49a4 100644
+--- a/imx8m/AndroidProducts.mk
++++ b/imx8m/AndroidProducts.mk
+@@ -31,5 +31,5 @@ PRODUCT_MAKEFILES := \
+   $(LOCAL_DIR)/evk_8mq/evk_8mq_drm.mk \
+   $(LOCAL_DIR)/evk_8mm/evk_8mm.mk \
+   $(LOCAL_DIR)/evk_8mm/evk_8mm_drm.mk \
+-  $(LOCAL_DIR)/aiy_8mq/aiy_8mq.mk
+-
++  $(LOCAL_DIR)/aiy_8mq/aiy_8mq.mk \
++  $(LOCAL_DIR)/ucm-imx8m-mini/ucm-imx8m-mini.mk
+diff --git a/imx8m/vendorsetup.sh b/imx8m/vendorsetup.sh
+index d43c920f..67c56bab 100644
+--- a/imx8m/vendorsetup.sh
++++ b/imx8m/vendorsetup.sh
+@@ -8,3 +8,5 @@ add_lunch_combo evk_8mm_drm-eng
+ add_lunch_combo evk_8mm_drm-userdebug
+ add_lunch_combo aiy_8mq-eng
+ add_lunch_combo aiy_8mq-userdebug
++add_lunch_combo ucm-imx8m-mini-eng
++add_lunch_combo ucm-imx8m-mini-userdebug
+-- 
+2.11.0
+
