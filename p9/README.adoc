@@ -52,10 +52,10 @@ git -C ${A}/device/fsl am ${C}/device/fsl/*.patch
 Set a desire machine configuration:
 
 * `cl-som-imx8`
-** `export MACHINE=cl_som_imx8`
+** `export MACHINE=cl_som_imx8; export SOC=imx8mq`
 
 * `ucm-imx8m-mini`
-** `export MACHINE=ucm_imx8m_mini`
+** `export MACHINE=ucm_imx8m_mini; export SOC=imx8mm`
 
 IMPORTANT: Underscore in the `MACHINE` name is not a typo.
 
@@ -72,13 +72,11 @@ When the make command is complete, the build-log.txt file contains the execution
 
 * Issue these commands:
 
-NOTE: #1 This sample is for an 8G-card.
-
-NOTE: #2 -f parameter is for imx-boot image location. imx8mq & imx8mm have the same position that is why the -f parameter can be either of them.
+NOTE: This sample is for an 8G-card.
 
 [source,console]
 cd ${A}/out/target/product/${MACHINE}
-sudo ./fsl-sdcard-partition.sh -c 7 -f imx8mm /dev/sdX
+sudo ./fsl-sdcard-partition.sh -c 7 -f ${SOC} /dev/sdX
 
 # Boot from the SD-card
 
