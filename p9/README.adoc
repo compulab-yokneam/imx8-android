@@ -78,7 +78,7 @@ NOTE: #2 -f parameter is for imx-boot image location. imx8mq & imx8mm have the s
 
 [source,console]
 cd ${A}/out/target/product/${MACHINE}
-sudo ./fsl-sdcard-partition.sh -c 7 -f imx8mq /dev/sdX
+sudo ./fsl-sdcard-partition.sh -c 7 -f imx8mm /dev/sdX
 
 # Boot from the SD-card
 
