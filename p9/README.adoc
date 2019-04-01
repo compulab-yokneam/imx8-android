@@ -35,17 +35,17 @@ export C=~/compulab-imx8/p9
 # Apply the patches:
 * U-boot
 [source,console]
-git -C ${A}/vendor/nxp-opensource/uboot-imx checkout -b compulab-imx8 4a8d27cbb3eaf7f90fd4f6c98013f549a4adadae
+git -C ${A}/vendor/nxp-opensource/uboot-imx checkout -b compulab-imx8 p9.0.0_1.0.0-ga
 git -C ${A}/vendor/nxp-opensource/uboot-imx am ${C}/vendor/nxp-opensource/uboot-imx/*.patch
 
 * Kernel
 [source,console]
-git -C ${A}/vendor/nxp-opensource/kernel_imx checkout -b compulab-imx8 4a75c31bbfddc60f62d0cbc00e463a19552454ca
+git -C ${A}/vendor/nxp-opensource/kernel_imx checkout -b compulab-imx8 p9.0.0_1.0.0-ga
 git -C ${A}/vendor/nxp-opensource/kernel_imx am ${C}/vendor/nxp-opensource/kernel_imx/*.patch
 
 * Board
 [source,console]
-git -C ${A}/device/fsl checkout -b compulab-imx8 0ff2d73ccb484f946580270bfbbc0f61ab902832
+git -C ${A}/device/fsl checkout -b compulab-imx8 p9.0.0_1.0.0-ga
 git -C ${A}/device/fsl am ${C}/device/fsl/*.patch
 
 # Create the image
