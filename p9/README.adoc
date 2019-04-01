@@ -13,7 +13,7 @@ https://www.nxp.com/webapp/sps/download/license.jsp?colCode=P9.0.0_1.0.0_GA_ANDR
 
 * Untar it this way:
 [source,console]
-tar -C ~/ xf /path/to/imx-p9.0.0_1.0.0-ga.tar.gz
+tar -C ~/ -xf /path/to/imx-p9.0.0_1.0.0-ga.tar.gz
 
 * Download and Setup Source:
 [source,console]
@@ -57,7 +57,7 @@ Set a desire machine configuration:
 * `ucm-imx8m-mini`
 ** `export MACHINE=ucm_imx8m_mini`
 
-IMPORTANT: Underscore in the `MACHINE` name is not a typo mistake.
+IMPORTANT: Underscore in the `MACHINE` name is not a typo.
 
 * Goto Android buid directory and issue:
 [source,console]
@@ -70,7 +70,7 @@ When the make command is complete, the build-log.txt file contains the execution
 
 # Create a bootable SD-card
 
-* Issue these command:
+* Issue these commands:
 
 NOTE: #1 This sample is for an 8G-card.
 
