@@ -52,10 +52,10 @@ git -C ${A}/device/fsl am ${C}/device/fsl/*.patch
 Set a desire machine configuration:
 
 * `cl-som-imx8`
-** `export MACHINE=cl_som_imx8; export SOC=imx8mq`
+** `export MACHINE=cl_som_imx8 SOC=imx8mq`
 
 * `ucm-imx8m-mini`
-** `export MACHINE=ucm_imx8m_mini; export SOC=imx8mm`
+** `export MACHINE=ucm_imx8m_mini SOC=imx8mm`
 
 IMPORTANT: Underscore in the `MACHINE` name is not a typo.
 
