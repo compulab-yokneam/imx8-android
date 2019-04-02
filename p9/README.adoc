@@ -8,7 +8,7 @@ chmod a+x ~/bin/repo
 export PATH=${PATH}:~/bin
 
 # NXP Sources
-* Download the nxp Android sources from this location:
+* Download the NXP Android sources from this location:
 https://www.nxp.com/webapp/sps/download/license.jsp?colCode=P9.0.0_1.0.0_GA_ANDROID_SOURCE&appType=file2&DOWNLOAD_ID=null&lang_cd=en[imx-p9.0.0_1.0.0-ga.tar.gz]
 
 * Untar it this way:
