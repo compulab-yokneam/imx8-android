@@ -1,4 +1,4 @@
-# CompuLab iMX8 Andoid
+# CompuLab Android for iMX8M and iMX8M-Mini
 
 ## https://github.com/compulab-yokneam/imx8/tree/master/o8[Oreo 8]
 Supported  machines:
