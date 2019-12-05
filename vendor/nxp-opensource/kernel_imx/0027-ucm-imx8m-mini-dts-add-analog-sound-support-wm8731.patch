@@ -1,0 +1,112 @@
+From 216a5234cc060923d8cc0282995d11dfa5d108e6 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Mon, 18 Mar 2019 14:57:26 +0200
+Subject: [PATCH 27/31] ucm-imx8m-mini: dts: add analog sound support wm8731
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ arch/arm64/boot/dts/compulab/ucm-imx8m-mini.dts | 67 +++++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/compulab/ucm-imx8m-mini.dts b/arch/arm64/boot/dts/compulab/ucm-imx8m-mini.dts
+index 11c8f4578f36..f74f2298732a 100644
+--- a/arch/arm64/boot/dts/compulab/ucm-imx8m-mini.dts
++++ b/arch/arm64/boot/dts/compulab/ucm-imx8m-mini.dts
+@@ -140,6 +140,43 @@
+ 		enable-active-high;
+ 		vin-supply = <&regulator_bt_reg_on>;
+ 	};
++
++	simple_sound: sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,name = "ucm-imx8m-mini";
++		simple-audio-card,widgets =
++			"Headphone", "Headphone Jack",
++			"Line", "Line Out",
++			"Microphone", "Mic Jack",
++			"Line", "Line In";
++		simple-audio-card,routing =
++			"Headphone Jack", "RHPOUT",
++			"Headphone Jack", "LHPOUT",
++			"MICIN", "Mic Bias",
++			"Mic Bias", "Mic Jack";
++		simple-audio-card,format = "i2s";
++		simple-audio-card,bitclock-master = <&sound_master>;
++		simple-audio-card,frame-master = <&sound_master>;
++		simple-audio-card,bitclock-inversion;
++
++		sound_master: simple-audio-card,cpu {
++			sound-dai = <&sai2>;
++			system-clock-frequency = <0>;
++			system-clock-direction = "out";
++		};
++
++		sound_codec: simple-audio-card,codec {
++			sound-dai = <&wm8731>;
++			system-clock-direction = "in";
++			system-clock-type = "mclk";
++		};
++
++	};
++};
++
++&clk {
++	assigned-clocks = <&clk IMX8MM_AUDIO_PLL1>, <&clk IMX8MM_AUDIO_PLL2>;
++	assigned-clock-rates = <786432000>, <722534400>;
+ };
+ 
+ &iomuxc {
+@@ -391,6 +428,18 @@
+ 				MX8MM_IOMUXC_GPIO1_IO14_CCMSRCGPCMIX_CLKO1	0x59
+ 			>;
+ 		};
++
++		pinctrl_sai2: sai2grp {
++			fsl,pins = <
++				MX8MM_IOMUXC_SAI2_MCLK_SAI2_MCLK        0xd6
++				MX8MM_IOMUXC_SAI2_TXFS_SAI2_TX_SYNC     0xd6
++				MX8MM_IOMUXC_SAI2_RXFS_SAI2_RX_SYNC     0xd6
++				MX8MM_IOMUXC_SAI2_TXC_SAI2_TX_BCLK      0xd6
++				MX8MM_IOMUXC_SAI2_TXD0_SAI2_TX_DATA0    0xd6
++				MX8MM_IOMUXC_SAI2_RXD0_SAI2_RX_DATA0    0xd6
++			>;
++		};
++
+ 	};
+ };
+ 
+@@ -577,6 +626,13 @@
+ 	pinctrl-0 = <&pinctrl_i2c4>;
+ 	status = "okay";
+ 
++	wm8731: wm8731@1a {
++		#sound-dai-cells = <0>;
++		compatible = "wlf,wm8731";
++		reg = <0x1a>;
++		status = "okay";
++	};
++
+ 	ov5640_mipi: ov5640_mipi@3c {
+ 		compatible = "ovti,ov5640_mipi";
+ 		reg = <0x3c>;
+@@ -778,6 +834,17 @@
+ 	status = "okay";
+ };
+ 
++&sai2 {
++	#sound-dai-cells = <0>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_sai2>;
++	assigned-clocks = <&clk IMX8MM_CLK_SAI2_SRC>,
++			<&clk IMX8MM_CLK_SAI2_DIV>;
++	assigned-clock-parents = <&clk IMX8MM_AUDIO_PLL1_OUT>;
++	assigned-clock-rates = <0>, <12288000>;
++	status = "okay";
++};
++
+ &lcdif {
+ 	status = "okay";
+ };
+-- 
+2.11.0
+

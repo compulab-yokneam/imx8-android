@@ -1,0 +1,26 @@
+From c6ec0435bb195b86d2e7605ece2d291f2313d304 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sat, 18 May 2019 19:02:21 +0300
+Subject: [PATCH 30/31] ucm-imx8m-mini: android: defconfig: Enable
+ CONFIG_FRAMEBUFFER_CONSOLE_ROTATION
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ arch/arm64/configs/ucm-imx8m-mini-android_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/configs/ucm-imx8m-mini-android_defconfig b/arch/arm64/configs/ucm-imx8m-mini-android_defconfig
+index 91333b637c7b..d795618f5089 100644
+--- a/arch/arm64/configs/ucm-imx8m-mini-android_defconfig
++++ b/arch/arm64/configs/ucm-imx8m-mini-android_defconfig
+@@ -466,6 +466,7 @@ CONFIG_BACKLIGHT_GENERIC=m
+ CONFIG_BACKLIGHT_PWM=y
+ CONFIG_BACKLIGHT_LP855X=y
+ CONFIG_FRAMEBUFFER_CONSOLE=y
++CONFIG_FRAMEBUFFER_CONSOLE_ROTATION=y
+ CONFIG_LOGO=y
+ CONFIG_SOUND=y
+ CONFIG_SND=y
+-- 
+2.11.0
+

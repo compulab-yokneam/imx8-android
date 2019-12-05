@@ -1,0 +1,215 @@
+From 284fcebaabb46b81c6d0d869bde9ca854d093559 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Thu, 5 Dec 2019 15:23:17 +0200
+Subject: [PATCH 2/3] ucm-imx8m-mini: Add bluetoth support
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ imx8m/ucm_imx8m_mini/BoardConfig.mk              |  7 +++++-
+ imx8m/ucm_imx8m_mini/bluetooth/bdroid_buildcfg.h | 21 +++++++++++-------
+ imx8m/ucm_imx8m_mini/bluetooth/bt_vendor.conf    |  6 +++++
+ imx8m/ucm_imx8m_mini/bluetooth/vnd_config.txt    | 11 ++++++++++
+ imx8m/ucm_imx8m_mini/bt_start                    |  7 ++++++
+ imx8m/ucm_imx8m_mini/init.rc                     |  8 +++++++
+ imx8m/ucm_imx8m_mini/sepolicy/bt_start.te        | 28 ++++++++++++++++++++++++
+ imx8m/ucm_imx8m_mini/sepolicy/file_contexts      |  3 +++
+ imx8m/ucm_imx8m_mini/ueventd.freescale.rc        |  2 +-
+ 9 files changed, 83 insertions(+), 10 deletions(-)
+ create mode 100644 imx8m/ucm_imx8m_mini/bluetooth/bt_vendor.conf
+ create mode 100644 imx8m/ucm_imx8m_mini/bluetooth/vnd_config.txt
+ create mode 100755 imx8m/ucm_imx8m_mini/bt_start
+ create mode 100644 imx8m/ucm_imx8m_mini/sepolicy/bt_start.te
+
+diff --git a/imx8m/ucm_imx8m_mini/BoardConfig.mk b/imx8m/ucm_imx8m_mini/BoardConfig.mk
+index 3d45ddfc..bec62001 100644
+--- a/imx8m/ucm_imx8m_mini/BoardConfig.mk
++++ b/imx8m/ucm_imx8m_mini/BoardConfig.mk
+@@ -50,7 +50,7 @@ DEVICE_MATRIX_FILE := $(IMX_DEVICE_PATH)/compatibility_matrix.xml
+ 
+ TARGET_BOOTLOADER_BOARD_NAME := UCM-iMX8M-MINI
+ 
+-PRODUCT_MODEL := UCM-iMX8M-MINI
++PRODUCT_MODEL := ucm_imx8m_mini
+ 
+ TARGET_BOOTLOADER_POSTFIX := bin
+ 
+@@ -89,10 +89,15 @@ TARGET_SELECT_KEY := 28
+ # we don't support sparse image.
+ TARGET_USERIMAGES_SPARSE_EXT_DISABLED := false
+ 
++# Broadcom SLR
+ BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(IMX_DEVICE_PATH)/bluetooth
++BOARD_CUSTOM_BT_CONFIG := $(BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR)/vnd_config.txt
+ BOARD_HAVE_BLUETOOTH_BLUEZ := false
+ 
+ BOARD_HAVE_BLUETOOTH_BCM := true
++PRODUCT_COPY_FILES += \
++       $(IMX_DEVICE_PATH)/bluetooth/bt_vendor.conf:system/etc/bluetooth/bt_vendor.conf \
++       $(IMX_DEVICE_PATH)/bt_start:vendor/bin/bt_start
+ 
+ UBOOT_POST_PROCESS := true
+ 
+diff --git a/imx8m/ucm_imx8m_mini/bluetooth/bdroid_buildcfg.h b/imx8m/ucm_imx8m_mini/bluetooth/bdroid_buildcfg.h
+index 606e9abb..9b6f6ba0 100644
+--- a/imx8m/ucm_imx8m_mini/bluetooth/bdroid_buildcfg.h
++++ b/imx8m/ucm_imx8m_mini/bluetooth/bdroid_buildcfg.h
+@@ -16,19 +16,24 @@
+ 
+ /* Copyright (C) 2015-2016 Freescale Semiconductor, Inc. */
+ /* Copyright 2017-2018 NXP */
++/* Copyright (C) 2019 CompuLab Ltd */
+ 
+ #ifndef _BDROID_BUILDCFG_H
+ #define _BDROID_BUILDCFG_H
+ 
+-#define BTM_DEF_LOCAL_NAME "iMX8"
++#define BTM_DEF_LOCAL_NAME "UCM-iMX8M-MINI"
+ 
+-// Disables Interleave scan
+-#define BTA_HOST_INTERLEAVE_SEARCH  FALSE
+-// skips conn update at conn completion
+-#define BTA_BLE_SKIP_CONN_UPD  TRUE
+-// Disables read remote device feature
+-#define BTA_SKIP_BLE_READ_REMOTE_FEAT TRUE
++#define KERNEL_MISSING_CLOCK_BOOTTIME_ALARM TRUE
+ 
+-//Enable A2DPSink AVRCPController
++/* Wide-band speech support */
++#define BTM_WBS_INCLUDED TRUE
++#define BTIF_HF_WBS_PREFERRED TRUE
++
++/*Enable A2dp Sink */
+ #define BTA_AV_SINK_INCLUDED TRUE
++
++/*
++#define BLE_VND_INCLUDED TRUE
++*/
++
+ #endif
+diff --git a/imx8m/ucm_imx8m_mini/bluetooth/bt_vendor.conf b/imx8m/ucm_imx8m_mini/bluetooth/bt_vendor.conf
+new file mode 100644
+index 00000000..7e76a1d2
+--- /dev/null
++++ b/imx8m/ucm_imx8m_mini/bluetooth/bt_vendor.conf
+@@ -0,0 +1,6 @@
++# UART device port where Bluetooth controller is attached
++UartPort = /dev/ttymxc3
++
++# Firmware patch file location
++FwPatchFilePath = /vendor/firmware/brcm/
++FwPatchFileName = 4339.hcd
+diff --git a/imx8m/ucm_imx8m_mini/bluetooth/vnd_config.txt b/imx8m/ucm_imx8m_mini/bluetooth/vnd_config.txt
+new file mode 100644
+index 00000000..7919ff57
+--- /dev/null
++++ b/imx8m/ucm_imx8m_mini/bluetooth/vnd_config.txt
+@@ -0,0 +1,11 @@
++BLUETOOTH_UART_DEVICE_PORT = "/dev/ttymxc3"
++FW_PATCHFILE_LOCATION = "/vendor/firmware/brcm/4339.hcd"
++VENDOR_LIB_CONF_FILE = "/vendor/etc/bluetooth/bt_vendor.conf"
++LPM_IDLE_TIMEOUT_MULTIPLE = 5
++SCO_USE_I2S_INTERFACE = FALSE
++BTVND_DBG = FALSE
++BTHW_DBG = TRUE
++VNDUSERIAL_DBG = TRUE
++UPIO_DBG = FALSE
++LPM_SLEEP_MODE = 0
++UART_TARGET_BAUD_RATE = 3000000
+diff --git a/imx8m/ucm_imx8m_mini/bt_start b/imx8m/ucm_imx8m_mini/bt_start
+new file mode 100755
+index 00000000..af3104fb
+--- /dev/null
++++ b/imx8m/ucm_imx8m_mini/bt_start
+@@ -0,0 +1,7 @@
++#!/vendor/bin/sh
++
++# /system/bin/brcm_patchram_plus --patchram /vendor/firmware/brcm/4339.hcd --enable_hci --no2bytes --baudrate 3000000 --tosleep 1000 /dev/ttymxc3 &
++
++# setprop sys.brcm.bt.completed 1
++
++exit 0
+diff --git a/imx8m/ucm_imx8m_mini/init.rc b/imx8m/ucm_imx8m_mini/init.rc
+index c1a27ec1..bf66772b 100644
+--- a/imx8m/ucm_imx8m_mini/init.rc
++++ b/imx8m/ucm_imx8m_mini/init.rc
+@@ -8,12 +8,20 @@ on early-init
+ 
+ on early-init
+     start early_init_sh
++    start bt_start
+ 
+     # Due keymaster start very early so set prop here
+     # Also gatekeeper share same role for keymaster
+     setprop ro.hardware.keystore ${ro.boot.keystore}
+     setprop ro.hardware.gatekeeper ${ro.boot.keystore}
+ 
++service bt_start /vendor/bin/bt_start
++    class main
++    user root
++    group root system
++    disabled
++    oneshot
++
+ on init
+     start watchdogd
+ 
+diff --git a/imx8m/ucm_imx8m_mini/sepolicy/bt_start.te b/imx8m/ucm_imx8m_mini/sepolicy/bt_start.te
+new file mode 100644
+index 00000000..de6bbaf1
+--- /dev/null
++++ b/imx8m/ucm_imx8m_mini/sepolicy/bt_start.te
+@@ -0,0 +1,28 @@
++type bt_start, domain;
++permissive bt_start;
++type bt_start_exec, exec_type, vendor_file_type, file_type;
++permissive bt_start_exec;
++
++init_daemon_domain(bt_start)
++
++allow bt_start vendor_shell_exec:file rx_file_perms;
++allow bt_start vendor_toolbox_exec:file rx_file_perms;
++
++# Set the sys.brcm.wifibt.completed property
++# set_prop(bt_start, public_vendor_system_prop)
++
++# Allow insmod
++allow bt_start self:capability sys_module;
++allow bt_start system_file:system module_load;
++allow bt_start vendor_file:system module_load;
++
++# some more permissions
++# extending the rules under system/sepolicy
++allow bt_start init:unix_stream_socket connectto;
++allow bt_start property_socket:sock_file write;
++allow bt_start proc:file { getattr open read };
++allow bt_start proc_modules:file { getattr open read };
++allow bt_start self:capability net_admin;
++# allow bt_start sysfs:dir { add_name write };
++# allow bt_start sysfs:file { create getattr open read write };
++allow bt_start vendor_file:file execute_no_trans;
+diff --git a/imx8m/ucm_imx8m_mini/sepolicy/file_contexts b/imx8m/ucm_imx8m_mini/sepolicy/file_contexts
+index c1f852cc..588f5dad 100644
+--- a/imx8m/ucm_imx8m_mini/sepolicy/file_contexts
++++ b/imx8m/ucm_imx8m_mini/sepolicy/file_contexts
+@@ -33,3 +33,6 @@
+ # Wifi binary for UNITE
+ /(vendor|system/vendor)/bin/hw/bcm_hostapd          u:object_r:hal_wifi_hostapd_default_exec:s0
+ /(vendor|system/vendor)/bin/hw/bcm_wpa_supplicant   u:object_r:hal_wifi_supplicant_default_exec:s0
++
++# BT script
++/vendor/bin/bt_start u:object_r:bt_start_exec:s0
+diff --git a/imx8m/ucm_imx8m_mini/ueventd.freescale.rc b/imx8m/ucm_imx8m_mini/ueventd.freescale.rc
+index 21159605..ed523e0d 100644
+--- a/imx8m/ucm_imx8m_mini/ueventd.freescale.rc
++++ b/imx8m/ucm_imx8m_mini/ueventd.freescale.rc
+@@ -1,6 +1,6 @@
+ /dev/block/platform/30b50000\.mmc/by-name/presistdata 0600   system     system
+ /dev/block/platform/30b60000\.mmc/by-name/presistdata 0600   system     system
+-/dev/ttymxc0              0660   bluetooth  bluetooth
++/dev/ttymxc3              0660   bluetooth  bluetooth
+ /dev/snd/*                0660   system     audio
+ /dev/video*               0660   system     camera
+ /dev/mxc_hantro           0660   media      drmrpc
+-- 
+2.11.0
+

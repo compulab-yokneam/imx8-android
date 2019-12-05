@@ -1,0 +1,43 @@
+From 7933e9611e6831cc40d5e7f988eb1737dbec2c23 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Thu, 5 Dec 2019 18:41:39 +0200
+Subject: [PATCH 3/3] ucm-imx8m-mini: Update init.rc
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ imx8m/ucm_imx8m_mini/init.rc | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
+
+diff --git a/imx8m/ucm_imx8m_mini/init.rc b/imx8m/ucm_imx8m_mini/init.rc
+index bf66772b..09189743 100644
+--- a/imx8m/ucm_imx8m_mini/init.rc
++++ b/imx8m/ucm_imx8m_mini/init.rc
+@@ -8,7 +8,7 @@ on early-init
+ 
+ on early-init
+     start early_init_sh
+-    start bt_start
++    # start bt_start
+ 
+     # Due keymaster start very early so set prop here
+     # Also gatekeeper share same role for keymaster
+@@ -116,16 +116,6 @@ on early-boot
+     # Set tracefs permission to 755
+     chmod 0755 /sys/kernel/debug/tracing
+ 
+-    # Default backlight device
+-    setprop hw.backlight.dev "32e10000.mipi_dsi.0"
+-    # Chmod/chown FSL specific sys entry
+-    chown system system /sys/class/backlight/32e10000.mipi_dsi.0/brightness
+-    chmod 0660 /sys/class/backlight/32e10000.mipi_dsi.0/brightness
+-
+-    # Set light sensor sysfs path and light sensor threshold lux value
+-    setprop ro.hardware.lightsensor "/sys/class/i2c-dev/i2c-0/device/0-0044/"
+-    setprop ro.lightsensor.threshold  20
+-
+     # Dectect DSF streams when scanning media
+     setprop ro.FSL_DSF_PARSER 1
+ 
+-- 
+2.11.0
+

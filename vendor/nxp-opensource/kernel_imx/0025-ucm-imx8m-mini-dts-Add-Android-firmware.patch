@@ -1,0 +1,51 @@
+From 7ee945baaed69cad80684e4f25042da559f53120 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sat, 16 Mar 2019 18:16:51 +0200
+Subject: [PATCH 25/31] ucm-imx8m-mini: dts: Add Android firmware
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ arch/arm64/boot/dts/compulab/ucm-imx8m-mini.dts | 27 +++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/compulab/ucm-imx8m-mini.dts b/arch/arm64/boot/dts/compulab/ucm-imx8m-mini.dts
+index a23bd0bb4a0a..11c8f4578f36 100644
+--- a/arch/arm64/boot/dts/compulab/ucm-imx8m-mini.dts
++++ b/arch/arm64/boot/dts/compulab/ucm-imx8m-mini.dts
+@@ -18,6 +18,33 @@
+ #include "sb-ucm-imx8-rev2.dtsi"
+ 
+ / {
++	firmware {
++		android {
++			compatible = "android,firmware";
++			fstab {
++				compatible = "android,fstab";
++				vendor {
++					compatible = "android,vendor";
++					/* sd card node which used if androidboot.storage_type=sd */
++					dev_sd = "/dev/block/platform/30b50000.mmc/by-name/vendor";
++					/* emmc node which used if androidboot.storage_type=emmc */
++					dev_emmc = "/dev/block/platform/30b60000.mmc/by-name/vendor";
++					type = "ext4";
++					mnt_flags = "ro,barrier=1,inode_readahead_blks=8";
++					fsmgr_flags = "wait,slotselect,avb";
++				};
++			};
++			vbmeta {
++				/*we need use FirstStageMountVBootV2 if we enable avb*/
++				compatible = "android,vbmeta";
++				/*parts means the partition witch can be mount in first stage*/
++				parts = "vbmeta,boot,system,vendor";
++			};
++		};
++	};
++};
++
++/ {
+ 	model = "CompuLab UCM i.MX8MM board";
+ 	compatible = "cpl,ucm-imx8m-mini", "fsl,imx8mm";
+ 
+-- 
+2.11.0
+
