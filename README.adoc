@@ -7,12 +7,10 @@ curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
 chmod a+x ~/bin/repo
 export PATH=${PATH}:~/bin
 
-# NXP REsources
-* Dwnload the i.MX Android proprietary Source Code:
-https://www.nxp.com/webapp/sps/download/license.jsp?colCode=P9.0.0_2.1.0_AUTO_GA_SOURCE&appType=file1&DOWNLOAD_ID=null
+# NXP Resources
+* i.MX Android proprietary Source Code: https://www.nxp.com/webapp/sps/download/license.jsp?colCode=P9.0.0_2.1.0_AUTO_GA_SOURCE&appType=file1&DOWNLOAD_ID=null[imx-p9.0.0_2.1.0-auto-ga.tar.gz]
 
-* Android P9.0.0_2.1.0_Auto Documentation:
-https://www.nxp.com/docs/en/supporting-information/android_p9.0.0_2.1.0-auto-ga_docs.zip
+* Documentation: https://www.nxp.com/docs/en/supporting-information/android_p9.0.0_2.1.0-auto-ga_docs.zip[android_p9.0.0_2.1.0-auto-ga_docs.zip]
 
 * Untar it this way:
 [source,console]
@@ -33,7 +31,7 @@ Refer to the `imx-p9.0.0_2.1.0-auto-ga/README` for details.
 [source,console]
 mkdir ~/compulab-imx8
 git clone https://github.com/compulab-yokneam/imx8.git ~/compulab-imx8
-export C=~/compulab-imx8/p9
+export C=~/compulab-imx8
 
 # Apply the patches:
 * U-boot
