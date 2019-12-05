@@ -1,0 +1,97 @@
+# CompuLab Android Pie 9
+
+* Set up the Android `repo` utility
+[source,console]
+mkdir ~/bin
+curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+chmod a+x ~/bin/repo
+export PATH=${PATH}:~/bin
+
+# NXP REsources
+* Dwnload the i.MX Android proprietary Source Code:
+https://www.nxp.com/webapp/sps/download/license.jsp?colCode=P9.0.0_2.1.0_AUTO_GA_SOURCE&appType=file1&DOWNLOAD_ID=null
+
+* Android P9.0.0_2.1.0_Auto Documentation:
+https://www.nxp.com/docs/en/supporting-information/android_p9.0.0_2.1.0-auto-ga_docs.zip
+
+* Untar it this way:
+[source,console]
+tar -C ~/ -xf /path/to/imx-p9.0.0_2.1.0-auto-ga.tar.gz
+
+* Download and Setup Source:
+[source,console]
+source ./imx-p9.0.0_2.1.0-auto-ga/imx_android_setup.sh
+export A=$(pwd)
+
+* Follow the instructions of the `~/imx-p9.0.0_2.1.0-auto-ga/README` and make sure that the build environment is ready
+
+IMPORTANT: It is up to developers to make sure that NXP procedure works and an NXP example image can be created.
+Refer to the `imx-p9.0.0_2.1.0-auto-ga/README` for details.
+
+# CompuLab Sources
+* Clone this repository
+[source,console]
+mkdir ~/compulab-imx8
+git clone https://github.com/compulab-yokneam/imx8.git ~/compulab-imx8
+export C=~/compulab-imx8/p9
+
+# Apply the patches:
+* U-boot
+[source,console]
+git -C ${A}/vendor/nxp-opensource/uboot-imx checkout -b compulab-imx8 p9.0.0_2.1.0-auto-ga
+git -C ${A}/vendor/nxp-opensource/uboot-imx am ${C}/vendor/nxp-opensource/uboot-imx/*.patch
+
+* Kernel
+[source,console]
+git -C ${A}/vendor/nxp-opensource/kernel_imx checkout -b compulab-imx8 p9.0.0_2.1.0-auto-ga
+git -C ${A}/vendor/nxp-opensource/kernel_imx am ${C}/vendor/nxp-opensource/kernel_imx/*.patch
+
+* Alsa
+[source,console]
+git -C ${A}/vendor/nxp-opensource/imx/alsa checkout -b compulab-imx8 p9.0.0_2.1.0-auto-ga
+git -C ${A}/vendor/nxp-opensource/imx/alsa am ${C}/vendor/nxp-opensource/imx/alsa/*.patch
+
+* Bluetooth
+[source,console]
+git -C ${A}/hardware/broadcon/libbt checkout -b compulab-imx8 p9.0.0_2.1.0-auto-ga
+git -C ${A}/hardware/broadcon/libbt  am ${C}/hardware/broadcon/libbt/*.patch
+
+* Board
+[source,console]
+git -C ${A}/device/fsl checkout -b compulab-imx8 p9.0.0_2.1.0-auto-ga
+git -C ${A}/device/fsl am ${C}/device/fsl/*.patch
+
+# Create the image
+Set a desire machine configuration:
+
+* `ucm-imx8m-mini`
+** `export MACHINE=ucm_imx8m_mini SOC=imx8mm`
+
+IMPORTANT: Underscore in the `MACHINE` name is not a typo.
+
+* Goto Android build directory and issue:
+[source,console]
+cd ${A}
+source build/envsetup.sh
+lunch ${MACHINE}-userdebug
+make 2>&1 | tee build-log.txt
+
+When the make command is complete, the build-log.txt file contains the execution output. Check for any errors.
+
+# Create a bootable SD-card
+
+* Issue these commands:
+
+NOTE: This sample is for an 8G-card.
+
+[source,console]
+cd ${A}/out/target/product/${MACHINE}
+sudo ./fsl-sdcard-partition.sh -c 7 -f ${SOC} /dev/sdX
+
+# Boot from the SD-card
+
+* `usm-imx8m-mini`
+** Insert a created uSD card into the uSD socket `P23`
+** Power on the board
+** Press and hold `SW6` and `SW7`
+** Release `SW6` and then `SW7`
