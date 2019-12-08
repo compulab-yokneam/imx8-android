@@ -12,16 +12,21 @@ export PATH=${PATH}:~/bin
 
 * Documentation: https://www.nxp.com/docs/en/supporting-information/android_p9.0.0_2.1.0-auto-ga_docs.zip[android_p9.0.0_2.1.0-auto-ga_docs.zip]
 
-* Untar it this way:
+* Create a bsp directory:
 [source,console]
-tar -C ~/ -xf /path/to/imx-p9.0.0_2.1.0-auto-ga.tar.gz
+mkdir -p /path/to/bsp
+export BSP=/path/to/bsp
 
-* Download and Setup Source:
+* Untar the Android source archive:
 [source,console]
-source ./imx-p9.0.0_2.1.0-auto-ga/imx_android_setup.sh
-export A=$(pwd)
+tar -C ${BSP} -xf /path/to/imx-p9.0.0_2.1.0-auto-ga.tar.gz
 
-* Follow the instructions of the `~/imx-p9.0.0_2.1.0-auto-ga/README` and make sure that the build environment is ready
+* Setup Source:
+[source,console]
+source ${BSP}/imx-p9.0.0_2.1.0-auto-ga/imx_android_setup.sh
+export A=${BSP}/android_build
+
+* Follow the instructions of the `${BSP}/imx-p9.0.0_2.1.0-auto-ga/README` and make sure that the build environment is ready
 
 IMPORTANT: It is up to developers to make sure that NXP procedure works and an NXP example image can be created.
 Refer to the `imx-p9.0.0_2.1.0-auto-ga/README` for details.
@@ -29,9 +34,9 @@ Refer to the `imx-p9.0.0_2.1.0-auto-ga/README` for details.
 # CompuLab Sources
 * Clone this repository
 [source,console]
-mkdir ~/compulab-imx8
-git clone https://github.com/compulab-yokneam/imx8.git ~/compulab-imx8
-export C=~/compulab-imx8
+mkdir ${BSP}/compulab-imx8
+git clone --single-branch --branch p9.0.0_2.1.0-auto-ga https://github.com/compulab-yokneam/imx8.git ${BSP}/compulab-imx8
+export C=${BSP}/compulab-imx8
 
 # Apply the patches:
 * U-boot
@@ -52,7 +57,7 @@ git -C ${A}/vendor/nxp-opensource/imx/alsa am ${C}/vendor/nxp-opensource/imx/als
 * Bluetooth
 [source,console]
 git -C ${A}/hardware/broadcon/libbt checkout -b compulab-imx8 p9.0.0_2.1.0-auto-ga
-git -C ${A}/hardware/broadcon/libbt  am ${C}/hardware/broadcon/libbt/*.patch
+git -C ${A}/hardware/broadcon/libbt am ${C}/hardware/broadcon/libbt/*.patch
 
 * Board
 [source,console]
