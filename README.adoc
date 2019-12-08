@@ -56,13 +56,13 @@ git -C ${A}/vendor/nxp-opensource/imx/alsa am ${C}/vendor/nxp-opensource/imx/als
 
 * Bluetooth
 [source,console]
-git -C ${A}/hardware/broadcon/libbt checkout -b compulab-imx8 p9.0.0_2.1.0-auto-ga
-git -C ${A}/hardware/broadcon/libbt am ${C}/hardware/broadcon/libbt/*.patch
+git -C ${A}/hardware/broadcom/libbt checkout -b compulab-imx8 p9.0.0_2.1.0-auto-ga
+git -C ${A}/hardware/broadcom/libbt am ${C}/hardware/broadcom/libbt/*.patch
 
 * Board
 [source,console]
 git -C ${A}/device/fsl checkout -b compulab-imx8 p9.0.0_2.1.0-auto-ga
-git -C ${A}/device/fsl am ${C}/device/fsl/*.patch
+git -C ${A}/device/fsl am ${C}/device/fsl/imx8m/*.patch
 
 # Create the image
 Set a desire machine configuration:
