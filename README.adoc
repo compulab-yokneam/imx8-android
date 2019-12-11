@@ -64,6 +64,11 @@ git -C ${A}/hardware/broadcom/libbt am ${C}/hardware/broadcom/libbt/*.patch
 git -C ${A}/device/fsl checkout -b compulab-imx8 p9.0.0_2.1.0-auto-ga
 git -C ${A}/device/fsl am ${C}/device/fsl/imx8m/*.patch
 
+* ATF
+[source,console]
+git -C ${A}/vendor/nxp-opensource/arm-trusted-firmware checkout -b compulab-imx8 p9.0.0_2.1.0-auto-ga
+git -C ${A}/vendor/nxp-opensource/arm-trusted-firmware am ${C}/vendor/nxp-opensource/imx-atf/*.patch
+
 # Create the image
 Set a desire machine configuration:
 
