@@ -83,7 +83,7 @@ https://drive.google.com/open?id=1EbyMlaP9frwNMEkIUE67O9AB4hZQBh4n[cl-som-imx8 P
 
 * Create a bootable SD-card this way:
 [source,console]
-pv /tmp/image-cl-som-imx8-7G-2020_04_20-15_01_15.xz | sudo dd of=/dev/sdX bs=1M
+xz -dc /tmp/image-cl-som-imx8-7G-2020_04_20-15_01_15.xz | pv |sudo dd of=/dev/sdX bs=1M
 
 # Boot from the SD-card
 
