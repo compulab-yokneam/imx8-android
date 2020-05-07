@@ -1,0 +1,164 @@
+From 34ec980a7c0cfdb60c747cd1fb7acc3fb117e46e Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Thu, 7 May 2020 17:39:26 +0300
+Subject: [PATCH 1/1] Add CompuLab wm8731 codec support
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ alsa/config_compulab.h | 87 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ alsa/tinyalsa_hal.c    | 10 +++---
+ 2 files changed, 93 insertions(+), 4 deletions(-)
+ create mode 100644 alsa/config_compulab.h
+
+diff --git a/alsa/config_compulab.h b/alsa/config_compulab.h
+new file mode 100644
+index 0000000..482f433
+--- /dev/null
++++ b/alsa/config_compulab.h
+@@ -0,0 +1,87 @@
++#ifndef ANDROID_INCLUDE_IMX_CONFIG_COMPULAB_H
++#define ANDROID_INCLUDE_IMX_CONFIG_COMPULAB_H
++
++#include "audio_hardware.h"
++
++#define MIXER_WM8731_MASTER_PLAYBACK_VOLUME              "Master Playback Volume"
++#define MIXER_WM8731_MASTER_PLAYBACK_ZC_SWITCH           "Master Playback ZC Switch"
++#define MIXER_WM8731_CAPTURE_VOLUME                      "Capture Volume"
++#define MIXER_WM8731_LINE_CAPTURE_SWITCH                 "Line Capture Switch"
++#define MIXER_WM8731_MIC_BOOST_VOLUME                    "Mic Boost Volume"
++#define MIXER_WM8731_MIC_CAPTURE_SWITCH                  "Mic Capture Switch"
++#define MIXER_WM8731_SIDETONE_PLAYBACK_VOLUME            "Sidetone Playback Volume"
++#define MIXER_WM8731_ADC_HIGH_PASS_FILTER_SWITCH         "ADC High Pass Filter Switch"
++#define MIXER_WM8731_STORE_DC_OFFSET_SWITCH              "Store DC Offset Switch"
++#define MIXER_WM8731_PLAYBACK_DEEMPHASIS_SWITCH          "Playback Deemphasis Switch"
++#define MIXER_WM8731_OUTPUT_MIXER_LINE_BYPASS_SWITCH     "Output Mixer Line Bypass Switch"
++#define MIXER_WM8731_OUTPUT_MIXER_MIC_SIDETONE_SWITCH    "Output Mixer Mic Sidetone Switch"
++#define MIXER_WM8731_OUTPUT_MIXER_HIFI_PLAYBACK_SWITCH   "Output Mixer HiFi Playback Switch"
++#define MIXER_WM8731_INPUT_MUX                           "Input Mux"
++
++static struct route_setting defaults_wm8731[] = {
++    /* general */
++    {
++        .ctl_name = MIXER_WM8731_OUTPUT_MIXER_HIFI_PLAYBACK_SWITCH,
++        .intval = 1,
++    },
++    {
++        .ctl_name = MIXER_WM8731_LINE_CAPTURE_SWITCH,
++        .intval = 1,
++    },
++    {
++        .ctl_name = MIXER_WM8731_CAPTURE_VOLUME,
++        .intval = 31,
++    },
++    {
++        .ctl_name = NULL,
++    },
++};
++
++static struct route_setting speaker_output_wm8731[] = {
++    {
++        .ctl_name = MIXER_WM8731_MASTER_PLAYBACK_VOLUME,
++        .intval = 121,
++    },
++    {
++        .ctl_name = NULL,
++    },
++};
++
++#define NAME "compulab-imx8mq"
++
++static struct audio_card  compulab_audio = {
++    .name = NAME,
++    .driver_name = NAME,
++    .supported_out_devices = (AUDIO_DEVICE_OUT_SPEAKER |
++            AUDIO_DEVICE_OUT_WIRED_HEADSET |
++            AUDIO_DEVICE_OUT_WIRED_HEADPHONE |
++            AUDIO_DEVICE_OUT_ALL_SCO |
++            AUDIO_DEVICE_OUT_DEFAULT ),
++    .supported_in_devices = ( AUDIO_DEVICE_IN_COMMUNICATION |
++            AUDIO_DEVICE_IN_AMBIENT |
++            AUDIO_DEVICE_IN_BUILTIN_MIC |
++            AUDIO_DEVICE_IN_WIRED_HEADSET |
++            AUDIO_DEVICE_IN_BACK_MIC |
++            AUDIO_DEVICE_IN_ALL_SCO |
++            AUDIO_DEVICE_IN_DEFAULT),
++    .defaults            = defaults_wm8731,
++    .bt_output           = NULL,
++    .speaker_output      = speaker_output_wm8731,
++    .hs_output           = NULL,
++    .earpiece_output     = NULL,
++    .vx_hs_mic_input     = NULL,
++    .mm_main_mic_input   = NULL,
++    .vx_main_mic_input   = NULL,
++    .mm_hs_mic_input     = NULL,
++    .vx_bt_mic_input     = NULL,
++    .mm_bt_mic_input     = NULL,
++    .card                = 0,
++    .out_rate            = 0,
++    .out_channels        = 0,
++    .out_format          = 0,
++    .in_rate             = 0,
++    .in_channels         = 0,
++    .in_format           = 0,
++};
++
++#endif  /* ANDROID_INCLUDE_IMX_CONFIG_COMPULAB_H */
+diff --git a/alsa/tinyalsa_hal.c b/alsa/tinyalsa_hal.c
+index 78a025e..7eca993 100755
+--- a/alsa/tinyalsa_hal.c
++++ b/alsa/tinyalsa_hal.c
+@@ -69,6 +69,7 @@
+ #include "config_xtor_pico.h"
+ #include "config_rt5645.h"
+ #include "config_micfil.h"
++#include "config_compulab.h"
+ 
+ /* ALSA ports for IMX */
+ #define PORT_MM     0
+@@ -102,7 +103,7 @@
+ /* minimum sleep time in out_write() when write threshold is not reached */
+ #define MIN_WRITE_SLEEP_US 5000
+ 
+-#define DEFAULT_OUT_SAMPLING_RATE 44100
++#define DEFAULT_OUT_SAMPLING_RATE 48000
+ 
+ /* sampling rate when using MM low power port */
+ #define MM_LOW_POWER_SAMPLING_RATE  44100
+@@ -140,6 +141,7 @@ static const char* lpa_wakelock = "lpa_audio_wakelock";
+ 
+ /*"null_card" must be in the end of this array*/
+ struct audio_card *audio_card_list[SUPPORT_CARD_NUM] = {
++    &compulab_audio,
+     &wm8958_card,
+     &wm8962_card,
+     &hdmi_card,
+@@ -4257,7 +4259,7 @@ static int scan_available_device(struct imx_audio_device *adev, bool queryInput,
+                 }
+ 
+                 if(queryOutput) {
+-                    rate = 44100;
++                    rate = DEFAULT_OUT_SAMPLING_RATE;
+                     if( pcm_get_near_param_wrap(i, 0, PCM_OUT, PCM_HW_PARAM_RATE, &rate) == 0)
+                             adev->card_list[n]->out_rate = rate;
+                     ALOGW("out rate %d",adev->card_list[n]->out_rate);
+@@ -4271,7 +4273,7 @@ static int scan_available_device(struct imx_audio_device *adev, bool queryInput,
+                 }
+ 
+                 if(queryInput) {
+-                    rate = 44100;
++                    rate = DEFAULT_OUT_SAMPLING_RATE;
+                     if( pcm_get_near_param_wrap(i, 0, PCM_IN, PCM_HW_PARAM_RATE, &rate) == 0)
+                             adev->card_list[n]->in_rate = rate;
+ 
+@@ -4370,7 +4372,7 @@ static int adev_open(const hw_module_t* module, const char* name,
+     adev->hw_device.get_microphones         = adev_get_microphones;
+ #endif
+     adev->hw_device.dump                    = adev_dump;
+-    adev->mm_rate                           = 44100;
++    adev->mm_rate                           = DEFAULT_OUT_SAMPLING_RATE;
+     adev->support_multichannel              = false;
+ 
+     ret = scan_available_device(adev, true, true);
+-- 
+2.11.0
+
