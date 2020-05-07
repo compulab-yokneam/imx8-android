@@ -1,0 +1,30 @@
+From f3964d34a6136e1f9ed80cff60cc0044d7050b49 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Thu, 7 May 2020 19:12:36 +0300
+Subject: [PATCH 20/21] cl-som-imx8: Fix serial number issue
+
+Fix serial number issue.
+Report the machine mane instead.
+To be fixed by providing a correct ro.serial.
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ imx8m/cl_som_imx8/init.usb.rc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/imx8m/cl_som_imx8/init.usb.rc b/imx8m/cl_som_imx8/init.usb.rc
+index 8d7241b1..29d26c2f 100644
+--- a/imx8m/cl_som_imx8/init.usb.rc
++++ b/imx8m/cl_som_imx8/init.usb.rc
+@@ -21,7 +21,7 @@ on early-boot
+     write /config/usb_gadget/g1/bcdUSB 0x0200
+     write /config/usb_gadget/g1/idVendor 0x18d1
+     write /config/usb_gadget/g1/bcdDevice 0x0440
+-    write /config/usb_gadget/g1/strings/0x409/serialnumber ${ro.serialno}
++    write /config/usb_gadget/g1/strings/0x409/serialnumber cl-som-imx8
+     write /config/usb_gadget/g1/strings/0x409/manufacturer ${ro.product.manufacturer}
+     write /config/usb_gadget/g1/strings/0x409/product ${ro.product.model}
+     mkdir /config/usb_gadget/g1/functions/mass_storage.0
+-- 
+2.11.0
+
