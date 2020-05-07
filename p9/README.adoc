@@ -79,11 +79,11 @@ cd ${A}/out/target/product/${MACHINE}
 sudo ./fsl-sdcard-partition.sh -c 7 -f ${SOC} /dev/sdX
 
 # Pre-Built Development Image
-https://drive.google.com/open?id=1EbyMlaP9frwNMEkIUE67O9AB4hZQBh4n[cl-som-imx8 Pie 9 Image]
+https://drive.google.com/open?id=1hMa-vMJpauycAsopfRgpKedsZCuxUwuL[cl-som-imx8 Pie 9 Image]
 
 * Create a bootable SD-card this way:
 [source,console]
-xz -dc /path/to/image-cl-som-imx8-7G-2020_04_20-15_01_15.xz | pv |sudo dd of=/dev/sdX bs=1M conv=fdatasync
+xz -dc /path/to/image-cl-som-imx8-7G-2020_05_07-19_22_46.xz | pv |sudo dd of=/dev/sdX bs=1M conv=fdatasync
 
 # Boot from the SD-card
 
