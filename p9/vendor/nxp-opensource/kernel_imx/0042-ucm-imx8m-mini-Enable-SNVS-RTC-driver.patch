@@ -1,0 +1,25 @@
+From 64b5cd4daaf19dfdf38c21745b534250a7ca89fe Mon Sep 17 00:00:00 2001
+From: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+Date: Wed, 15 Jul 2020 14:59:08 +0300
+Subject: [PATCH 42/42] ucm-imx8m-mini:Enable SNVS RTC driver
+
+Signed-off-by: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+---
+ arch/arm64/configs/ucm-imx8m-mini-android_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/configs/ucm-imx8m-mini-android_defconfig b/arch/arm64/configs/ucm-imx8m-mini-android_defconfig
+index 006ecb9a919d..715a4b571c76 100644
+--- a/arch/arm64/configs/ucm-imx8m-mini-android_defconfig
++++ b/arch/arm64/configs/ucm-imx8m-mini-android_defconfig
+@@ -624,6 +624,7 @@ CONFIG_LEDS_TRIGGER_HEARTBEAT=y
+ CONFIG_LEDS_TRIGGER_CPU=y
+ CONFIG_RTC_CLASS=y
+ CONFIG_RTC_DRV_ABX80X=y
++CONFIG_RTC_DRV_SNVS=y
+ CONFIG_DMADEVICES=y
+ CONFIG_BCM_SBA_RAID=m
+ CONFIG_FSL_EDMA_V3=y
+-- 
+2.11.0
+
