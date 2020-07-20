@@ -31,6 +31,7 @@ Refer to the `imx-p9.0.0_1.0.0-ga/README` for details.
 mkdir ~/compulab-imx8
 git clone https://github.com/compulab-yokneam/imx8.git ~/compulab-imx8
 export C=~/compulab-imx8/p9
+git -C ${C} checkout p9.0.0_1.0.0-ga-dev
 
 # Apply the patches:
 * U-boot
