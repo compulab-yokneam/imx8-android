@@ -1,0 +1,31 @@
+From f9294307477fddcb239109b057d57ed6438796ce Mon Sep 17 00:00:00 2001
+From: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+Date: Tue, 21 Jul 2020 20:44:25 +0300
+Subject: [PATCH 22/22] ucm-imx8m-mini: Fix backlight dev path
+
+Signed-off-by: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+---
+ imx8m/ucm_imx8m_mini/init.rc | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/imx8m/ucm_imx8m_mini/init.rc b/imx8m/ucm_imx8m_mini/init.rc
+index b057dfed..b7e18e5b 100644
+--- a/imx8m/ucm_imx8m_mini/init.rc
++++ b/imx8m/ucm_imx8m_mini/init.rc
+@@ -111,10 +111,10 @@ on early-boot
+     chmod 0755 /sys/kernel/debug/tracing
+ 
+     # Default backlight device
+-    setprop hw.backlight.dev "32e10000.mipi_dsi.0"
++    setprop hw.backlight.dev "backlight"
+     # Chmod/chown FSL specific sys entry
+-    chown system system /sys/class/backlight/32e10000.mipi_dsi.0/brightness
+-    chmod 0660 /sys/class/backlight/32e10000.mipi_dsi.0/brightness
++    chown system system /sys/class/backlight/backlight/brightness
++    chmod 0660 /sys/class/backlight/backlight/brightness
+ 
+     # Set light sensor sysfs path and light sensor threshold lux value
+     setprop ro.hardware.lightsensor "/sys/class/i2c-dev/i2c-0/device/0-0044/"
+-- 
+2.11.0
+
