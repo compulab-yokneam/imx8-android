@@ -64,7 +64,7 @@ IMPORTANT: Underscore in the `MACHINE` name is not a typo.
 [source,console]
 cd ${A}
 source build/envsetup.sh
-lunch ${MACHINE}-userdebug
+lunch ${MACHINE}-eng
 make 2>&1 | tee build-log.txt
 
 When the make command is complete, the build-log.txt file contains the execution output. Check for any errors.
