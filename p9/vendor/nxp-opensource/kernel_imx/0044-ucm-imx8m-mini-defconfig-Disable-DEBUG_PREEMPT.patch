@@ -1,0 +1,26 @@
+From 50dcb132ffaffa016f9d10f5cf62d3da16d010bf Mon Sep 17 00:00:00 2001
+From: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+Date: Sun, 26 Jul 2020 17:54:13 +0300
+Subject: [PATCH 44/44] ucm-imx8m-mini: defconfig: Disable DEBUG_PREEMPT
+
+Signed-off-by: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+---
+ arch/arm64/configs/ucm-imx8m-mini-android_defconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/configs/ucm-imx8m-mini-android_defconfig b/arch/arm64/configs/ucm-imx8m-mini-android_defconfig
+index 715a4b571c76..98e5f9ac5103 100644
+--- a/arch/arm64/configs/ucm-imx8m-mini-android_defconfig
++++ b/arch/arm64/configs/ucm-imx8m-mini-android_defconfig
+@@ -714,7 +714,7 @@ CONFIG_PRINTK_TIME=y
+ CONFIG_MAGIC_SYSRQ=y
+ CONFIG_PANIC_TIMEOUT=5
+ CONFIG_SCHEDSTATS=y
+-# CONFIG_DEBUG_PREEMPT is not set
++CONFIG_DEBUG_PREEMPT=n
+ CONFIG_ENABLE_DEFAULT_TRACERS=y
+ CONFIG_MEMTEST=y
+ CONFIG_SECURITY_PERF_EVENTS_RESTRICT=y
+-- 
+2.11.0
+
