@@ -1,0 +1,44 @@
+From e57c18aa890217b9fe4879bdb315326cfe1a64da Mon Sep 17 00:00:00 2001
+From: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+Date: Tue, 1 Sep 2020 16:18:03 +0300
+Subject: [PATCH 45/45] dts: Enable uart2
+
+Signed-off-by: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+---
+ arch/arm64/boot/dts/compulab/ucm-imx8m-mini.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/compulab/ucm-imx8m-mini.dts b/arch/arm64/boot/dts/compulab/ucm-imx8m-mini.dts
+index 94699a641d1c..03ece7d5f2f7 100644
+--- a/arch/arm64/boot/dts/compulab/ucm-imx8m-mini.dts
++++ b/arch/arm64/boot/dts/compulab/ucm-imx8m-mini.dts
+@@ -279,6 +279,13 @@
+ 			>;
+ 		};
+ 
++		pinctrl_uart2: uart2grp {
++			fsl,pins = <
++				MX8MM_IOMUXC_UART2_RXD_UART2_DCE_RX	0x49
++				MX8MM_IOMUXC_UART2_TXD_UART2_DCE_TX	0x49
++			>;
++		};
++
+ 		pinctrl_uart3: uart3grp {
+ 			fsl,pins = <
+ 				MX8MM_IOMUXC_UART3_RXD_UART3_DCE_RX	0x49
+@@ -773,6 +780,12 @@
+ 	status = "okay";
+ };
+ 
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	status = "okay";
++};
++
+ &uart3 { /* console */
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_uart3>;
+-- 
+2.11.0
+
