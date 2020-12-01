@@ -1,0 +1,50 @@
+From a9b5955e94e5b36bc54f17702631cc4fae1b54c8 Mon Sep 17 00:00:00 2001
+From: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+Date: Tue, 1 Dec 2020 22:58:18 +0200
+Subject: [PATCH 46/46] dts: Remove uart4
+
+Signed-off-by: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+---
+ arch/arm64/boot/dts/compulab/ucm-imx8m-mini.dts | 19 -------------------
+ 1 file changed, 19 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/compulab/ucm-imx8m-mini.dts b/arch/arm64/boot/dts/compulab/ucm-imx8m-mini.dts
+index 00e02fcc4ae6..418e4dd359dc 100644
+--- a/arch/arm64/boot/dts/compulab/ucm-imx8m-mini.dts
++++ b/arch/arm64/boot/dts/compulab/ucm-imx8m-mini.dts
+@@ -272,15 +272,6 @@
+ 			>;
+ 		};
+ 
+-		pinctrl_uart4: uart4grp {
+-			fsl,pins = <
+-				MX8MM_IOMUXC_ECSPI2_MISO_UART4_DCE_CTS_B 0x49
+-				MX8MM_IOMUXC_ECSPI2_MOSI_UART4_DCE_TX    0x49
+-				MX8MM_IOMUXC_ECSPI2_SS0_UART4_DCE_RTS_B  0x49
+-				MX8MM_IOMUXC_ECSPI2_SCLK_UART4_DCE_RX    0x49
+-			>;
+-		};
+-
+ 		pinctrl_usdhc1_gpio: usdhc1grpgpio {
+ 			fsl,pins = <
+ 				MX8MM_IOMUXC_SD1_RESET_B_GPIO2_IO10	0x41
+@@ -759,16 +750,6 @@
+ 	status = "okay";
+ };
+ 
+-&uart4 { /* bluetooth */
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_uart4>;
+-	assigned-clocks = <&clk IMX8MM_CLK_UART4_SRC>;
+-	assigned-clock-parents = <&clk IMX8MM_SYS_PLL1_80M>;
+-	fsl,uart-has-rtscts;
+-	dma-names = "","tx";
+-	status = "okay";
+-};
+-
+ &usdhc1 {
+ 	pinctrl-names = "default", "state_100mhz", "state_200mhz";
+ 	pinctrl-0 = <&pinctrl_usdhc1>, <&pinctrl_usdhc1_gpio>;
+-- 
+2.11.0
+
