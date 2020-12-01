@@ -1,0 +1,71 @@
+From 2be93bf9db4aae2766acee88e0382c1b550f3924 Mon Sep 17 00:00:00 2001
+From: "Nadav (NG) Greenberg" <NadavG@Sysmop.com>
+Date: Wed, 7 Oct 2020 11:46:21 +0300
+Subject: [PATCH 37/45] Update-Statek-Registers
+
+---
+ drivers/gpu/drm/panel/panel-startek-kd070hdf.c | 28 +++++++++++++-------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/gpu/drm/panel/panel-startek-kd070hdf.c b/drivers/gpu/drm/panel/panel-startek-kd070hdf.c
+index 1ceb9cc8a58b..cb2a6d7f3a35 100644
+--- a/drivers/gpu/drm/panel/panel-startek-kd070hdf.c
++++ b/drivers/gpu/drm/panel/panel-startek-kd070hdf.c
+@@ -107,7 +107,7 @@ static inline struct kd070hdf_panel *panel_to_kd070hdf_panel(struct drm_panel *p
+ static int kd070hdf_panel_prepare(struct drm_panel *panel)
+ {
+ 	struct kd070hdf_panel *ctx = panel_to_kd070hdf_panel(panel);
+-	int ret,i;
++	int ret;
+ 
+ printk("*****\nLocation: %s\n*****\n", __func__);
+ 	ret = regulator_enable(ctx->supply);
+@@ -123,18 +123,6 @@ printk("*****\nLocation: %s\n*****\n", __func__);
+ 	gpio_set_value(ctx->reset, 1);
+ 	msleep(120);
+ 
+-	for (i = 0; i < ARRAY_SIZE(panel_init); i++) {
+-		const struct panel_instr *instr = &panel_init[i];
+-
+-		ret = mipi_send_cmd_data(ctx, instr->cmd.cmd,
+-						      instr->cmd.data);
+-
+-		printk("%s #: cmd/data/ret = %d: 0x%x/0x%x/%d\n",__func__,
+-		i, instr->cmd.cmd, instr->cmd.data, ret);
+-		if (ret)
+-			return ret;
+-	}
+-
+ 	return 0;
+ }
+ 
+@@ -151,13 +139,25 @@ static int kd070hdf_panel_unprepare(struct drm_panel *panel)
+ static int kd070hdf_panel_enable(struct drm_panel *panel)
+ {
+ 	struct kd070hdf_panel *ctx = panel_to_kd070hdf_panel(panel);
+-	int ret;
++	int ret, i;
+ 
+ printk("*****\nLocation: %s\n*****\n", __func__);
+ 	ret = mipi_dsi_dcs_exit_sleep_mode(ctx->dsi);
+ 	if (ret)
+ 		return ret;
+ 
++	for (i = 0; i < ARRAY_SIZE(panel_init); i++) {
++		const struct panel_instr *instr = &panel_init[i];
++
++		ret = mipi_send_cmd_data(ctx, instr->cmd.cmd,
++						      instr->cmd.data);
++
++		printk("%s #: cmd/data/ret = %d: 0x%x/0x%x/%d\n",__func__,
++		i, instr->cmd.cmd, instr->cmd.data, ret);
++		if (ret)
++			return ret;
++	}
++
+ 	ret = backlight_enable(ctx->backlight);
+ 	if (ret)
+ 		goto out;
+-- 
+2.11.0
+

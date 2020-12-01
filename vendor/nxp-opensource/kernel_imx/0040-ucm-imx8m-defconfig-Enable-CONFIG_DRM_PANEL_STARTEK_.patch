@@ -1,0 +1,26 @@
+From df880ddef727288cc00bc488e0256fd008ce80b3 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Tue, 1 Dec 2020 14:39:14 +0200
+Subject: [PATCH 40/45] ucm-imx8m: defconfig: Enable
+ +CONFIG_DRM_PANEL_STARTEK_KD070HDF
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ arch/arm64/configs/ucm-imx8m-mini-android_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/configs/ucm-imx8m-mini-android_defconfig b/arch/arm64/configs/ucm-imx8m-mini-android_defconfig
+index 0c33100c2cbd..9a24273461e1 100644
+--- a/arch/arm64/configs/ucm-imx8m-mini-android_defconfig
++++ b/arch/arm64/configs/ucm-imx8m-mini-android_defconfig
+@@ -456,6 +456,7 @@ CONFIG_DRM_I2C_SIL164=m
+ CONFIG_DRM_VIVANTE=m
+ CONFIG_DRM_PANEL_SIMPLE=y
+ CONFIG_DRM_PANEL_STARTEK_ILI9881C=y
++CONFIG_DRM_PANEL_STARTEK_KD070HDF=y
+ CONFIG_DRM_IMX_PARALLEL_DISPLAY=y
+ CONFIG_DRM_IMX_TVE=y
+ CONFIG_DRM_IMX_LDB=y
+-- 
+2.11.0
+

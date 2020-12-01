@@ -1,0 +1,53 @@
+From fb65eba72152eae66ae6f2057e026260cf02d3af Mon Sep 17 00:00:00 2001
+From: "Nadav (NG) Greenberg" <NadavG@Sysmop.com>
+Date: Tue, 6 Oct 2020 16:49:28 +0300
+Subject: [PATCH 34/45] StarTek-DeviceTree-Update
+
+---
+ arch/arm64/boot/dts/compulab/ucm-imx8m-mini-kd7.dts | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/compulab/ucm-imx8m-mini-kd7.dts b/arch/arm64/boot/dts/compulab/ucm-imx8m-mini-kd7.dts
+index 649e0b9e553e..f932bb86c823 100644
+--- a/arch/arm64/boot/dts/compulab/ucm-imx8m-mini-kd7.dts
++++ b/arch/arm64/boot/dts/compulab/ucm-imx8m-mini-kd7.dts
+@@ -4,14 +4,14 @@
+ 	sb-mcm-imx8-kd7 {
+ 		pinctrl_kd070hdf: kd070hdf_csgrp {
+ 			fsl,pins = <
+-				MX8MM_IOMUXC_SAI5_RXFS_GPIO3_IO19	0x40000	 /* Reset DISP */
++				MX8MM_IOMUXC_SAI5_RXD2_GPIO3_IO23	0x40000	 /* Reset DISP */
+ 			>;
+ 		};
+ 
+ 		pinctrl_goodix: goodix_gpios {
+ 			fsl,pins = <
+ 				MX8MM_IOMUXC_GPIO1_IO01_GPIO1_IO1	0x00
+-				MX8MM_IOMUXC_SAI5_RXD0_GPIO3_IO21	0x40000  /* Reset TOUCH */
++				MX8MM_IOMUXC_SAI5_RXD1_GPIO3_IO22	0x40000  /* Reset TOUCH */
+ 			>;
+ 		};
+ 	};
+@@ -24,9 +24,7 @@
+ 		reg = <0>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_kd070hdf>;
+-		reset-gpio = <&gpio3 19 GPIO_ACTIVE_LOW>;
+-		/* This is a fake gpio, cause the disp_logics is already turned it on */
+-		power-gpio = <&gpio3 23 GPIO_ACTIVE_HIGH>;
++		reset-gpio = <&gpio3 23 GPIO_ACTIVE_LOW>;
+ 		dsi-lanes = <4>;
+ 		status = "okay";
+ 	};
+@@ -43,7 +41,7 @@
+ &touch_screen {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_goodix>;
+-	reset-gpios = <&gpio3 21 GPIO_ACTIVE_HIGH>;
++	reset-gpios = <&gpio3 22 GPIO_ACTIVE_HIGH>;
+ 	status = "okay";
+ };
+ 
+-- 
+2.11.0
+

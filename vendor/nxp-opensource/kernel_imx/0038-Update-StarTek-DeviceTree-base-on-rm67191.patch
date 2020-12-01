@@ -1,0 +1,28 @@
+From 0eada6800b497716547893352497dcaa375109d6 Mon Sep 17 00:00:00 2001
+From: "Nadav (NG) Greenberg" <NadavG@Sysmop.com>
+Date: Sun, 11 Oct 2020 11:03:44 +0300
+Subject: [PATCH 38/45] Update-StarTek-DeviceTree-base-on-rm67191
+
+---
+ arch/arm64/boot/dts/compulab/ucm-imx8m-mini-kd7.dts | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/compulab/ucm-imx8m-mini-kd7.dts b/arch/arm64/boot/dts/compulab/ucm-imx8m-mini-kd7.dts
+index f932bb86c823..6ce6a0ec3a06 100644
+--- a/arch/arm64/boot/dts/compulab/ucm-imx8m-mini-kd7.dts
++++ b/arch/arm64/boot/dts/compulab/ucm-imx8m-mini-kd7.dts
+@@ -24,8 +24,10 @@
+ 		reg = <0>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_kd070hdf>;
+-		reset-gpio = <&gpio3 23 GPIO_ACTIVE_LOW>;
++		reset-gpio = <&gpio3 23 GPIO_ACTIVE_HIGH>;
+ 		dsi-lanes = <4>;
++		panel-width-mm = <154>;
++		panel-height-mm = <86>;
+ 		status = "okay";
+ 	};
+ };
+-- 
+2.11.0
+

@@ -1,0 +1,818 @@
+From 270df88734864112b7cbac25508eadccfa6d13b4 Mon Sep 17 00:00:00 2001
+From: "Nadav (NG) Greenberg" <NadavG@Sysmop.com>
+Date: Sun, 1 Nov 2020 11:19:50 +0200
+Subject: [PATCH 39/45] Update-StarTek-Driver-base-on-rm67191
+
+---
+ .../arm64/boot/dts/compulab/ucm-imx8m-mini-kd7.dts |  22 +-
+ drivers/gpu/drm/panel/panel-startek-kd070hdf.c     | 605 ++++++++++++++-------
+ 2 files changed, 438 insertions(+), 189 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/compulab/ucm-imx8m-mini-kd7.dts b/arch/arm64/boot/dts/compulab/ucm-imx8m-mini-kd7.dts
+index 6ce6a0ec3a06..0c92759597c6 100644
+--- a/arch/arm64/boot/dts/compulab/ucm-imx8m-mini-kd7.dts
++++ b/arch/arm64/boot/dts/compulab/ucm-imx8m-mini-kd7.dts
+@@ -26,9 +26,26 @@
+ 		pinctrl-0 = <&pinctrl_kd070hdf>;
+ 		reset-gpio = <&gpio3 23 GPIO_ACTIVE_HIGH>;
+ 		dsi-lanes = <4>;
++		status = "okay";
+ 		panel-width-mm = <154>;
+ 		panel-height-mm = <86>;
+-		status = "okay";
++		display-timings {
++			timing {
++				clock-frequency = <51206000>;
++				hactive = <1024>;
++				vactive = <600>;
++				hback-porch = <200>;
++				hfront-porch = <80>;
++				vback-porch = <30>;
++				vfront-porch = <10>;
++				hsync-len = <4>;
++				vsync-len = <4>;
++				hsync-active = <0>;
++				vsync-active = <0>;
++				de-active = <1>;
++				pixelclk-active = <1>;
++			};
++		};
+ 	};
+ };
+ 
+@@ -41,9 +58,12 @@
+ };
+ 
+ &touch_screen {
++	compatible = "goodix,gt9271";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_goodix>;
+ 	reset-gpios = <&gpio3 22 GPIO_ACTIVE_HIGH>;
++	touchscreen-inverted-x;
++	touchscreen-inverted-y;
+ 	status = "okay";
+ };
+ 
+diff --git a/drivers/gpu/drm/panel/panel-startek-kd070hdf.c b/drivers/gpu/drm/panel/panel-startek-kd070hdf.c
+index cb2a6d7f3a35..db6e88e278fd 100644
+--- a/drivers/gpu/drm/panel/panel-startek-kd070hdf.c
++++ b/drivers/gpu/drm/panel/panel-startek-kd070hdf.c
+@@ -4,10 +4,22 @@
+  * Copyright (C) 2018-2019, Bootlin
+  * Copyright (C) 2017, Free Electrons
+  *
++ * This file based on panel-raydium-rm67191.c
+  * This file based on panel-ilitek-ili9881c.c
+  */
+ 
+ #include <drm/drmP.h>
++#include <drm/drm_crtc.h>
++#include <drm/drm_mipi_dsi.h>
++#include <drm/drm_panel.h>
++#include <linux/gpio/consumer.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/regulator/consumer.h>
++#include <video/mipi_display.h>
++#include <video/of_videomode.h>
++#include <video/videomode.h>
++
+ #include <linux/backlight.h>
+ #include <linux/delay.h>
+ #include <linux/device.h>
+@@ -16,217 +28,370 @@
+ #include <linux/fb.h>
+ #include <linux/kernel.h>
+ #include <linux/media-bus-format.h>
+-#include <linux/module.h>
+ 
+-#include <linux/gpio/consumer.h>
+-#include <linux/regulator/consumer.h>
+ 
+ #include <linux/of_device.h>
+ #include <linux/of_gpio.h>
+ 
+ #include <drm/drm_connector.h>
+-#include <drm/drm_mipi_dsi.h>
+ #include <drm/drm_modes.h>
+-#include <drm/drm_panel.h>
+ #include <drm/drm_print.h>
+ 
+-#define   PCLOCK          51206
+-
+-#define   LCD_XSIZE_TFT   1024
+-#define   LCD_YSIZE_TFT   600
++struct cmd_set_entry {
++	u8 cmd;
++	u8 param;
++};
+ 
+-#define   LCD_HFPD        4
+-#define   LCD_HSPW        200
+-#define   LCD_HBPD        80
++static const struct cmd_set_entry manufacturer_cmd_set[] = {
++	{0xB2, 0x40},
++	{0x80, 0x58},
++	{0x81, 0x47},
++	{0x82, 0xD4},
++	{0x83, 0x88},
++	{0x84, 0xA9},
++	{0x85, 0xC3},
++	{0x86, 0x82},
++	{0x01, 0x00},
++};
+ 
+-#define   LCD_VFPD        4
+-#define   LCD_VSPW        30
+-#define   LCD_VBPD        10
++static const u32 kd070hdf_bus_formats[] = {
++	MEDIA_BUS_FMT_RGB888_1X24,
++	MEDIA_BUS_FMT_RGB666_1X18,
++	MEDIA_BUS_FMT_RGB565_1X16,
++};
+ 
+ struct kd070hdf_panel {
+-	struct drm_panel panel;
++	struct drm_panel base;
+ 	struct mipi_dsi_device *dsi;
++
++	struct gpio_desc *reset;
+ 	struct backlight_device *backlight;
+-	struct regulator *supply;
+ 
+-	int reset;
++	bool prepared;
++	bool enabled;
+ 
+-	struct {
+-#if 0
+-		struct gpio_desc *reset;
+-#endif
+-		struct gpio_desc *updn;
+-		struct gpio_desc *shlr;
+-	} gpios;
++	struct videomode vm;
++	u32 width_mm;
++	u32 height_mm;
+ };
+ 
+-struct panel_instr {
+-	struct cmd {
+-		u8	cmd;
+-		u8	data;
+-	} cmd;
+-};
++static inline struct kd070hdf_panel *to_kd070hdf_panel(struct drm_panel *panel)
++{
++	return container_of(panel, struct kd070hdf_panel, base);
++}
+ 
+-#define MIPI_COMMAND_INSTR(_cmd, _data)	\
+-	{									\
+-		.cmd = {						\
+-			.cmd = (_cmd),				\
+-			.data = (_data),			\
+-		},								\
+-	}
++static int kd070hdf_panel_push_cmd_list(struct mipi_dsi_device *dsi)
++{
++	size_t i;
++	size_t count = ARRAY_SIZE(manufacturer_cmd_set);
++	int ret = 0;
+ 
+-static const struct panel_instr panel_init[] = {
+-	MIPI_COMMAND_INSTR(0xB2,    0x40),
+-	MIPI_COMMAND_INSTR(0x80,    0x58),
+-	MIPI_COMMAND_INSTR(0x81,    0x47),
+-	MIPI_COMMAND_INSTR(0x82,    0xD4),
+-	MIPI_COMMAND_INSTR(0x83,    0x88),
+-	MIPI_COMMAND_INSTR(0x84,    0xA9),
+-	MIPI_COMMAND_INSTR(0x85,    0xC3),
+-MIPI_COMMAND_INSTR(0x86,    0x82),
+-};
++	for (i = 0; i < count; i++) {
++		const struct cmd_set_entry *entry = &manufacturer_cmd_set[i];
++		u8 buffer[2] = { entry->cmd, entry->param };
+ 
+-static int mipi_send_cmd_data(struct kd070hdf_panel *ctx, u8 cmd, u8 data)
+-{
+-	u8 buf[2] = { cmd, data };
+-	int ret;
++		if (entry->cmd != 0x01) {
++			ret = mipi_dsi_generic_write(dsi, &buffer, sizeof(buffer));
++		} else {
++			ret = mipi_dsi_generic_write(dsi, &buffer, 1);
++			msleep(20);
++		}
+ 
+-	ret = mipi_dsi_dcs_write_buffer(ctx->dsi, buf, sizeof(buf));
+-	if (ret < 0) {
+-		dev_err(&ctx->dsi->dev,"%s:0x%x failed %d\n", __func__,cmd, ret);
+-		return ret;
++		printk("%s #: cmd/param/ret = %ld: 0x%x/0x%x/%ld\n", __func__, i, entry->cmd, entry->param, ret);
++
++		if (ret < 0) {
++			dev_err(&dsi->dev,"%s:0x%x failed %d\n", __func__, entry->cmd, ret);
++			return ret;
++		}
+ 	}
+-	return 0;
+-}
+ 
+-static inline struct kd070hdf_panel *panel_to_kd070hdf_panel(struct drm_panel *panel)
++	return ret;
++};
++
++static int color_format_from_dsi_format(enum mipi_dsi_pixel_format format)
+ {
+-	return container_of(panel, struct kd070hdf_panel, panel);
+-}
++	switch (format) {
++	case MIPI_DSI_FMT_RGB565:
++		return 0x55;
++	case MIPI_DSI_FMT_RGB666:
++	case MIPI_DSI_FMT_RGB666_PACKED:
++		return 0x66;
++	case MIPI_DSI_FMT_RGB888:
++		return 0x77;
++/*		return 0x7;*/
++	default:
++		return 0x77; /* for backward compatibility */
++	}
++};
+ 
+ static int kd070hdf_panel_prepare(struct drm_panel *panel)
+ {
+-	struct kd070hdf_panel *ctx = panel_to_kd070hdf_panel(panel);
+-	int ret;
+-
+-printk("*****\nLocation: %s\n*****\n", __func__);
+-	ret = regulator_enable(ctx->supply);
+-	if (ret < 0) {
+-		DRM_DEV_ERROR(&ctx->dsi->dev, "Failed to enable supply: %d\n", ret);
+-		return ret;
++	struct kd070hdf_panel *kd070hdf = to_kd070hdf_panel(panel);
++
++	if (kd070hdf->prepared)
++		return 0;
++
++	if (kd070hdf->reset != NULL) {
++		gpiod_set_value(kd070hdf->reset, 1);
++		msleep(1);
++		gpiod_set_value(kd070hdf->reset, 0);
++/*		usleep_range(10000, 10000);*/
++		msleep(10);
++		gpiod_set_value(kd070hdf->reset, 1);
++/*		usleep_range(120000, 120000);*/
++		msleep(120);
+ 	}
+ 
+-	gpio_set_value(ctx->reset, 1);
+-	msleep(1);
+-	gpio_set_value(ctx->reset, 0);
+-	msleep(10);
+-	gpio_set_value(ctx->reset, 1);
+-	msleep(120);
++	kd070hdf->prepared = true;
+ 
+ 	return 0;
+ }
+ 
+ static int kd070hdf_panel_unprepare(struct drm_panel *panel)
+ {
+-	struct kd070hdf_panel *ctx = panel_to_kd070hdf_panel(panel);
++	struct kd070hdf_panel *kd070hdf = to_kd070hdf_panel(panel);
++	struct device *dev = &kd070hdf->dsi->dev;
++
++	if (!kd070hdf->prepared)
++		return 0;
++
++	if (kd070hdf->enabled) {
++		DRM_DEV_ERROR(dev, "Panel still enabled!\n");
++		return -EPERM;
++	}
+ 
+-	gpio_set_value(ctx->reset, 0);
+-	regulator_disable(ctx->supply);
++	if (kd070hdf->reset != NULL) {
++		gpiod_set_value(kd070hdf->reset, 0);
++		msleep(1);
++		gpiod_set_value(kd070hdf->reset, 1);
++	}
++
++	kd070hdf->prepared = false;
+ 
+ 	return 0;
+ }
+ 
+ static int kd070hdf_panel_enable(struct drm_panel *panel)
+ {
+-	struct kd070hdf_panel *ctx = panel_to_kd070hdf_panel(panel);
+-	int ret, i;
++	struct kd070hdf_panel *kd070hdf = to_kd070hdf_panel(panel);
++	struct mipi_dsi_device *dsi = kd070hdf->dsi;
++	struct device *dev = &dsi->dev;
++	int color_format = color_format_from_dsi_format(dsi->format);
++	u16 brightness;
++	int ret;
+ 
+-printk("*****\nLocation: %s\n*****\n", __func__);
+-	ret = mipi_dsi_dcs_exit_sleep_mode(ctx->dsi);
+-	if (ret)
+-		return ret;
++	if (kd070hdf->enabled)
++		return 0;
+ 
+-	for (i = 0; i < ARRAY_SIZE(panel_init); i++) {
+-		const struct panel_instr *instr = &panel_init[i];
++	if (!kd070hdf->prepared) {
++		DRM_DEV_ERROR(dev, "Panel not prepared!\n");
++		return -EPERM;
++	}
+ 
+-		ret = mipi_send_cmd_data(ctx, instr->cmd.cmd,
+-						      instr->cmd.data);
++	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
+ 
+-		printk("%s #: cmd/data/ret = %d: 0x%x/0x%x/%d\n",__func__,
+-		i, instr->cmd.cmd, instr->cmd.data, ret);
+-		if (ret)
+-			return ret;
++	ret = kd070hdf_panel_push_cmd_list(dsi);
++	if (ret < 0) {
++		DRM_DEV_ERROR(dev, "Failed to send MCS (%d)\n", ret);
++		goto fail;
+ 	}
+ 
+-	ret = backlight_enable(ctx->backlight);
++	/* Set tear ON */
++	ret = mipi_dsi_dcs_set_tear_on(dsi, MIPI_DSI_DCS_TEAR_MODE_VBLANK);
++	if (ret < 0) {
++		DRM_DEV_ERROR(dev, "Failed to set tear ON (%d)\n", ret);
++		goto fail;
++	}
++	/* Set tear scanline */
++	ret = mipi_dsi_dcs_set_tear_scanline(dsi, 0x380);
++	if (ret < 0) {
++		DRM_DEV_ERROR(dev, "Failed to set tear scanline (%d)\n", ret);
++		goto fail;
++	}
++	/* Set pixel format */
++	ret = mipi_dsi_dcs_set_pixel_format(dsi, color_format);
++	DRM_DEV_DEBUG_DRIVER(dev, "Interface color format set to 0x%x\n", color_format);
++	if (ret < 0) {
++		DRM_DEV_ERROR(dev, "Failed to set pixel format (%d)\n", ret);
++		goto fail;
++	}
++	/* Set display brightness */
++	brightness = kd070hdf->backlight->props.brightness;
++	ret = mipi_dsi_dcs_set_display_brightness(dsi, brightness);
++	if (ret < 0) {
++		DRM_DEV_ERROR(dev, "Failed to set display brightness (%d)\n",
++			      ret);
++		goto fail;
++	}
++	/* Exit sleep mode */
++	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
++	if (ret < 0) {
++		DRM_DEV_ERROR(dev, "Failed to exit sleep mode (%d)\n", ret);
++		goto fail;
++	}
++
++	msleep(5);
++
++	ret = mipi_dsi_dcs_set_display_on(dsi);
++	if (ret < 0) {
++		DRM_DEV_ERROR(dev, "Failed to set display ON (%d)\n", ret);
++		goto fail;
++	}
++
++	backlight_enable(kd070hdf->backlight);
+ 	if (ret)
+-		goto out;
++		goto fail;
++
++	kd070hdf->enabled = true;
++
++	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
+ 
+ 	return 0;
+ 
+-out:
+-	mipi_dsi_dcs_enter_sleep_mode(ctx->dsi);
++fail:
++	if (kd070hdf->reset != NULL) {
++		gpiod_set_value(kd070hdf->reset, 0);
++	}
++
++	mipi_dsi_dcs_enter_sleep_mode(kd070hdf->dsi);
++
+ 	return ret;
+ }
+ 
+ static int kd070hdf_panel_disable(struct drm_panel *panel)
+ {
+-	struct kd070hdf_panel *ctx = panel_to_kd070hdf_panel(panel);
++	struct kd070hdf_panel *kd070hdf = to_kd070hdf_panel(panel);
++	struct mipi_dsi_device *dsi = kd070hdf->dsi;
++	struct device *dev = &dsi->dev;
++	int ret;
+ 
+-	backlight_disable(ctx->backlight);
+-	return mipi_dsi_dcs_enter_sleep_mode(ctx->dsi);
+-}
++	if (!kd070hdf->enabled)
++		return 0;
+ 
+-/* Default timings */
+-static const struct drm_display_mode default_mode = {
+-	.clock			= PCLOCK,
++	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
+ 
+-	.hdisplay		= LCD_XSIZE_TFT,
+-	.hsync_start	= LCD_XSIZE_TFT + LCD_HFPD,
+-	.hsync_end		= LCD_XSIZE_TFT + LCD_HFPD + LCD_HSPW,
+-	.htotal			= LCD_XSIZE_TFT + LCD_HFPD + LCD_HSPW + LCD_HBPD,
++	backlight_disable(kd070hdf->backlight);
+ 
+-	.vdisplay		= LCD_YSIZE_TFT,
+-	.vsync_start	= LCD_YSIZE_TFT + LCD_VFPD,
+-	.vsync_end		= LCD_YSIZE_TFT + LCD_VFPD + LCD_VSPW,
+-	.vtotal			= LCD_YSIZE_TFT + LCD_VFPD + LCD_VSPW + LCD_VBPD,
++	msleep(10);
+ 
+-	.vrefresh		= 60,
++	ret = mipi_dsi_dcs_set_display_off(dsi);
++	if (ret < 0) {
++		DRM_DEV_ERROR(dev, "Failed to set display OFF (%d)\n", ret);
++		return ret;
++	}
+ 
+-	.width_mm		= 154,
+-	.height_mm		= 86,
+-};
++	msleep(5);
++
++	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
++	if (ret < 0) {
++		DRM_DEV_ERROR(dev, "Failed to enter sleep mode (%d)\n", ret);
++		return ret;
++	}
++
++	kd070hdf->enabled = false;
++
++	return 0;
++}
+ 
+ static int kd070hdf_panel_get_modes(struct drm_panel *panel)
+ {
++	struct kd070hdf_panel *kd070hdf = to_kd070hdf_panel(panel);
++	struct device *dev = &kd070hdf->dsi->dev;
+ 	struct drm_connector *connector = panel->connector;
+-	struct kd070hdf_panel *ctx = panel_to_kd070hdf_panel(panel);
+ 	struct drm_display_mode *mode;
+-	static const u32 bus_format = MEDIA_BUS_FMT_RGB888_1X24;
++	u32 *bus_flags = &connector->display_info.bus_flags;
++	int ret;
+ 
+-printk("*****\nLocation: %s\n*****\n", __func__);
+-	mode = drm_mode_duplicate(panel->drm, &default_mode);
++	mode = drm_mode_create(connector->dev);
+ 	if (!mode) {
+-		DRM_DEV_ERROR(&ctx->dsi->dev,
+-			      "Failed to add mode " DRM_MODE_FMT "\n",
+-			      DRM_MODE_ARG(&default_mode));
+-		return -EINVAL;
++		DRM_DEV_ERROR(dev, "Failed to create display mode!\n");
++		return 0;
+ 	}
+ 
+-	drm_mode_set_name(mode);
++	drm_display_mode_from_videomode(&kd070hdf->vm, mode);
++
++	mode->width_mm = kd070hdf->width_mm;
++	mode->height_mm = kd070hdf->height_mm;
++
++	connector->display_info.width_mm = kd070hdf->width_mm;
++	connector->display_info.height_mm = kd070hdf->height_mm;
+ 
+ 	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
+-	drm_mode_probed_add(connector, mode);
+ 
+-	panel->connector->display_info.bpc = 8;
+-	panel->connector->display_info.width_mm = mode->width_mm;
+-	panel->connector->display_info.height_mm = mode->height_mm;
+-	drm_display_info_set_bus_formats(&connector->display_info,
+-					 &bus_format, 1);
++	if (kd070hdf->vm.flags & DISPLAY_FLAGS_DE_HIGH) {
++		*bus_flags |= DRM_BUS_FLAG_DE_HIGH;
++	}
++	if (kd070hdf->vm.flags & DISPLAY_FLAGS_DE_LOW) {
++		*bus_flags |= DRM_BUS_FLAG_DE_LOW;
++	}
++	if (kd070hdf->vm.flags & DISPLAY_FLAGS_PIXDATA_NEGEDGE) {
++		*bus_flags |= DRM_BUS_FLAG_PIXDATA_NEGEDGE;
++	}
++	if (kd070hdf->vm.flags & DISPLAY_FLAGS_PIXDATA_POSEDGE) {
++		*bus_flags |= DRM_BUS_FLAG_PIXDATA_POSEDGE;
++	}
++
++	ret = drm_display_info_set_bus_formats(&connector->display_info,
++			kd070hdf_bus_formats, ARRAY_SIZE(kd070hdf_bus_formats));
++	if (ret)
++		return ret;
++
++	drm_mode_probed_add(panel->connector, mode);
+ 
+ 	return 1;
+ }
+ 
++
++static int kd070hdf_bl_get_brightness(struct backlight_device *bl)
++{
++	struct mipi_dsi_device *dsi = bl_get_data(bl);
++	struct kd070hdf_panel *kd070hdf = mipi_dsi_get_drvdata(dsi);
++	struct device *dev = &dsi->dev;
++	u16 brightness;
++	int ret;
++
++	if (!kd070hdf->prepared)
++		return 0;
++
++	DRM_DEV_DEBUG_DRIVER(dev, "\n");
++
++	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
++
++	ret = mipi_dsi_dcs_get_display_brightness(dsi, &brightness);
++	if (ret < 0)
++		return ret;
++
++	bl->props.brightness = brightness;
++
++	return brightness & 0xff;
++}
++
++static int kd070hdf_bl_update_status(struct backlight_device *bl)
++{
++	struct mipi_dsi_device *dsi = bl_get_data(bl);
++	struct kd070hdf_panel *kd070hdf = mipi_dsi_get_drvdata(dsi);
++	struct device *dev = &dsi->dev;
++	int ret = 0;
++
++	if (!kd070hdf->prepared)
++		return 0;
++
++	DRM_DEV_DEBUG_DRIVER(dev, "New brightness: %d\n", bl->props.brightness);
++
++	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
++
++	ret = mipi_dsi_dcs_set_display_brightness(dsi, bl->props.brightness);
++	if (ret < 0)
++		return ret;
++
++	return 0;
++}
++
++static const struct backlight_ops kd070hdf_bl_ops = {
++	.get_brightness	= kd070hdf_bl_get_brightness,
++	.update_status	= kd070hdf_bl_update_status,
++};
++
+ static const struct drm_panel_funcs kd070hdf_panel_funcs = {
+ 	.prepare	= kd070hdf_panel_prepare,
+ 	.unprepare	= kd070hdf_panel_unprepare,
+@@ -234,96 +399,159 @@ static const struct drm_panel_funcs kd070hdf_panel_funcs = {
+ 	.disable	= kd070hdf_panel_disable,
+ 	.get_modes	= kd070hdf_panel_get_modes,
+ };
++/*
++ * The clock might range from 66MHz (30Hz refresh rate)
++ * to 132MHz (60Hz refresh rate)
++ */
++static const struct display_timing kd070hdf_default_timing = {
++	.pixelclock		= { 51206000, 51206000, 51206000 },
++	.hactive		= { 1024, 1024, 1024 },
++	.hfront_porch	= { 80, 80, 80 },
++	.hsync_len		= { 4, 4, 4 },
++	.hback_porch	= { 200, 200, 200 },
++	.vactive		= { 600, 600, 600 },
++	.vfront_porch	= { 10, 10, 10 },
++	.vsync_len		= { 4, 4, 4 },
++	.vback_porch	= { 30, 30, 30 },
++	.flags			= DISPLAY_FLAGS_HSYNC_LOW |
++		 DISPLAY_FLAGS_VSYNC_LOW |
++		 DISPLAY_FLAGS_DE_HIGH |
++		 DISPLAY_FLAGS_PIXDATA_POSEDGE,
++};
+ 
+ static int kd070hdf_panel_dsi_probe(struct mipi_dsi_device *dsi)
+ {
+-	struct kd070hdf_panel *ctx;
+-	struct device_node *np;
++	struct device *dev = &dsi->dev;
++	struct device_node *np = dev->of_node;
++	struct device_node *timings;
++	struct kd070hdf_panel *panel;
++	struct backlight_properties bl_props;
+ 	int ret;
++	u32 video_mode;
+ 
+-printk("*****\nLocation: %s\n*****\n", __func__);
+-	ctx = devm_kzalloc(&dsi->dev, sizeof(*ctx), GFP_KERNEL);
+-	if (!ctx)
++	panel = devm_kzalloc(&dsi->dev, sizeof(*panel), GFP_KERNEL);
++	if (!panel)
+ 		return -ENOMEM;
+ 
+-	ctx->supply = devm_regulator_get(&dsi->dev, "vcc-lcd");
+-	if (IS_ERR(ctx->supply))
+-		return PTR_ERR(ctx->supply);
++	mipi_dsi_set_drvdata(dsi, panel);
+ 
+-	mipi_dsi_set_drvdata(dsi, ctx);
+-	ctx->dsi = dsi;
++	panel->dsi = dsi;
+ 
+-	drm_panel_init(&ctx->panel);
+-	ctx->panel.dev = &dsi->dev;
+-	ctx->panel.funcs = &kd070hdf_panel_funcs;
+-
+-	ctx->reset = of_get_named_gpio(dsi->dev.of_node, "reset-gpio", 0);
+-	if (!gpio_is_valid(ctx->reset)) {
+-		DRM_DEV_ERROR(&dsi->dev, "Couldn't get our reset GPIO\n");
+-		return -EINVAL;
++	dsi->format = MIPI_DSI_FMT_RGB888;
++/*	dsi->mode_flags =  MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST | MIPI_DSI_MODE_LPM;*/
++	dsi->mode_flags =  MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE | MIPI_DSI_MODE_LPM;
++
++	ret = of_property_read_u32(np, "video-mode", &video_mode);
++	if (!ret) {
++		switch (video_mode) {
++		case 0:
++			/* burst mode */
++			dsi->mode_flags |= MIPI_DSI_MODE_VIDEO_BURST;
++			break;
++		case 1:
++			/* non-burst mode with sync event */
++			break;
++		case 2:
++			/* non-burst mode with sync pulse */
++			dsi->mode_flags |= MIPI_DSI_MODE_VIDEO_SYNC_PULSE;
++			break;
++		default:
++			dev_warn(dev, "invalid video mode %d\n", video_mode);
++			break;
++
++		}
+ 	}
+ 
+-	ret = devm_gpio_request_one(&dsi->dev, ctx->reset,
+-		GPIOF_OUT_INIT_LOW, "kd7_reset");
+-
++	ret = of_property_read_u32(np, "dsi-lanes", &dsi->lanes);
+ 	if (ret < 0) {
+-		dev_err(&dsi->dev, "Couldn't get panel reset pin available 1\n");
++		dev_err(dev, "Failed to get dsi-lanes property (%d)\n", ret);
+ 		return ret;
+ 	}
++
+ 	/*
+-	 * We don't change the state of that GPIO later on but we need
+-	 * to force it into a low state.
++	 * 'display-timings' is optional, so verify if the node is present
++	 * before calling of_get_videomode so we won't get console error
++	 * messages
+ 	 */
+-#if 0
+-	ctx->gpios.updn = devm_gpiod_get(&dsi->dev, "updn", GPIOD_OUT_LOW);
+-	if (IS_ERR(ctx->gpios.updn)) {
+-		DRM_DEV_ERROR(&dsi->dev, "Couldn't get our updn GPIO\n");
+-		return PTR_ERR(ctx->gpios.updn);
++	timings = of_get_child_by_name(np, "display-timings");
++	if (timings) {
++		of_node_put(timings);
++		ret = of_get_videomode(np, &panel->vm, 0);
++	} else {
++		videomode_from_timing(&kd070hdf_default_timing, &panel->vm);
+ 	}
++	if (ret < 0)
++		return ret;
+ 
+-	/*
+-	 * We don't change the state of that GPIO later on but we need
+-	 * to force it into a low state.
+-	 */
+-	ctx->gpios.shlr = devm_gpiod_get(&dsi->dev, "shlr", GPIOD_OUT_LOW);
+-	if (IS_ERR(ctx->gpios.shlr)) {
+-		DRM_DEV_ERROR(&dsi->dev, "Couldn't get our shlr GPIO\n");
+-		return PTR_ERR(ctx->gpios.shlr);
++	of_property_read_u32(np, "panel-width-mm", &panel->width_mm);
++	of_property_read_u32(np, "panel-height-mm", &panel->height_mm);
++
++	panel->reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
++
++	if (IS_ERR(panel->reset)) {
++		panel->reset = NULL;
++	} else {
++		gpiod_set_value(panel->reset, 0);
+ 	}
+-#endif
+ 
+-	np = of_parse_phandle(dsi->dev.of_node, "backlight", 0);
+-	if (np) {
+-		ctx->backlight = of_find_backlight_by_node(np);
+-		of_node_put(np);
+ 
+-		if (!ctx->backlight) {
+-		    DRM_DEV_ERROR(&dsi->dev, "Backlight is not ready\n");
+-			return -EPROBE_DEFER;
+-        }
++	memset(&bl_props, 0, sizeof(bl_props));
++	bl_props.type = BACKLIGHT_RAW;
++	bl_props.brightness = 255;
++	bl_props.max_brightness = 255;
++
++	panel->backlight = devm_backlight_device_register(
++				dev, dev_name(dev),
++				dev, dsi,
++				&kd070hdf_bl_ops, &bl_props);
++	if (IS_ERR(panel->backlight)) {
++		ret = PTR_ERR(panel->backlight);
++		dev_err(dev, "Failed to register backlight (%d)\n", ret);
++		return ret;
+ 	}
+ 
+-	ret = drm_panel_add(&ctx->panel);
+-	if (ret < 0)
++	drm_panel_init(&panel->base);
++	panel->base.funcs = &kd070hdf_panel_funcs;
++	panel->base.dev = dev;
++
++	ret = drm_panel_add(&panel->base);
++
++	if (ret < 0) {
+ 		return ret;
++	}
+ 
+-	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST | MIPI_DSI_MODE_LPM;
+-	dsi->format = MIPI_DSI_FMT_RGB888;
+-	dsi->lanes = 4;
++	ret = mipi_dsi_attach(dsi);
++	if (ret < 0) {
++		drm_panel_remove(&panel->base);
++	}
+ 
+-	return mipi_dsi_attach(dsi);
++	return ret;
+ }
+ 
+ static int kd070hdf_panel_dsi_remove(struct mipi_dsi_device *dsi)
+ {
+ 	struct kd070hdf_panel *ctx = mipi_dsi_get_drvdata(dsi);
++	struct device *dev = &dsi->dev;
++	int ret;
++
++	ret = mipi_dsi_detach(dsi);
++	if (ret < 0)
++		DRM_DEV_ERROR(dev, "Failed to detach from host (%d)\n",
++			ret);
+ 
+-	mipi_dsi_detach(dsi);
+-	drm_panel_remove(&ctx->panel);
++	drm_panel_remove(&ctx->base);
+ 
+ 	return 0;
+ }
+ 
++static void kd070hdf_panel_shutdown(struct mipi_dsi_device *dsi)
++{
++	struct kd070hdf_panel *kd070hdf = mipi_dsi_get_drvdata(dsi);
++
++	kd070hdf_panel_disable(&kd070hdf->base);
++	kd070hdf_panel_unprepare(&kd070hdf->base);
++}
++
+ static const struct of_device_id kd070hdf_panel_of_match[] = {
+ 	{ .compatible = "startek,kd070hdf" },
+ 	{ /* sentinel */ },
+@@ -331,12 +559,13 @@ static const struct of_device_id kd070hdf_panel_of_match[] = {
+ MODULE_DEVICE_TABLE(of, kd070hdf_panel_of_match);
+ 
+ static struct mipi_dsi_driver kd070hdf_panel_driver = {
+-	.probe = kd070hdf_panel_dsi_probe,
+-	.remove = kd070hdf_panel_dsi_remove,
+-	.driver = {
+-		.name = "panel-startek-kd070hdf",
++	.driver	= {
++		.name			= "panel-startek-kd070hdf",
+ 		.of_match_table	= kd070hdf_panel_of_match,
+ 	},
++	.probe		= kd070hdf_panel_dsi_probe,
++	.remove		= kd070hdf_panel_dsi_remove,
++	.shutdown	= kd070hdf_panel_shutdown,
+ };
+ module_mipi_dsi_driver(kd070hdf_panel_driver);
+ 
+-- 
+2.11.0
+
