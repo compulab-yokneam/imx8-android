@@ -1,0 +1,26 @@
+From 74caced267e948cf9d6b31a27bf8545914a563a0 Mon Sep 17 00:00:00 2001
+From: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+Date: Fri, 5 Jun 2020 20:54:33 +0300
+Subject: [PATCH 29/34] u-boot: Enable flashing unlock
+
+Signed-off-by: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+---
+ drivers/usb/gadget/f_fastboot.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/usb/gadget/f_fastboot.c b/drivers/usb/gadget/f_fastboot.c
+index f06cd6dc1c..913dda2d12 100644
+--- a/drivers/usb/gadget/f_fastboot.c
++++ b/drivers/usb/gadget/f_fastboot.c
+@@ -3881,7 +3881,7 @@ static void cb_flashing(struct usb_ep *ep, struct usb_request *req)
+ 		 */
+ 		strcpy(response, "OKAY");
+ #else
+-		status = do_fastboot_unlock(false);
++		status = do_fastboot_unlock(true);
+ 		if (status != FASTBOOT_LOCK_ERROR)
+ 			strcpy(response, "OKAY");
+ 		else
+-- 
+2.11.0
+
