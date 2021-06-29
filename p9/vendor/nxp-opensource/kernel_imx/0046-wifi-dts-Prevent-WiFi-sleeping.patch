@@ -1,0 +1,25 @@
+From cfa7214e565511e75bfd2b4bcb9d07200274ccc6 Mon Sep 17 00:00:00 2001
+From: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+Date: Tue, 29 Jun 2021 17:06:42 +0300
+Subject: [PATCH 46/46] wifi:dts: Prevent WiFi sleeping
+
+Signed-off-by: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+---
+ arch/arm64/boot/dts/compulab/ucm-imx8m-mini.dts | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/compulab/ucm-imx8m-mini.dts b/arch/arm64/boot/dts/compulab/ucm-imx8m-mini.dts
+index 03ece7d5f2f7..7a217f239c34 100644
+--- a/arch/arm64/boot/dts/compulab/ucm-imx8m-mini.dts
++++ b/arch/arm64/boot/dts/compulab/ucm-imx8m-mini.dts
+@@ -808,6 +808,7 @@
+ 	pinctrl-1 = <&pinctrl_usdhc1_100mhz>, <&pinctrl_usdhc1_gpio>;
+ 	pinctrl-2 = <&pinctrl_usdhc1_200mhz>, <&pinctrl_usdhc1_gpio>;
+ 	bus-width = <4>;
++	keep-power-in-suspend;
+ 	non-removable;
+ 	wifi-host;
+ 	pm-ignore-notify;
+-- 
+2.11.0
+
