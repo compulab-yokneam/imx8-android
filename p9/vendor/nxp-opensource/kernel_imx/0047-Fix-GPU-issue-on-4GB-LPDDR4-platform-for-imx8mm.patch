@@ -1,0 +1,54 @@
+From f89bbd72dfbede17d774bcfd4a7b15c4f713557a Mon Sep 17 00:00:00 2001
+From: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+Date: Mon, 9 Jan 2023 20:01:02 +0200
+Subject: [PATCH 47/47] Fix GPU issue on 4GB LPDDR4 platform for imx8mm
+
+According to section 2.1.2 (Cortex-A53 Memory Map) of i.MX 8M Mini Reference
+Manual [1], only 3072MB of DDR Memory address area are available for all modules,
+including GPU. Address range from 0x100000000 to 0x23FFFFFFF is accessible
+only by the A53 Cores only. An attempt to use this memory range by another
+module, such as GPU leads a crash.
+
+[1] https://www.nxp.com/webapp/Download?colCode=IMX8MMRM
+
+Signed-off-by: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+---
+ drivers/mxc/gpu-viv/hal/os/linux/kernel/gc_hal_kernel_platform.h | 1 +
+ .../linux/kernel/platform/freescale/gc_hal_kernel_platform_imx.c | 9 +++++++++
+ 2 files changed, 10 insertions(+)
+
+diff --git a/drivers/mxc/gpu-viv/hal/os/linux/kernel/gc_hal_kernel_platform.h b/drivers/mxc/gpu-viv/hal/os/linux/kernel/gc_hal_kernel_platform.h
+index f83354d47735..95b85ea742b5 100644
+--- a/drivers/mxc/gpu-viv/hal/os/linux/kernel/gc_hal_kernel_platform.h
++++ b/drivers/mxc/gpu-viv/hal/os/linux/kernel/gc_hal_kernel_platform.h
+@@ -285,6 +285,7 @@ enum
+ {
+     /* GPU can't issue more that 32bit physical address */
+     gcvPLATFORM_FLAG_LIMIT_4G_ADDRESS = 1 << 0,
++    gcvPLATFORM_FLAG_IMX_MM           = 1 << 1,
+ };
+ 
+ struct soc_platform
+diff --git a/drivers/mxc/gpu-viv/hal/os/linux/kernel/platform/freescale/gc_hal_kernel_platform_imx.c b/drivers/mxc/gpu-viv/hal/os/linux/kernel/platform/freescale/gc_hal_kernel_platform_imx.c
+index 62624d69b4a4..518507120277 100644
+--- a/drivers/mxc/gpu-viv/hal/os/linux/kernel/platform/freescale/gc_hal_kernel_platform_imx.c
++++ b/drivers/mxc/gpu-viv/hal/os/linux/kernel/platform/freescale/gc_hal_kernel_platform_imx.c
+@@ -1496,6 +1496,15 @@ _AdjustParam(
+     if (of_find_compatible_node(NULL, NULL, "fsl,imx8mq-gpu") && ((Args->baseAddress + totalram_pages * PAGE_SIZE) > 0x100000000))
+         Platform->flagBits = gcvPLATFORM_FLAG_LIMIT_4G_ADDRESS;
+ 
++     if (of_find_compatible_node(NULL, NULL, "fsl,imx8mm-gpu"))
++     {
++         Platform->flagBits |= gcvPLATFORM_FLAG_IMX_MM;
++         if (((Args->baseAddress + totalram_pages * PAGE_SIZE) > 0x100000000))
++         {
++             Platform->flagBits |= gcvPLATFORM_FLAG_LIMIT_4G_ADDRESS;
++         }
++     }
++
+     return gcvSTATUS_OK;
+ }
+ 
+-- 
+2.11.0
+
