@@ -1,0 +1,25 @@
+From d3dbbbb5553c0f43dacef8787697e0583ef5a0ca Mon Sep 17 00:00:00 2001
+From: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+Date: Tue, 12 Nov 2024 21:23:59 +0200
+Subject: [PATCH 135/155] iot-gate-imx8: Erase DEFAULT_FDT
+
+Signed-off-by: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+---
+ board/compulab/iot-gate-imx8/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/board/compulab/iot-gate-imx8/Kconfig b/board/compulab/iot-gate-imx8/Kconfig
+index 0f6a7f39542..5de337d7999 100644
+--- a/board/compulab/iot-gate-imx8/Kconfig
++++ b/board/compulab/iot-gate-imx8/Kconfig
+@@ -12,6 +12,6 @@ config SYS_CONFIG_NAME
+ config DEFAULT_FDT
+ 	string
+ 	depends on TARGET_IOT_GATE_IMX8
+-	default "sb-iotgimx8-can.dtb"
++	default ""
+ 
+ endif
+-- 
+2.34.1
+

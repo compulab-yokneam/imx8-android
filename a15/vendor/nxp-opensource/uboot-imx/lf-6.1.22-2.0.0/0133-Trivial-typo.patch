@@ -1,0 +1,26 @@
+From dde361998a6e73b73e4580230a6ae42546b17237 Mon Sep 17 00:00:00 2001
+From: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+Date: Mon, 11 Nov 2024 22:07:35 +0200
+Subject: [PATCH 133/155] Trivial typo
+
+Signed-off-by: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+---
+ board/compulab/ucm-imx8m-mini/ucm-imx8m-mini.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/board/compulab/ucm-imx8m-mini/ucm-imx8m-mini.c b/board/compulab/ucm-imx8m-mini/ucm-imx8m-mini.c
+index 6780bcdd24f..d39d8f8ed6c 100644
+--- a/board/compulab/ucm-imx8m-mini/ucm-imx8m-mini.c
++++ b/board/compulab/ucm-imx8m-mini/ucm-imx8m-mini.c
+@@ -37,7 +37,7 @@ static void ucm_imx8_mini_select_dtb(void)
+ 	const char *fdt_src;
+ 	const char *env_fdt_file = env_get(ENV_FDT_FILE);
+ 	char buf[PRODUCT_OPTION_SIZE * PRODUCT_OPTION_NUM + 1];
+-// Variable fdt_file unset or empty -- choose FDT, basing on the device ooptions
++// Variable fdt_file unset or empty -- choose FDT, basing on the device options
+ 	if (NULL == env_fdt_file || 0 == env_fdt_file[0]) {
+ 		env_fdt_file = CONFIG_DEFAULT_FDT_WB5; //Valid DTB for all PCB revisions, but 1.4
+ 		if (cl_eeprom_read_som_options(buf)) {
+-- 
+2.34.1
+

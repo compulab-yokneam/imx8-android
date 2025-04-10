@@ -1,0 +1,31 @@
+From 1e8e464a04bb22c18016b690233def95317b067f Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sun, 31 Mar 2024 11:23:35 +0300
+Subject: [PATCH 065/155] compulab: im8mp: ddr: Update Micron support
+
+Add 111L53100S, MICRON; MT53E2G32D4DE-046 support
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ board/compulab/plat/imx8mp/ddr/ddr.h | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/board/compulab/plat/imx8mp/ddr/ddr.h b/board/compulab/plat/imx8mp/ddr/ddr.h
+index 36a094f0997..d166567312d 100644
+--- a/board/compulab/plat/imx8mp/ddr/ddr.h
++++ b/board/compulab/plat/imx8mp/ddr/ddr.h
+@@ -117,6 +117,11 @@ static const struct lpddr4_desc lpddr4_array[] = {
+ 	{ .name = "Micron",	.id = 0xff060018, .subind = 0x8, .size = 8192, .count = 1,
+ #ifdef CONFIG_SPL_BUILD
+ 		.timing = &ucm_dram_timing_ff060018
++#endif
++	},
++	{ .name = "Micron",	.id = 0xff070018, .subind = 0x8, .size = 8192, .count = 1,
++#ifdef CONFIG_SPL_BUILD
++		.timing = &ucm_dram_timing_ff060018
+ #endif
+ 	},
+ #endif
+-- 
+2.34.1
+

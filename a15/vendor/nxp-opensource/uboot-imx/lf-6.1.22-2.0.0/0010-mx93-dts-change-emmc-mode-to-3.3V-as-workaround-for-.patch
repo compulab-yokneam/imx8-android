@@ -1,0 +1,42 @@
+From 421d8ff030b77ff87d10fbc155cc617b285efcac Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Wed, 20 Dec 2023 19:31:05 +0200
+Subject: [PATCH 010/155] mx93 dts: change emmc mode to 3.3V as workaround for
+ Kingston emmc. fix board to remove warning
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ arch/arm/dts/ucm-imx93.dts           | 1 +
+ board/compulab/ucm-imx93/ucm-imx93.c | 4 ++++
+ 2 files changed, 5 insertions(+)
+
+diff --git a/arch/arm/dts/ucm-imx93.dts b/arch/arm/dts/ucm-imx93.dts
+index 568dc91fdca..b807182a08a 100644
+--- a/arch/arm/dts/ucm-imx93.dts
++++ b/arch/arm/dts/ucm-imx93.dts
+@@ -300,6 +300,7 @@
+ 	pinctrl-0 = <&pinctrl_usdhc1>;
+ 	pinctrl-1 = <&pinctrl_usdhc1>;
+ 	pinctrl-2 = <&pinctrl_usdhc1>;
++	no-1-8-v;
+ 	bus-width = <8>;
+ 	non-removable;
+ 	status = "okay";
+diff --git a/board/compulab/ucm-imx93/ucm-imx93.c b/board/compulab/ucm-imx93/ucm-imx93.c
+index a613021650e..59d91a5e898 100644
+--- a/board/compulab/ucm-imx93/ucm-imx93.c
++++ b/board/compulab/ucm-imx93/ucm-imx93.c
+@@ -270,6 +270,10 @@ static int fdt_set_env_addr(void *blob)
+ 	return 0;
+ }
+ 
++int disable_npu_nodes(void *blob);
++int disable_m33_nodes(void *blob);
++int disable_ele_nodes(void *blob);
++
+ int ft_board_setup(void *blob, struct bd_info *bd)
+ {
+ 	phys_size_t sdram_size;
+-- 
+2.34.1
+

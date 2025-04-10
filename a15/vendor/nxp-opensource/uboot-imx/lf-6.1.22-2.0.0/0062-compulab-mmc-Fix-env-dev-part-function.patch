@@ -1,0 +1,43 @@
+From be776132beea874f728f77b05a8525df7e862a17 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Mon, 18 Mar 2024 18:23:00 +0200
+Subject: [PATCH 062/155] compulab: mmc: Fix env dev/part function
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ board/compulab/common/mmc.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/board/compulab/common/mmc.c b/board/compulab/common/mmc.c
+index ce21add72d8..b2922122b2e 100644
+--- a/board/compulab/common/mmc.c
++++ b/board/compulab/common/mmc.c
+@@ -15,10 +15,10 @@ int get_env_dev() {
+ }
+ 
+ int get_env_part() {
+-	return env_dev;
++	return env_part;
+ }
+ 
+-int board_mmc_get_env_dev(int devno)
++static int _board_mmc_get_env_dev(int devno)
+ {
+ 	const ulong user_env_devno = env_get_hex("env_dev", ULONG_MAX);
+ 	if (user_env_devno != ULONG_MAX) {
+@@ -28,6 +28,12 @@ int board_mmc_get_env_dev(int devno)
+ 	return devno;
+ }
+ 
++int board_mmc_get_env_dev(int devno)
++{
++	env_dev = _board_mmc_get_env_dev(devno);
++	return env_dev;
++}
++
+ static int _mmc_get_env_part(struct mmc *mmc)
+ {
+ 	const ulong user_env_part = env_get_hex("env_part", ULONG_MAX);
+-- 
+2.34.1
+

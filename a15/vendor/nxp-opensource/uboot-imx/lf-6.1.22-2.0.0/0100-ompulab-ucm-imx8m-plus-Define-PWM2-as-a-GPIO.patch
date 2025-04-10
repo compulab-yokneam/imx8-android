@@ -1,0 +1,32 @@
+From bd9c09273649a0943cfc00823b1eaa40a7522459 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Mon, 17 Jun 2024 19:25:09 +0300
+Subject: [PATCH 100/155] ompulab: ucm-imx8m-plus: Define PWM2 as a GPIO
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ arch/arm/dts/compulab-imx8m-plus-lcdif2.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/arm/dts/compulab-imx8m-plus-lcdif2.dtsi b/arch/arm/dts/compulab-imx8m-plus-lcdif2.dtsi
+index 06a56962e87..5423d27267c 100644
+--- a/arch/arm/dts/compulab-imx8m-plus-lcdif2.dtsi
++++ b/arch/arm/dts/compulab-imx8m-plus-lcdif2.dtsi
+@@ -58,6 +58,14 @@
+ 	};
+ };
+ 
++&iomuxc {
++	pinctrl_pwm2: pwm2grp {
++		fsl,pins = <
++			MX8MP_IOMUXC_SPDIF_RX__GPIO5_IO04	0x116
++		>;
++	};
++};
++
+ &pwm2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_pwm2>;
+-- 
+2.34.1
+

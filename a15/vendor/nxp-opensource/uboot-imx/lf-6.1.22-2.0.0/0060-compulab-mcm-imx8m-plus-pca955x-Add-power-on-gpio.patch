@@ -1,0 +1,48 @@
+From 44281c1d0d8025135814f3c1157ee2f252abcfe6 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Thu, 14 Mar 2024 14:49:05 +0200
+Subject: [PATCH 060/155] compulab: mcm-imx8m-plus: pca955x: Add power on gpio
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ arch/arm/dts/mcm-imx8m-plus.dts | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/arch/arm/dts/mcm-imx8m-plus.dts b/arch/arm/dts/mcm-imx8m-plus.dts
+index bcc0ab688a9..cfadc3761f7 100644
+--- a/arch/arm/dts/mcm-imx8m-plus.dts
++++ b/arch/arm/dts/mcm-imx8m-plus.dts
+@@ -97,6 +97,17 @@
+ 	};
+ };
+ 
++&gpio1 {
++	pcapower-on-hog {
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_reg_pca_poweron>;
++		gpios = <8 GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "pcapoweron";
++		gpio-hog;
++	};
++};
++
+ &eqos {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_eqos>;
+@@ -649,6 +660,12 @@
+ 		>;
+ 	};
+ 
++	pinctrl_reg_pca_poweron: regpcapoweron {
++		fsl,pins = <
++			MX8MP_IOMUXC_GPIO1_IO08__GPIO1_IO08	0x41
++		>;
++	};
++
+ 	pinctrl_uart1: uart1grp {
+ 		fsl,pins = <
+ 			MX8MP_IOMUXC_SD1_CMD__UART1_DCE_RX	0x49
+-- 
+2.34.1
+

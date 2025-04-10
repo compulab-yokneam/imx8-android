@@ -1,0 +1,62 @@
+From 28faac69d928ef4b89b66651f0bf9ea415ef95c0 Mon Sep 17 00:00:00 2001
+From: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+Date: Sun, 11 Feb 2024 19:35:28 +0200
+Subject: [PATCH 112/155] compulab: eeprom: layout: add read serial function
+
+The function conver the CompuLab serial number format to tag_serialnr structure.
+
+Signed-off-by: Uri Mashiach <uri.mashiach@compulab.co.il>
+Signed-off-by: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+---
+ common/eeprom/eeprom_field.c | 21 +++++++++++++++++++++
+ include/eeprom_field.h       |  2 ++
+ 2 files changed, 23 insertions(+)
+
+diff --git a/common/eeprom/eeprom_field.c b/common/eeprom/eeprom_field.c
+index e588b0943f6..814dc4eb7a2 100644
+--- a/common/eeprom/eeprom_field.c
++++ b/common/eeprom/eeprom_field.c
+@@ -203,6 +203,27 @@ int eeprom_field_update_bin_rev(struct eeprom_field *field, uchar *fbuf,
+ 	return __eeprom_field_update_bin(field, fbuf, value, true);
+ }
+ 
++/**
++ * eeprom_field_read_rev() - Read reversed binary data
++ *
++ * @field:     an initialized field
++ * @fbuf:      field buffer
++ * @buf:       read buffer
++ * @buf_size:  read buffer size
++ */
++int eeprom_field_read_rev(const struct eeprom_field *field, uchar *fbuf,
++			  uchar *buf, int buf_size)
++{
++	int i;
++
++	memset(buf, 0, buf_size);
++
++	for (i = field->size - 1; i >= 0; i--, buf++)
++		*buf = fbuf[i];
++
++	return 0;
++}
++
+ /**
+  * eeprom_field_print_mac_addr() - print a field which contains a mac address
+  *
+diff --git a/include/eeprom_field.h b/include/eeprom_field.h
+index 6b6cd372296..311c49401a6 100644
+--- a/include/eeprom_field.h
++++ b/include/eeprom_field.h
+@@ -31,6 +31,8 @@ int eeprom_field_read_bin(const struct eeprom_field *field, uchar *fbuf,
+ void eeprom_field_print_bin_rev(const struct eeprom_field *field, uchar *fbuf);
+ int eeprom_field_update_bin_rev(struct eeprom_field *field, uchar *fbuf,
+ 				char *value);
++int eeprom_field_read_rev(const struct eeprom_field *field, uchar *fbuf,
++			  uchar *buf, int buf_size);
+ 
+ void eeprom_field_print_mac(const struct eeprom_field *field, uchar *fbuf);
+ int eeprom_field_update_mac(struct eeprom_field *field, uchar *fbuf,
+-- 
+2.34.1
+

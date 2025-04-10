@@ -1,0 +1,24 @@
+From c26c408fbbfab06a9ce0381103fee1e3e58379b2 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Wed, 9 Apr 2025 15:10:55 +0300
+Subject: [PATCH 6/7] imx8m: ucm_imx8m_plus: Add SIMPLE and LVDS panels as
+ modules
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ imx8m/ucm_imx8m_plus/android_addition_defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/imx8m/ucm_imx8m_plus/android_addition_defconfig b/imx8m/ucm_imx8m_plus/android_addition_defconfig
+index b2439e00..0f5fbc56 100644
+--- a/imx8m/ucm_imx8m_plus/android_addition_defconfig
++++ b/imx8m/ucm_imx8m_plus/android_addition_defconfig
+@@ -2,3 +2,5 @@ CONFIG_DRM_PANEL_STARTEK_ILI9881C=y
+ CONFIG_BACKLIGHT_PWM=y
+ CONFIG_GPIO_PCA953X=y
+ CONFIG_PWM_IMX27=y
++CONFIG_DRM_PANEL_SIMPLE=y
++CONFIG_DRM_PANEL_LVDS=y
+-- 
+2.34.1
+

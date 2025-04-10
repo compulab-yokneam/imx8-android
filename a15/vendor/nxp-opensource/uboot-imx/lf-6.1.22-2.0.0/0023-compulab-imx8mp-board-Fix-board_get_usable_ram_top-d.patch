@@ -1,0 +1,39 @@
+From 4e098ec9b1095d685a17b9756317bb6fa09709e7 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Fri, 29 Dec 2023 18:55:56 +0200
+Subject: [PATCH 023/155] compulab: imx8mp: board: Fix
+ board_get_usable_ram_top() definition
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+
+%% original patch: 0005-compulab-imx8mp-board-Fix-board_get_usable_ram_top-d.patch
+---
+ board/compulab/plat/imx8mp/board/board.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/board/compulab/plat/imx8mp/board/board.c b/board/compulab/plat/imx8mp/board/board.c
+index 514144bb9bb..8b797b3d70e 100644
+--- a/board/compulab/plat/imx8mp/board/board.c
++++ b/board/compulab/plat/imx8mp/board/board.c
+@@ -466,9 +466,6 @@ int board_init(void)
+ 	arm_smccc_smc(IMX_SIP_GPC, IMX_SIP_GPC_PM_DOMAIN,
+ 		      MIPI, true, 0, 0, 0, 0, &res);
+ 
+-	if (IS_ENABLED(CONFIG_LED))
+-		led_default_state();
+-
+ 	return 0;
+ }
+ 
+@@ -494,7 +491,7 @@ int board_late_init(void)
+ }
+ 
+ #ifdef CONFIG_IMX_BOOTAUX
+-ulong board_get_usable_ram_top(ulong total_size)
++phys_size_t board_get_usable_ram_top(phys_size_t total_size)
+ {
+ 	/* Reserve 16M memory used by M core vring/buffer, which begins at 16MB before optee */
+ 	if (rom_pointer[1])
+-- 
+2.34.1
+

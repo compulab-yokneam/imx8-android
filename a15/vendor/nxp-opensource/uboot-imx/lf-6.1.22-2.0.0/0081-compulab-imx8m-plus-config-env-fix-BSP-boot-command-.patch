@@ -1,0 +1,57 @@
+From c47445caad41f1d7c3116168a83bfae505c6dcaf Mon Sep 17 00:00:00 2001
+From: Ilya Ledvich <ilya@compulab.co.il>
+Date: Sun, 19 May 2024 13:48:18 +0300
+Subject: [PATCH 081/155] compulab-imx8m-plus: config: env: fix BSP boot
+ command logics
+
+Signed-off-by: Ilya Ledvich <ilya@compulab.co.il>
+---
+ include/configs/compulab-imx8m-plus.h | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
+
+diff --git a/include/configs/compulab-imx8m-plus.h b/include/configs/compulab-imx8m-plus.h
+index 979ba126c93..7c99cb120ca 100644
+--- a/include/configs/compulab-imx8m-plus.h
++++ b/include/configs/compulab-imx8m-plus.h
+@@ -115,7 +115,9 @@
+ 			"setenv bootargs console=${console} root=${sd_root} ${root_opt};\0" \
+ 		"usb_ul=usb start; setenv iface usb; setenv dev ${usb_dev}; setenv part ${boot_part};" \
+ 			"setenv bootargs console=${console} root=${usb_root} ${root_opt};\0" \
+-		"ulbootscript=load ${iface} ${dev}:${part} ${loadaddr} ${script};\0" \
++		"ulbootscript=load ${iface} ${dev}:${part} ${scriptaddr} ${bsp_script};\0" \
++		"ulrunbootscript=echo Running bootscript from ${iface} ${dev}:${part} ...; " \
++				"source ${scriptaddr}\0" \
+ 		"ulimage=echo loading ${image}; load ${iface} ${dev}:${part} ${loadaddr} ${image}\0" \
+ 		"ulfdto=setenv fdto1file; for fdto1file in ${fdtofile}; do "\
+ 			    "echo loading ${fdto1file}; "\
+@@ -135,18 +137,18 @@
+ 		"bootlist=usb_ul sd_ul emmc_ul\0" \
+ 		"bsp_bootcmd=echo Running BSP bootcmd ...; " \
+ 		"for src in ${bootlist}; do " \
++			"echo Running ${src} ...; " \
+ 			"run ${src}; " \
+ 			"env exist boot_opt && env exists bootargs && setenv bootargs ${bootargs} ${boot_opt}; " \
+ 			"if run ulbootscript; then " \
+-				"run bootscript; " \
+-			"else " \
+-				"if run ulimage; then " \
+-					"if run ulfdt; then " \
+-						"booti ${loadaddr} - ${fdt_addr_r}; " \
+-					"else " \
+-						"if test ${boot_fdt} != yes; then " \
+-							"booti ${loadaddr}; " \
+-						"fi; " \
++				"run ulrunbootscript; " \
++			"fi; " \
++			"if run ulimage; then " \
++				"if run ulfdt; then " \
++					"booti ${loadaddr} - ${fdt_addr_r}; " \
++				"else " \
++					"if test ${boot_fdt} != yes; then " \
++						"booti ${loadaddr}; " \
+ 					"fi; " \
+ 				"fi; " \
+ 			"fi; " \
+-- 
+2.34.1
+

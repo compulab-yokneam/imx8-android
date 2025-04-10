@@ -1,0 +1,26 @@
+From 11c214f8cfe6124e418ee270563576efc5876631 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sat, 23 Dec 2023 15:46:31 +0200
+Subject: [PATCH 012/155] ucm-imx93: dts: Update the u-boot device tree for
+ 2023.04
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ arch/arm/dts/ucm-imx93-u-boot.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/dts/ucm-imx93-u-boot.dtsi b/arch/arm/dts/ucm-imx93-u-boot.dtsi
+index 0554a2ae947..c98c24c32c2 100644
+--- a/arch/arm/dts/ucm-imx93-u-boot.dtsi
++++ b/arch/arm/dts/ucm-imx93-u-boot.dtsi
+@@ -178,6 +178,7 @@
+ 	u-boot,dm-spl;
+ 	/delete-property/ assigned-clocks;
+ 	/delete-property/ assigned-clock-rates;
++	/delete-property/ assigned-clock-parents;
+ };
+ 
+ &osc_32k {
+-- 
+2.34.1
+

@@ -1,0 +1,30 @@
+From 04f318dec2d59692255129121c9db619b2c1270f Mon Sep 17 00:00:00 2001
+From: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+Date: Mon, 28 Oct 2024 23:02:11 +0200
+Subject: [PATCH 127/155] ucm-imx8m-mini:defconfig: Enable fastboot
+
+Signed-off-by: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+---
+ configs/cl-imx8m-mini_defconfig | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/configs/cl-imx8m-mini_defconfig b/configs/cl-imx8m-mini_defconfig
+index 09c71cf7779..2c853f7fe8d 100644
+--- a/configs/cl-imx8m-mini_defconfig
++++ b/configs/cl-imx8m-mini_defconfig
+@@ -178,3 +178,12 @@ CONFIG_SYS_EEPROM_PAGE_WRITE_DELAY_MS=5
+ CONFIG_SYS_I2C_MXC_I2C1=y
+ CONFIG_SYS_I2C_MXC_I2C2=y
+ CONFIG_SYS_I2C_MXC_I2C3=y
++
++CONFIG_FASTBOOT=y
++CONFIG_CMD_FASTBOOT=y
++CONFIG_USB_FUNCTION_FASTBOOT=y
++CONFIG_FASTBOOT_UUU_SUPPORT=y
++CONFIG_FASTBOOT_FLASH=y
++CONFIG_FASTBOOT_BUF_ADDR=0x42800000
++CONFIG_FASTBOOT_BUF_SIZE=0x40000000
++CONFIG_FASTBOOT_OEM_RUN=y
+-- 
+2.34.1
+

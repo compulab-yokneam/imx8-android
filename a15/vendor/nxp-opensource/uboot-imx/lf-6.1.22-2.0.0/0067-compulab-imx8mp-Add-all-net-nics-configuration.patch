@@ -1,0 +1,59 @@
+From 5873d9f4302bf01e022fd65251bf2e87a66ac92c Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Mon, 13 May 2024 08:19:32 +0300
+Subject: [PATCH 067/155] compulab: imx8mp: Add all net nics configuration
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ board/compulab/plat/imx8mp/board/board.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
+
+diff --git a/board/compulab/plat/imx8mp/board/board.c b/board/compulab/plat/imx8mp/board/board.c
+index 2ab72de8f25..113609c2cbd 100644
+--- a/board/compulab/plat/imx8mp/board/board.c
++++ b/board/compulab/plat/imx8mp/board/board.c
+@@ -69,7 +69,15 @@ int ft_board_setup(void *blob, struct bd_info *bd)
+ }
+ #endif
+ 
+-#ifdef CONFIG_DWC_ETH_QOS
++static void setup_fec(void)
++{
++	struct iomuxc_gpr_base_regs *gpr =
++		(struct iomuxc_gpr_base_regs *)IOMUXC_GPR_BASE_ADDR;
++
++	/* Enable RGMII TX clk output */
++	setbits_le32(&gpr->gpr[1], BIT(22));
++}
++
+ static int setup_eqos(void)
+ {
+ 	struct iomuxc_gpr_base_regs *gpr =
+@@ -82,7 +90,6 @@ static int setup_eqos(void)
+ 
+ 	return set_clk_eqos(ENET_125MHZ);
+ }
+-#endif
+ 
+ #if defined(CONFIG_FEC_MXC) || defined(CONFIG_DWC_ETH_QOS)
+ static int mx8_rgmii_rework(struct phy_device *phydev);
+@@ -236,9 +243,13 @@ int board_init(void)
+ 
+ 	board_vendor_init();
+ 
+-#ifdef CONFIG_DWC_ETH_QOS
+-	setup_eqos();
+-#endif
++	if (IS_ENABLED(CONFIG_FEC_MXC)) {
++		setup_fec();
++	}
++
++	if (IS_ENABLED(CONFIG_DWC_ETH_QOS)) {
++		setup_eqos();
++	}
+ 
+ #if defined(CONFIG_USB_DWC3) || defined(CONFIG_USB_XHCI_IMX8M)
+ 	init_usb_clk();
+-- 
+2.34.1
+

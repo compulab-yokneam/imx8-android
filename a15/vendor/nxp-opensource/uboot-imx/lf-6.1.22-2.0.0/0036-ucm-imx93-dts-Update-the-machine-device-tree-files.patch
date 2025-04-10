@@ -1,0 +1,122 @@
+From 0cd00b21a66cf9f536bee059c336f1fda6363835 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Tue, 9 Jan 2024 10:56:51 +0200
+Subject: [PATCH 036/155] ucm-imx93: dts: Update the machine device tree files
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ arch/arm/dts/ucm-imx93-u-boot.dtsi |  4 ---
+ arch/arm/dts/ucm-imx93.dts         | 43 ++++++++++--------------------
+ 2 files changed, 14 insertions(+), 33 deletions(-)
+
+diff --git a/arch/arm/dts/ucm-imx93-u-boot.dtsi b/arch/arm/dts/ucm-imx93-u-boot.dtsi
+index c98c24c32c2..a21028bdd27 100644
+--- a/arch/arm/dts/ucm-imx93-u-boot.dtsi
++++ b/arch/arm/dts/ucm-imx93-u-boot.dtsi
+@@ -150,10 +150,6 @@
+ 	phy-reset-post-delay = <100>;
+ };
+ 
+-&eqos {
+-	compatible = "fsl,imx-eqos";
+-};
+-
+ &ethphy1 {
+ 	reset-gpios = <&gpio1 6 GPIO_ACTIVE_LOW>;
+ 	reset-assert-us = <15000>;
+diff --git a/arch/arm/dts/ucm-imx93.dts b/arch/arm/dts/ucm-imx93.dts
+index 030d5c59cb0..c243c16d121 100644
+--- a/arch/arm/dts/ucm-imx93.dts
++++ b/arch/arm/dts/ucm-imx93.dts
+@@ -12,6 +12,7 @@
+ 	compatible = "compulab,ucm-imx93", "fsl,imx93";
+ 
+ 	chosen {
++		bootargs = "console=ttyLP0,115200";
+ 		stdout-path = &lpuart1;
+ 	};
+ 
+@@ -21,18 +22,6 @@
+ 		ethernet1 = &fec;
+ 	};
+ 
+-	reserved-memory {
+-		#address-cells = <2>;
+-		#size-cells = <2>;
+-		ranges;
+-
+-		audio: audio@a4120000 {
+-			compatible = "shared-dma-pool";
+-			reg = <0 0xa4120000 0 0x100000>;
+-			no-map;
+-		};
+-	};
+-
+ 	reg_usdhc2_vmmc: regulator-usdhc2 {
+ 		compatible = "regulator-fixed";
+ 		pinctrl-names = "default";
+@@ -321,48 +310,44 @@
+ 	status = "disabled";
+ };
+ 
+-&fec {
++&eqos {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_fec>;
++	pinctrl-0 = <&pinctrl_eqos>;
+ 	phy-mode = "rgmii-id";
+-	phy-handle = <&ethphy2>;
+-	fsl,magic-packet;
++	phy-handle = <&ethphy1>;
+ 	status = "okay";
+ 
+ 	mdio {
++		compatible = "snps,dwmac-mdio";
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		clock-frequency = <5000000>;
+ 
+-		ethphy2: ethernet-phy-fec@5 {
++		ethphy1: ethernet-phy-eqos@4 {
+ 			compatible = "ethernet-phy-ieee802.3-c22";
+-			reg = <5>;
++			reg = <4>;
+ 			eee-broken-1000t;
+-			rtl821x,aldps-disable;
+-			rtl821x,clkout-disable;
+ 		};
+ 	};
+ };
+ 
+-&eqos {
++&fec {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_eqos>;
++	pinctrl-0 = <&pinctrl_fec>;
+ 	phy-mode = "rgmii-id";
+-	phy-handle = <&ethphy1>;
+-	status = "okay";
++	phy-handle = <&ethphy2>;
++	fsl,magic-packet;
++	status = "disabled";
+ 
+ 	mdio {
+-		compatible = "snps,dwmac-mdio";
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		clock-frequency = <5000000>;
+ 
+-		ethphy1: ethernet-phy-eqos@4 {
++		ethphy2: ethernet-phy-fec@5 {
+ 			compatible = "ethernet-phy-ieee802.3-c22";
+-			reg = <4>;
++			reg = <5>;
+ 			eee-broken-1000t;
+-			rtl821x,aldps-disable;
+-			rtl821x,clkout-disable;
+ 		};
+ 	};
+ };
+-- 
+2.34.1
+

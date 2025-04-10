@@ -1,0 +1,33 @@
+From 36eff3ba46519acda0df86dec64397744dbabd99 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Tue, 16 Apr 2024 15:42:07 +0300
+Subject: [PATCH 066/155] ucm-imx8m-plus: Update falcon mode config
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ configs/ucm-imx8m-plus_falcon_defconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/configs/ucm-imx8m-plus_falcon_defconfig b/configs/ucm-imx8m-plus_falcon_defconfig
+index 98e845a726f..f8f66ce353d 100644
+--- a/configs/ucm-imx8m-plus_falcon_defconfig
++++ b/configs/ucm-imx8m-plus_falcon_defconfig
+@@ -185,13 +185,13 @@ CONFIG_USB_GADGET_PRODUCT_NUM=0x0152
+ CONFIG_VIDEO=y
+ CONFIG_VIDEO_LOGO=y
+ CONFIG_VIDEO_LCD_STARTEK_ILI9881C=y
+-CONFIG_VIDEO_IMX_SEC_DSI=y
+-CONFIG_VIDEO_IMX_LCDIFV3=y
++CONFIG_VIDEO_BRIDGE=y
+ CONFIG_SPLASH_SCREEN=y
+ CONFIG_SPLASH_SCREEN_ALIGN=y
+ CONFIG_BMP_16BPP=y
+ CONFIG_BMP_24BPP=y
+ CONFIG_BMP_32BPP=y
++CONFIG_VIDEO_LINK=y
+ CONFIG_WDT=y
+ CONFIG_LZO=y
+ CONFIG_BZIP2=y
+-- 
+2.34.1
+

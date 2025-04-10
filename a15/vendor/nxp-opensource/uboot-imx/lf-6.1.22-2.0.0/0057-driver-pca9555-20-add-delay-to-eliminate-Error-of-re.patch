@@ -1,0 +1,32 @@
+From 97d8236a3cebecdc9510deee9f31a1356f106959 Mon Sep 17 00:00:00 2001
+From: yaakov entin <yaakov.entin@compulab.co.il>
+Date: Mon, 12 Feb 2024 11:44:24 +0200
+Subject: [PATCH 057/155] driver: pca9555@20: add delay to eliminate Error of
+ reading output register
+
+---
+ drivers/gpio/pca953x_gpio.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpio/pca953x_gpio.c b/drivers/gpio/pca953x_gpio.c
+index 4654f9e0989..c81d2963dc8 100644
+--- a/drivers/gpio/pca953x_gpio.c
++++ b/drivers/gpio/pca953x_gpio.c
+@@ -337,8 +337,12 @@ static int pca953x_probe(struct udevice *dev)
+ 
+ 	ret = pca953x_read_regs(dev, info->regs->output, info->reg_output);
+ 	if (ret) {
+-		dev_err(dev, "Error reading output register\n");
+-		return ret;
++		udelay(1000000);
++		ret = pca953x_read_regs(dev, PCA953X_DIRECTION, info->reg_direction);
++		if (ret) {
++			dev_err(dev, "Error reading output register\n");
++			return ret;
++		}
+ 	}
+ 
+ 	ret = pca953x_read_regs(dev, PCA953X_DIRECTION, info->reg_direction);
+-- 
+2.34.1
+

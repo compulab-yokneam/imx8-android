@@ -1,0 +1,40 @@
+From 369961c3c3270d9ab315a69fdf8f17fbe77c600f Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sun, 23 Mar 2025 15:14:51 +0200
+Subject: [PATCH 5/5] compulab: imx8mp: Make usb1 work as a peripheral device
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ arch/arm64/boot/dts/compulab/ucm-imx8m-plus-headless.dts | 2 --
+ arch/arm64/boot/dts/compulab/ucm-imx8m-plus-som.dts      | 2 ++
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/compulab/ucm-imx8m-plus-headless.dts b/arch/arm64/boot/dts/compulab/ucm-imx8m-plus-headless.dts
+index 3af7cc86381d..e83ef71b9558 100644
+--- a/arch/arm64/boot/dts/compulab/ucm-imx8m-plus-headless.dts
++++ b/arch/arm64/boot/dts/compulab/ucm-imx8m-plus-headless.dts
+@@ -19,8 +19,6 @@
+ #include "ucm-imx8m-plus-pcie.dtsi"
+ #include "ucm-imx8m-plus-mmc.dtsi"
+ #include "sb-ucmimx8plus.dtsi"
+-/* Android adb support */
+-#include "ucm-imx8m-plus-usbdev.dtsi"
+ 
+ / {
+ 	model = "CompuLab UCM-iMX8M-Plus (headless)";
+diff --git a/arch/arm64/boot/dts/compulab/ucm-imx8m-plus-som.dts b/arch/arm64/boot/dts/compulab/ucm-imx8m-plus-som.dts
+index 8557b1bea39a..b98b39516516 100644
+--- a/arch/arm64/boot/dts/compulab/ucm-imx8m-plus-som.dts
++++ b/arch/arm64/boot/dts/compulab/ucm-imx8m-plus-som.dts
+@@ -16,6 +16,8 @@
+ 
+ #include "ucm-imx8m-plus.dtsi"
+ #include "compulab-imx8m-plus-ldo4.dtsi"
++/* Android adb support */
++#include "ucm-imx8m-plus-usbdev.dtsi"
+ 
+ / {
+ 	model = "CompuLab UCM-iMX8M-Plus (SOM)";
+-- 
+2.34.1
+

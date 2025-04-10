@@ -1,0 +1,72 @@
+From 29ca7f07dfdeeb12c2fae2313e237ff8dead6c8f Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Wed, 20 Dec 2023 19:21:27 +0200
+Subject: [PATCH 007/155] ucm-imx93: disable m33 when memory is 500MB
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ arch/arm/mach-imx/imx9/soc.c         | 14 +++++++++++++-
+ board/compulab/ucm-imx93/ucm-imx93.c | 17 +++++++++++++----
+ 2 files changed, 26 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm/mach-imx/imx9/soc.c b/arch/arm/mach-imx/imx9/soc.c
+index 5ebdaf1e649..950bb493b5b 100644
+--- a/arch/arm/mach-imx/imx9/soc.c
++++ b/arch/arm/mach-imx/imx9/soc.c
+@@ -709,10 +709,22 @@ int disable_npu_nodes(void *blob)
+ 		"/ethosu",
+ 		"/reserved-memory/ethosu_region@C0000000"
+ 	};
+-
+ 	return delete_fdt_nodes(blob, nodes_path_npu, ARRAY_SIZE(nodes_path_npu));
+ }
+ 
++int disable_m33_nodes(void *blob)
++{
++	static const char * const nodes_path[] = {
++		"/reserved-memory/vdev0vring0@a4000000",
++		"/reserved-memory/vdev0vring1@a4008000",
++		"/reserved-memory/vdev1vring0@a4000000",
++		"/reserved-memory/vdev1vring1@a4018000",
++		"/reserved-memory/vdevbuffer@a4020000",
++		"/imx93-cm33"
++	};
++	return delete_fdt_nodes(blob, nodes_path, ARRAY_SIZE(nodes_path));
++}
++
+ static void disable_thermal_cpu_nodes(void *blob, u32 disabled_cores)
+ {
+ 	static const char * const thermal_path[] = {
+diff --git a/board/compulab/ucm-imx93/ucm-imx93.c b/board/compulab/ucm-imx93/ucm-imx93.c
+index 8e3f4b39de1..4c4d2ea220b 100644
+--- a/board/compulab/ucm-imx93/ucm-imx93.c
++++ b/board/compulab/ucm-imx93/ucm-imx93.c
+@@ -273,12 +273,21 @@ static int fdt_set_env_addr(void *blob)
+ int ft_board_setup(void *blob, struct bd_info *bd)
+ {
+ 	phys_size_t sdram_size;
+-	board_phys_sdram_size(&sdram_size);
+-	if (sdram_size < 0x80000000) { // ethosu operates only at physical address 0xc0000000
+-		disable_npu_nodes(blob);
+-	}
++	int error = board_phys_sdram_size(&sdram_size);
++
+ 	fdt_set_env_addr(blob);
+ 	fdt_set_sn(blob);
++	if (error) {
++		return error;
++	}
++	if (sdram_size < 0x80000000) {
++		printf("disable ethosu because its address is mapped above 1GB\n");
++		disable_npu_nodes(blob);
++	}
++	if (sdram_size < 0x40000000) {
++		printf("disable M33 because its shared address is mapped above 500MB, you can enable it after changing this address in M33 code and in Linux device tree\n");
++		disable_m33_nodes(blob);
++	}
+ 	return 0;
+ }
+ #endif
+-- 
+2.34.1
+

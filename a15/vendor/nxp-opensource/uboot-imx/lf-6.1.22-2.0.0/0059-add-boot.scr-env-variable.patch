@@ -1,0 +1,24 @@
+From a025da7808b4c12d0efbe565a9469a87bfb4b4cb Mon Sep 17 00:00:00 2001
+From: yaakov entin <yaakov.entin@compulab.co.il>
+Date: Wed, 14 Feb 2024 17:02:43 +0200
+Subject: [PATCH 059/155] add boot.scr env variable
+
+---
+ include/configs/compulab-imx93.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/include/configs/compulab-imx93.h b/include/configs/compulab-imx93.h
+index 3df5b8ae5f9..1b2b98f8646 100644
+--- a/include/configs/compulab-imx93.h
++++ b/include/configs/compulab-imx93.h
+@@ -66,6 +66,7 @@
+ 	AHAB_ENV \
+ 	"autoload=off\0" \
+ 	"scriptaddr=0x83500000\0" \
++	"script=boot.scr\0" \
+ 	"kernel_addr_r=" __stringify(CONFIG_SYS_LOAD_ADDR) "\0" \
+ 	"image=Image\0" \
+ 	"splashimage=0x90000000\0" \
+-- 
+2.34.1
+

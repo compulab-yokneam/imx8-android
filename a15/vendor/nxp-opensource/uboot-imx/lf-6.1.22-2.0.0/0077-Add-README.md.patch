@@ -1,0 +1,74 @@
+From 9c26ea8de6a3c8ed6c99634fe60d3614d2d82531 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Mon, 13 May 2024 23:04:51 +0300
+Subject: [PATCH 077/155] Add README.md
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ README.md | 54 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+ create mode 100644 README.md
+
+diff --git a/README.md b/README.md
+new file mode 100644
+index 00000000000..a761614f78e
+--- /dev/null
++++ b/README.md
+@@ -0,0 +1,54 @@
++# Disclaimer
++
++| !IMPORTANT! | This is a development branch, that is not relelased by CompuLab yet|
++|---|---|
++
++# Configuring the build
++
++## Prerequisites
++It is up to developers to prepare the host machine; it requires:
++
++* [Setup Cross Compiler](https://github.com/compulab-yokneam/meta-bsp-imx8mp/blob/kirkstone/Documentation/toolchain.md#linaro-toolchain-how-to)
++* Install these packages: ``shareutils, swing``
++
++
++## Setup U-Boot environment
++
++* WorkDir:
++```
++mkdir -p compulab-bootloader/build && cd compulab-bootloader
++export BUILD=$(pwd)/build
++```
++
++* Set a CompuLab machine:
++
++| Machine | Command Line |
++|---|---|
++|ucm-imx8m-plus|```export MACHINE=ucm-imx8m-plus```|
++|~~mcm-imx8m-plus~~|~~```export MACHINE=mcm-imx8m-plus```~~|
++|~~som-imx8m-plus~~|~~```export MACHINE=som-imx8m-plus```~~|
++|~~iot-gate-imx8plus~~|~~```export MACHINE=iot-gate-imx8plus```~~|
++|~~iotdin-imx8p~~|~~```export MACHINE=iotdin-imx8p```~~|
++
++* Clone the source code:
++```
++git clone --branch u-boot-compulab_v2023.04 https://github.com/compulab-yokneam/u-boot-compulab.git
++cd u-boot-compulab
++```
++
++## Create U-boot binary
++
++* Apply the machine Config
++```
++make O=${BUILD} ${MACHINE}_defconfig
++```
++
++* Build
++```
++nice make -j`nproc` O=${BUILD} flash.bin
++```
++
++* Result
++```
++ls -al ${BUILD}/flash.bin
++```
+-- 
+2.34.1
+

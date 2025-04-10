@@ -1,0 +1,36 @@
+From 506f43b067c6bd61989b41471e756164e9178724 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Mon, 24 Jun 2024 19:59:19 +0300
+Subject: [PATCH 104/155] compulab: ucm-imx8mp: sbev: Enable USB_POWER_EN
+ regulator
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ arch/arm/dts/ucm-imx8m-plus.dts | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/arch/arm/dts/ucm-imx8m-plus.dts b/arch/arm/dts/ucm-imx8m-plus.dts
+index 2e3de82dad4..d63c023e80f 100644
+--- a/arch/arm/dts/ucm-imx8m-plus.dts
++++ b/arch/arm/dts/ucm-imx8m-plus.dts
+@@ -51,6 +51,17 @@
+ 		startup-delay-us = <100>;
+ 		off-on-delay-us = <12000>;
+ 	};
++#ifdef CONFIG_SBEV_UCMIMX8PLUS
++	usb_power: regulator-usbpower {
++		compatible = "regulator-fixed";
++		regulator-name = "usb-power-en";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&pca9555 1 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++		regulator-always-on;
++	};
++#endif
+ };
+ 
+ &fec {
+-- 
+2.34.1
+

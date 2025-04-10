@@ -1,0 +1,26 @@
+From 1a2fe0661c3e3f3b5892a44d5a09cc1e0bfb9ca0 Mon Sep 17 00:00:00 2001
+From: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+Date: Mon, 3 Mar 2025 17:23:45 +0200
+Subject: [PATCH 151/155] iot-gate-imx8: Fix FDT name printout
+
+Signed-off-by: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+---
+ board/compulab/iot-gate-imx8/iot-gate-imx8.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/board/compulab/iot-gate-imx8/iot-gate-imx8.c b/board/compulab/iot-gate-imx8/iot-gate-imx8.c
+index 4d13b017cf7..25749af3387 100644
+--- a/board/compulab/iot-gate-imx8/iot-gate-imx8.c
++++ b/board/compulab/iot-gate-imx8/iot-gate-imx8.c
+@@ -121,7 +121,7 @@ static void iot_gate_imx8_select_dtb(void)
+ 		fdt_src = "env"; // FDT name is gotten from environment
+ 	}
+ 
+-	printf("FDT[%s]: %s\n", fdt_src, iot_gate_imx8_dtb[iot_gate_imx8_ext_id]);
++	printf("FDT[%s]: %s\n", fdt_src, env_fdt_file);
+ }
+ 
+ static iomux_v3_cfg_t const iot_gate_imx8_ext_ied_pads[] = {
+-- 
+2.34.1
+

@@ -1,0 +1,27 @@
+From 3584328bd07ad0af364ad6c077461a58a7746d4a Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Tue, 4 Mar 2025 16:18:51 +0200
+Subject: [PATCH 152/155] compulab: Makefile: make flash.bin depend on
+ mk_firmware
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index 5a0d125ebfd..1e134d3ea2d 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1525,7 +1525,7 @@ flash.bin: spl/u-boot-spl.bin u-boot.cnt FORCE
+ 	$(Q)$(MAKE) $(build)=arch/arm/mach-imx $@
+ else
+ ifeq ($(CONFIG_BINMAN),y)
+-flash.bin: spl/u-boot-spl.bin $(INPUTS-y) FORCE
++flash.bin: spl/u-boot-spl.bin $(INPUTS-y) mk_firmware FORCE
+ 	$(call if_changed,binman)
+ else
+ flash.bin: spl/u-boot-spl.bin u-boot.itb FORCE
+-- 
+2.34.1
+

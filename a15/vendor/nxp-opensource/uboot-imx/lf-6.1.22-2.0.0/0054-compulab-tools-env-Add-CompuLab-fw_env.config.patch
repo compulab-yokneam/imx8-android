@@ -1,0 +1,57 @@
+From 658453dd7a6d93233123cc4ff157cecf2ed9ce71 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Thu, 18 Jan 2024 17:14:27 +0200
+Subject: [PATCH 054/155] compulab: tools: env: Add CompuLab fw_env.config
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ tools/env/fw_env.config | 36 ++++++------------------------------
+ 1 file changed, 6 insertions(+), 30 deletions(-)
+
+diff --git a/tools/env/fw_env.config b/tools/env/fw_env.config
+index 053895a2c07..02ba2da1aa4 100644
+--- a/tools/env/fw_env.config
++++ b/tools/env/fw_env.config
+@@ -6,33 +6,9 @@
+ # be the same as the Environment size, which is valid for NOR and SPI-dataflash
+ # Device offset must be prefixed with 0x to be parsed as a hexadecimal value.
+ 
+-# NOR example
+-# MTD device name	Device offset	Env. size	Flash sector size	Number of sectors
+-/dev/mtd1		0x0000		0x4000		0x4000
+-/dev/mtd2		0x0000		0x4000		0x4000
+-
+-# MTD SPI-dataflash example
+-# MTD device name	Device offset	Env. size	Flash sector size	Number of sectors
+-#/dev/mtd5		0x4200		0x4200
+-#/dev/mtd6		0x4200		0x4200
+-
+-# NAND example
+-#/dev/mtd0		0x4000		0x4000		0x20000			2
+-
+-# On a block device a negative offset is treated as a backwards offset from the
+-# end of the device/partition, rather than a forwards offset from the start.
+-
+-# Block device example
+-#/dev/mmcblk0		0xc0000		0x20000
+-#/dev/mmcblk0		-0x20000	0x20000
+-
+-# VFAT example
+-#/boot/uboot.env	0x0000          0x4000
+-
+-# UBI volume
+-#/dev/ubi0_0		0x0		0x1f000		0x1f000
+-#/dev/ubi0_1		0x0		0x1f000		0x1f000
+-
+-# UBI volume by name
+-#/dev/ubi0:env		0x0		0x1f000		0x1f000
+-#/dev/ubi0:env-redund	0x0		0x1f000		0x1f000
++# Block devices for CompuLab imx8m-plus
++# emmc
++/dev/mmcblk2boot0	0x3f0000 0x4000
++#/dev/mmcblk2boot1	0x3f0000 0x4000
++# sd-card; if AltBoot is in use
++#/dev/mmcblk1		0x3f0000 0x4000
+-- 
+2.34.1
+

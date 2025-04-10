@@ -1,0 +1,27 @@
+From 89a19df332beb605717bbee9430b7d0e2f71cd43 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sat, 23 Dec 2023 16:01:38 +0200
+Subject: [PATCH 016/155] drivers: video: Fix ithe VIDEO_LCD_STARTEK_ILI9881C
+ dependency
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ drivers/video/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/video/Kconfig b/drivers/video/Kconfig
+index 3a95627608b..f3f89ddbac1 100644
+--- a/drivers/video/Kconfig
++++ b/drivers/video/Kconfig
+@@ -461,7 +461,7 @@ config VIDEO_LCD_RAYDIUM_RM67191
+ 
+ config VIDEO_LCD_STARTEK_ILI9881C
+ 	tristate "Startek ILI9881C-based panels"
+-	depends on DM_VIDEO
++	depends on VIDEO
+ 	select VIDEO_MIPI_DSI
+ 	default n
+ 	help
+-- 
+2.34.1
+

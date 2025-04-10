@@ -1,0 +1,42 @@
+From 8c66af30497d17826ed363076bc3a4f14f6a3988 Mon Sep 17 00:00:00 2001
+From: Ilya Ledvich <ilya@compulab.co.il>
+Date: Mon, 10 Jun 2024 13:27:55 +0300
+Subject: [PATCH 096/155] compulab: imx8mp: iotdin-imx8p: set correct
+ temperature values
+
+Signed-off-by: Ilya Ledvich <ilya@compulab.co.il>
+---
+ arch/arm/dts/sb-iotdimx8p.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/dts/sb-iotdimx8p.dtsi b/arch/arm/dts/sb-iotdimx8p.dtsi
+index ed107cbbf34..a4e988a0d52 100644
+--- a/arch/arm/dts/sb-iotdimx8p.dtsi
++++ b/arch/arm/dts/sb-iotdimx8p.dtsi
+@@ -123,19 +123,19 @@
+ };
+ 
+ &cpu_alert0 {
+-    temperature = <100000>;
++    temperature = <90000>;
+ };
+ 
+ &cpu_crit0 {
+-    temperature = <105000>;
++    temperature = <100000>;
+ };
+ 
+ &soc_alert0 {
+-    temperature = <100000>;
++    temperature = <90000>;
+ };
+ 
+ &soc_crit0 {
+-    temperature = <105000>;
++    temperature = <100000>;
+ };
+ 
+ &iomuxc {
+-- 
+2.34.1
+

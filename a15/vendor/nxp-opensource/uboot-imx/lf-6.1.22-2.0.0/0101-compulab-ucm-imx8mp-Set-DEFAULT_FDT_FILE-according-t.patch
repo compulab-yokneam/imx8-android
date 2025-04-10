@@ -1,0 +1,34 @@
+From 4ad8d056f3a47c9451073c5470ef7b1c1cd5b38e Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Mon, 17 Jun 2024 19:26:04 +0300
+Subject: [PATCH 101/155] compulab: ucm-imx8mp: Set DEFAULT_FDT_FILE according
+ to the EVK
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ board/compulab/ucm-imx8m-plus/Kconfig | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
+
+diff --git a/board/compulab/ucm-imx8m-plus/Kconfig b/board/compulab/ucm-imx8m-plus/Kconfig
+index 17a688fd60a..2cbb0458eff 100644
+--- a/board/compulab/ucm-imx8m-plus/Kconfig
++++ b/board/compulab/ucm-imx8m-plus/Kconfig
+@@ -9,12 +9,10 @@ config SYS_VENDOR
+ config SYS_CONFIG_NAME
+ 	default "ucm-imx8m-plus"
+ 
+-config DEFAULT_DTB
+-	string
+-	default "ucm-imx8m-plus.dtb"
+-
+ config DEFAULT_FDT_FILE
+-	default "ucm-imx8m-plus.dtb"
++	string
++	default "ucm-imx8m-plus.dtb" if !SBEV_UCMIMX8PLUS
++	default "ucm-imx8m-plus-sbev.dtb" if SBEV_UCMIMX8PLUS
+ 
+ config DEFAULT_DEVICE_TREE
+ 	default "ucm-imx8m-plus"
+-- 
+2.34.1
+

@@ -1,0 +1,706 @@
+From f5df7bb7d14b8e9092fbe8c63fbe20d39c830bd9 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Fri, 29 Dec 2023 10:50:23 +0200
+Subject: [PATCH 019/155] compulab: imx8: support: Add modified file
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+
+%% original patch: 0001-compulab-imx8-support-Add-modified-file.patch
+---
+ Makefile                                      |   6 +
+ arch/arm/dts/Makefile                         |   8 ++
+ arch/arm/include/asm/arch-imx8m/imx8mm_pins.h |   4 +-
+ arch/arm/mach-imx/imx8m/Kconfig               |   1 +
+ board/compulab/iot-gate-imx8/Kconfig          |   4 +-
+ board/compulab/iot-gate-imx8plus/Kconfig      |  11 +-
+ .../iot-gate-imx8plus/iot-gate-imx8plus.c     | 106 ++++++++++-----
+ board/compulab/mcm-imx8m-mini/Kconfig         |   1 -
+ board/compulab/plat/imx8mp/board/Makefile     |   2 +-
+ board/compulab/plat/imx8mp/board/board.c      | 123 +-----------------
+ board/compulab/plat/imx8mp/ddr/Makefile       |  18 +--
+ board/compulab/plat/imx8mp/ddr/ddr.h          |  10 --
+ board/compulab/plat/imx8mp/spl/spl.c          |   6 +-
+ board/compulab/som-imx8m-plus/Kconfig         |   9 +-
+ board/compulab/ucm-imx8m-mini/Kconfig         |   6 +-
+ board/compulab/ucm-imx8m-plus/Kconfig         |  20 ++-
+ 16 files changed, 131 insertions(+), 204 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 263a6acfd61..fc0e59fce27 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1466,6 +1466,9 @@ else
+ SPL_PAYLOAD := u-boot.bin
+ endif
+ 
++export ATF_LOAD_ADDR=$(CONFIG_ATF_LOAD_ADDR)
++export TEE_LOAD_ADDR=$(CONFIG_TEE_LOAD_ADDR)
++
+ SPL_IMAGE := $(CONFIG_SPL_IMAGE:"%"=%)
+ 
+ OBJCOPYFLAGS_u-boot-with-spl.bin = -I binary -O binary \
+@@ -1502,6 +1505,9 @@ tpl/u-boot-with-tpl.bin: tpl/u-boot-tpl.bin u-boot.bin FORCE
+ SPL: spl/u-boot-spl.bin FORCE
+ 	$(Q)$(MAKE) $(build)=arch/arm/mach-imx $@
+ 
++firmware:
++	$(MAKE) -C $(srctree)/board/compulab/plat/imx8mp/firmware all
++
+ #ifeq ($(CONFIG_ARCH_IMX8M)$(CONFIG_ARCH_IMX8), y)
+ ifeq ($(CONFIG_SPL_LOAD_IMX_CONTAINER), y)
+ u-boot.cnt: u-boot.bin FORCE
+diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
+index 5c74c6b1b2f..a2e1de3e0aa 100644
+--- a/arch/arm/dts/Makefile
++++ b/arch/arm/dts/Makefile
+@@ -1084,6 +1084,14 @@ dtb-$(CONFIG_ARCH_IMX8M) += \
+ 	imx8mq-kontron-pitx-imx8m.dtb \
+ 	imx8mq-librem5-r4.dtb
+ 
++dtb-$(CONFIG_TARGET_UCM_IMX8M_MINI) += ucm-imx8m-mini.dtb
++dtb-$(CONFIG_TARGET_MCM_IMX8M_MINI) += mcm-imx8m-mini.dtb
++dtb-$(CONFIG_TARGET_IOT_GATE_IMX8) += iot-gate-imx8.dtb
++dtb-$(CONFIG_TARGET_UCM_IMX8M_PLUS) += ucm-imx8m-plus.dtb
++dtb-$(CONFIG_TARGET_MCM_IMX8M_PLUS) += mcm-imx8m-plus.dtb
++dtb-$(CONFIG_TARGET_SOM_IMX8M_PLUS) += som-imx8m-plus.dtb
++dtb-$(CONFIG_TARGET_IOT_GATE_IMX8PLUS) += iot-gate-imx8plus.dtb
++
+ dtb-$(CONFIG_ARCH_IMX9) += \
+ 	imx93-11x11-evk.dtb \
+ 	imx93-14x14-evk.dtb \
+diff --git a/arch/arm/include/asm/arch-imx8m/imx8mm_pins.h b/arch/arm/include/asm/arch-imx8m/imx8mm_pins.h
+index 210e96e1dbe..a1111b92418 100644
+--- a/arch/arm/include/asm/arch-imx8m/imx8mm_pins.h
++++ b/arch/arm/include/asm/arch-imx8m/imx8mm_pins.h
+@@ -612,12 +612,12 @@ enum {
+ 	IMX8MM_PAD_I2C1_SDA_ENET1_MDIO                                =  IOMUX_PAD(0x0480, 0x0218, 1, 0x04C0, 2, 0),
+ 	IMX8MM_PAD_I2C1_SDA_GPIO5_IO15                                =  IOMUX_PAD(0x0480, 0x0218, 5, 0x0000, 0, 0),
+ 
+-	IMX8MM_PAD_I2C2_SCL_I2C2_SCL                                  =  IOMUX_PAD(0x0484, 0x021C, 0, 0x0000, 0, 0),
++	IMX8MM_PAD_I2C2_SCL_I2C2_SCL                                  =  IOMUX_PAD(0x0484, 0x021C, 0 | IOMUX_CONFIG_SION, 0x0000, 0, 0),
+ 	IMX8MM_PAD_I2C2_SCL_ENET1_1588_EVENT1_IN                      =  IOMUX_PAD(0x0484, 0x021C, 1, 0x0000, 0, 0),
+ 	IMX8MM_PAD_I2C2_SCL_USDHC3_CD_B                               =  IOMUX_PAD(0x0484, 0x021C, 2, 0x0544, 1, 0),
+ 	IMX8MM_PAD_I2C2_SCL_GPIO5_IO16                                =  IOMUX_PAD(0x0484, 0x021C, 5, 0x0000, 0, 0),
+ 
+-	IMX8MM_PAD_I2C2_SDA_I2C2_SDA                                  =  IOMUX_PAD(0x0488, 0x0220, 0, 0x0000, 0, 0),
++	IMX8MM_PAD_I2C2_SDA_I2C2_SDA                                  =  IOMUX_PAD(0x0488, 0x0220, 0 | IOMUX_CONFIG_SION, 0x0000, 0, 0),
+ 	IMX8MM_PAD_I2C2_SDA_ENET1_1588_EVENT1_OUT                     =  IOMUX_PAD(0x0488, 0x0220, 1, 0x0000, 0, 0),
+ 	IMX8MM_PAD_I2C2_SDA_USDHC3_WP                                 =  IOMUX_PAD(0x0488, 0x0220, 2, 0x0548, 1, 0),
+ 	IMX8MM_PAD_I2C2_SDA_GPIO5_IO17                                =  IOMUX_PAD(0x0488, 0x0220, 5, 0x0000, 0, 0),
+diff --git a/arch/arm/mach-imx/imx8m/Kconfig b/arch/arm/mach-imx/imx8m/Kconfig
+index b124027910d..8e357b5ccf3 100644
+--- a/arch/arm/mach-imx/imx8m/Kconfig
++++ b/arch/arm/mach-imx/imx8m/Kconfig
+@@ -481,5 +481,6 @@ source "board/technexion/pico-imx8mq/Kconfig"
+ source "board/variscite/imx8mn_var_som/Kconfig"
+ source "board/toradex/verdin-imx8mm/Kconfig"
+ source "board/toradex/verdin-imx8mp/Kconfig"
++source "board/compulab/plat/Kconfig"
+ 
+ endif
+diff --git a/board/compulab/iot-gate-imx8/Kconfig b/board/compulab/iot-gate-imx8/Kconfig
+index 84f53ca6b90..0f6a7f39542 100644
+--- a/board/compulab/iot-gate-imx8/Kconfig
++++ b/board/compulab/iot-gate-imx8/Kconfig
+@@ -9,8 +9,8 @@ config SYS_VENDOR
+ config SYS_CONFIG_NAME
+ 	default "iot-gate-imx8"
+ 
+-config DEFAULT_DTB
+-	string "U-Boot Default Device Tree File"
++config DEFAULT_FDT
++	string
+ 	depends on TARGET_IOT_GATE_IMX8
+ 	default "sb-iotgimx8-can.dtb"
+ 
+diff --git a/board/compulab/iot-gate-imx8plus/Kconfig b/board/compulab/iot-gate-imx8plus/Kconfig
+index 5c9fffebba7..223608a9dff 100644
+--- a/board/compulab/iot-gate-imx8plus/Kconfig
++++ b/board/compulab/iot-gate-imx8plus/Kconfig
+@@ -10,6 +10,7 @@ config SYS_CONFIG_NAME
+ 	default "iot-gate-imx8plus"
+ 
+ config DEFAULT_DTB
++	string
+ 	default "iot-gate-imx8plus.dtb"
+ 
+ config DEFAULT_FDT_FILE
+@@ -19,19 +20,19 @@ config DEFAULT_DEVICE_TREE
+ 	default "iot-gate-imx8plus"
+ 
+ config SYS_I2C_EEPROM_BUS
+-	int "SOM eeprom bus address"
++	int
+ 	default 1
+ 
+ config SYS_I2C_EEPROM_ADDR
+-	hex "SOM eeprom dev address"
++	hex
+ 	default 0x50
+ 
+ config SYS_I2C_EEPROM_BUS_SB
+-	hex "SB eeprom bus address"
+-	default 1
++	hex
++	default 0x1
+ 
+ config SYS_I2C_EEPROM_ADDR_SB
+-	hex "SB eeprom dev address"
++	hex
+ 	default 0x54
+ 
+ endif
+diff --git a/board/compulab/iot-gate-imx8plus/iot-gate-imx8plus.c b/board/compulab/iot-gate-imx8plus/iot-gate-imx8plus.c
+index 43fbc6e2c69..2e046fd136a 100644
+--- a/board/compulab/iot-gate-imx8plus/iot-gate-imx8plus.c
++++ b/board/compulab/iot-gate-imx8plus/iot-gate-imx8plus.c
+@@ -42,82 +42,122 @@ void imx_get_mac_from_fuse(int dev_id, unsigned char *mac)
+ 
+ /* IOT-GATE-IMX8PLUS M.2 extension boards ID */
+ typedef enum {
+-	IOTG_IMX8PLUS_EXT_FIRST,
+-	IOTG_IMX8PLUS_EXT_M2TPM = IOTG_IMX8PLUS_EXT_FIRST, /* TPM module */
+-	IOTG_IMX8PLUS_EXT_EMPTY,
+-	IOTG_IMX8PLUS_EXT_LAST = IOTG_IMX8PLUS_EXT_EMPTY,
+-	IOTG_IMX8PLUS_EXT_NUM,
+-} iotg_imx8plus_ext_type;
+-
+-static char *iotg_imx8plus_ext_type_name[IOTG_IMX8PLUS_EXT_LAST] = {
+-	[IOTG_IMX8PLUS_EXT_M2TPM] = "M2TPM",
++	IOTG_IMX8PLUS_ADDON_FIRST,
++	IOTG_IMX8PLUS_ADDON_M2EMMC = IOTG_IMX8PLUS_ADDON_FIRST, /* eMMC+TPM module */
++	IOTG_IMX8PLUS_ADDON_M2ADC, /* ADC+TPM module */
++	IOTG_IMX8PLUS_ADDON_M2TPM, /* TPM module */
++	IOTG_IMX8PLUS_ADDON_EMPTY,
++	IOTG_IMX8PLUS_ADDON_LAST = IOTG_IMX8PLUS_ADDON_EMPTY,
++	IOTG_IMX8PLUS_ADDON_NUM,
++} iotg_imx8plus_addon_type;
++
++static char *iotg_imx8plus_addon_type_name[IOTG_IMX8PLUS_ADDON_NUM] = {
++	[IOTG_IMX8PLUS_ADDON_M2EMMC] = "M2EMMC",
++	[IOTG_IMX8PLUS_ADDON_M2ADC] = "M2ADC",
++	[IOTG_IMX8PLUS_ADDON_M2TPM] = "M2TPM",
++	[IOTG_IMX8PLUS_ADDON_EMPTY] = "none",
+ };
+ 
+ /* Device tree names array */
+-static char *iotg_imx8plus_dtb[IOTG_IMX8PLUS_EXT_NUM] = {
+-	[IOTG_IMX8PLUS_EXT_M2TPM] = "iot-gate-imx8plus-m2tpm.dtb",
+-	[IOTG_IMX8PLUS_EXT_EMPTY] = "iot-gate-imx8plus.dtb",
++static char *iotg_imx8plus_dtb[IOTG_IMX8PLUS_ADDON_NUM] = {
++	[IOTG_IMX8PLUS_ADDON_M2EMMC] = "iot-gate-imx8plus-m2emmc.dtb",
++	[IOTG_IMX8PLUS_ADDON_M2ADC] = "iot-gate-imx8plus-m2adc.dtb",
++	[IOTG_IMX8PLUS_ADDON_M2TPM] = "iot-gate-imx8plus-m2tpm.dtb",
++	[IOTG_IMX8PLUS_ADDON_EMPTY] = "iot-gate-imx8plus.dtb",
+ };
+ 
+ /* I2C bus numbers array */
+-static int iotg_imx8plus_ext_i2c_bus[IOTG_IMX8PLUS_EXT_LAST] = {
+-	[IOTG_IMX8PLUS_EXT_M2TPM] = 4,
++static int iotg_imx8plus_addon_i2c_bus[IOTG_IMX8PLUS_ADDON_LAST] = {
++	[IOTG_IMX8PLUS_ADDON_M2EMMC] = 4,
++	[IOTG_IMX8PLUS_ADDON_M2ADC] = 4,
++	[IOTG_IMX8PLUS_ADDON_M2TPM] = 4,
+ };
+ 
+ /* I2C device addresses array */
+-static uint iotg_imx8plus_ext_i2c_addr[IOTG_IMX8PLUS_EXT_LAST] = {
+-	[IOTG_IMX8PLUS_EXT_M2TPM] = 0x54,
++static uint iotg_imx8plus_addon_i2c_addr[IOTG_IMX8PLUS_ADDON_LAST] = {
++	[IOTG_IMX8PLUS_ADDON_M2EMMC] = 0x20,
++	[IOTG_IMX8PLUS_ADDON_M2ADC] = 0x48,
++	[IOTG_IMX8PLUS_ADDON_M2TPM] = 0x54,
+ };
+ 
+ /* Extension board type detected */
+-static int iotg_imx8plus_ext_id = IOTG_IMX8PLUS_EXT_EMPTY;
++static int iotg_imx8plus_addon_id = IOTG_IMX8PLUS_ADDON_EMPTY;
++
++#define IOTG_IMX8PLUS_ENV_FDT_FILE	"fdtfile"
++#define IOTG_IMX8PLUS_ENV_ADDON_SETUP	"addon_smart_setup"
++#define IOTG_IMX8PLUS_ENV_ADDON_BOARD	"addon_board"
++
++#define EMMC_SIZE(_detval)		((_detval & 0xf) << 4)
++
+ /*
+- * iotg_imx8plus_detect_ext() - extended board detection
++ * iotg_imx8plus_detect_addon() - extended add-on board detection
+  * The detection is done according to the detected I2C devices.
+  */
+-static void iotg_imx8plus_detect_ext(void)
++static void iotg_imx8plus_detect_addon(void)
+ {
+ 	int ret;
+ 	struct udevice *i2c_bus, *i2c_dev;
+ 	int type;
+ 
+-	for (type = IOTG_IMX8PLUS_EXT_FIRST; type < IOTG_IMX8PLUS_EXT_LAST; type++) {
+-		debug("%s: type_idx = %d, probing I2C bus %d\n", __func__, type, iotg_imx8plus_ext_i2c_bus[type]);
+-		ret = uclass_get_device_by_seq(UCLASS_I2C, iotg_imx8plus_ext_i2c_bus[type], &i2c_bus);
++	for (type = IOTG_IMX8PLUS_ADDON_FIRST; type < IOTG_IMX8PLUS_ADDON_LAST; type++) {
++		debug("%s: type_idx = %d, probing I2C bus %d\n", __func__, type, iotg_imx8plus_addon_i2c_bus[type]);
++		ret = uclass_get_device_by_seq(UCLASS_I2C, iotg_imx8plus_addon_i2c_bus[type], &i2c_bus);
+ 		if (ret) {
+-			debug("%s: Failed probing I2C bus %d\n", __func__, iotg_imx8plus_ext_i2c_bus[type]);
++			debug("%s: Failed probing I2C bus %d\n", __func__, iotg_imx8plus_addon_i2c_bus[type]);
+ 			continue;
+ 		}
+ 
+-		debug("%s: type_idx = %d, probing I2C addr = %d\n", __func__, type, iotg_imx8plus_ext_i2c_addr[type]);
+-		ret = dm_i2c_probe(i2c_bus, iotg_imx8plus_ext_i2c_addr[type], 0, &i2c_dev);
++		debug("%s: type_idx = %d, probing I2C addr = %d\n", __func__, type, iotg_imx8plus_addon_i2c_addr[type]);
++		ret = dm_i2c_probe(i2c_bus, iotg_imx8plus_addon_i2c_addr[type], 0, &i2c_dev);
+ 		if (!ret) {
+-			iotg_imx8plus_ext_id = type;
++			iotg_imx8plus_addon_id = type;
+ 			debug("%s: detected module type_idx = %d, type_name = %s\n", __func__, type,
+-				iotg_imx8plus_ext_type_name[type]);
++				iotg_imx8plus_addon_type_name[type]);
++			printf("Add-on Board:   %s", iotg_imx8plus_addon_type_name[type]);
++			if (type == IOTG_IMX8PLUS_ADDON_M2EMMC) {
++				/* Detect eMMC size: read offset 0 (Input port 0 reg) and inspect 4 lower bits */
++				ret = dm_i2c_reg_read(i2c_dev, 0);
++				printf("(%dG)", EMMC_SIZE(ret));
++			}
++			printf("\n");
++			env_set(IOTG_IMX8PLUS_ENV_ADDON_BOARD, iotg_imx8plus_addon_type_name[type]);
++
+ 			return;
+ 		}
+ 	}
++
++	env_set(IOTG_IMX8PLUS_ENV_ADDON_BOARD, iotg_imx8plus_addon_type_name[IOTG_IMX8PLUS_ADDON_EMPTY]);
+ }
+ 
+-#define IOTG_IMX8PLUS_ENV_FDT_FILE "fdtfile"
+ /*
+  * iot_gate_imx8plus_select_dtb() - select the kernel device tree blob
+- * The device tree blob is selected according to the detected extended board.
++ * The device tree blob is selected according to the detected add-on board.
+  */
+ static void iotg_imx8plus_select_dtb(void)
+ {
+-	char *env_fdt_file = env_get(IOTG_IMX8PLUS_ENV_FDT_FILE);
++	if (!env_get_yesno(IOTG_IMX8PLUS_ENV_ADDON_SETUP))
++		return;
+ 
+ 	debug("%s: set %s = %s\n", __func__, IOTG_IMX8PLUS_ENV_FDT_FILE,
+-		iotg_imx8plus_dtb[iotg_imx8plus_ext_id]);
++		iotg_imx8plus_dtb[iotg_imx8plus_addon_id]);
+ 	env_set(IOTG_IMX8PLUS_ENV_FDT_FILE,
+-		iotg_imx8plus_dtb[iotg_imx8plus_ext_id]);
++		iotg_imx8plus_dtb[iotg_imx8plus_addon_id]);
+ }
+ 
+ void board_vendor_late_init(void) {
++#ifdef CONFIG_ADDON_SMART_SETUP
++	/* Check feature strategy and set to default if not defined explicitly */
++	if (env_get_yesno(IOTG_IMX8PLUS_ENV_ADDON_SETUP) == -1) {
++	#ifdef CONFIG_ADDON_SMART_SETUP_DEFAULT_ON
++		env_set(IOTG_IMX8PLUS_ENV_ADDON_SETUP, "yes");
++	#else
++		env_set(IOTG_IMX8PLUS_ENV_ADDON_SETUP, "no");
++	#endif
++	}
++
+ 	/* Detect extension module in M.2 expantion connector */
+-	iotg_imx8plus_detect_ext();
++	iotg_imx8plus_detect_addon();
+ 	/* Apply an appropriate dtb */
+ 	iotg_imx8plus_select_dtb();
++#endif
+ }
+diff --git a/board/compulab/mcm-imx8m-mini/Kconfig b/board/compulab/mcm-imx8m-mini/Kconfig
+index 254399755a6..d11480b5570 100644
+--- a/board/compulab/mcm-imx8m-mini/Kconfig
++++ b/board/compulab/mcm-imx8m-mini/Kconfig
+@@ -10,7 +10,6 @@ config SYS_CONFIG_NAME
+ 	default "mcm-imx8m-mini"
+ 
+ config DEFAULT_DTB
+-	string "U-Boot Default Device Tree File"
+ 	depends on TARGET_MCM_IMX8M_MINI
+ 	default "sbc-mcm-imx8m-mini.dtb"
+ 
+diff --git a/board/compulab/plat/imx8mp/board/Makefile b/board/compulab/plat/imx8mp/board/Makefile
+index 358ecb859fe..951cd799dbb 100644
+--- a/board/compulab/plat/imx8mp/board/Makefile
++++ b/board/compulab/plat/imx8mp/board/Makefile
+@@ -4,5 +4,5 @@ ccflags-y += -I$(srctree)/board/freescale/
+ 
+ obj-y += board.o
+ ifndef CONFIG_SPL_BUILD
+-obj-y += efi_capsule.o
++obj-y += cmd.o
+ endif
+diff --git a/board/compulab/plat/imx8mp/board/board.c b/board/compulab/plat/imx8mp/board/board.c
+index 25bdf98535a..514144bb9bb 100644
+--- a/board/compulab/plat/imx8mp/board/board.c
++++ b/board/compulab/plat/imx8mp/board/board.c
+@@ -32,6 +32,7 @@
+ #include <linux/arm-smccc.h>
+ #include "ddr/ddr.h"
+ #include "common/eeprom.h"
++#include "cmd.h"
+ 
+ DECLARE_GLOBAL_DATA_PTR;
+ 
+@@ -56,6 +57,7 @@ int board_phys_sdram_size(phys_size_t *size)
+ 	return 0;
+ }
+ 
++
+ #ifdef CONFIG_OF_BOARD_SETUP
+ __weak int fdt_board_vendor_setup(void *blob) {
+ 	return 0;
+@@ -487,6 +489,7 @@ int board_late_init(void)
+ #endif
+ 	board_vendor_late_init();
+ 
++	do_pbb_restore();
+ 	return 0;
+ }
+ 
+@@ -626,123 +629,3 @@ static int mx8_rgmii_rework(struct phy_device *phydev)
+ 	board_save_phyaddr(phydev->addr);
+ 	return 0;
+ }
+-
+-#ifndef CONFIG_SPL_BUILD
+-#include <common.h>
+-#include <command.h>
+-
+-#ifdef TARGET_UCM_IMX8M_PLUS
+-static char ldo4_help_text[] =
+-	"value[8-33] - set 0x24 register value; voltage range: [0.80-3.30]\n"
+-	"ldo4 value[0] - disable ldo4\n";
+-
+-/* Forward declaration */
+-u8 cl_eeprom_get_ldo4(void);
+-u8 cl_eeprom_set_ldo4(u8 ldo4);
+-
+-static void do_pmic_ldo4(u8 ldo4) {
+-    const char *name = "pca9450@25";
+-    static struct udevice *currdev = NULL;
+-    int ret;
+-    if (currdev == NULL) {
+-        ret = pmic_get(name, &currdev);
+-        if (ret) {
+-            printf("Can't get PMIC: %s!\n", name);
+-            return;
+-        }
+-    }
+-    ret = pmic_reg_write(currdev, 0x24, ldo4);
+-    if (ret) {
+-        printf("Can't set PMIC: %s; register 0x%x\n", name, 0x24);
+-        return;
+-    }
+-}
+-
+-int do_ldo4(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
+-{
+-    u8 ldo4 = 0xDA;
+-    if (argc == 2) {
+-        ldo4 = (u8) simple_strtoul(argv[1], NULL, 10);
+-        if (( ldo4 >= 0x8 ) && ( ldo4 <= 0x21 )) {
+-            ldo4 -= 0x8; ldo4 |= 0x80;
+-	    } else if ( ldo4 == 0 )
+-            ldo4 = 0;
+-        else
+-            return CMD_RET_USAGE;
+-        ldo4 = cl_eeprom_set_ldo4(ldo4);
+-        do_pmic_ldo4(ldo4);
+-        return 0;
+-    }
+-
+-    ldo4 = cl_eeprom_get_ldo4();
+-    if (( ldo4 >= 0x80 ) && ( ldo4 <= 0x9F )) {
+-        ldo4 &= ~0x80; ldo4 += 8;
+-        ldo4 = (( ldo4 > 33 ) ? 33 : ldo4);
+-        printf("pca9450@25 [ldo4] = %dv%d\n", (ldo4/10) , (ldo4%10));
+-    } else
+-        printf("pca9450@25 [ldo4] = 0x%x\n", ldo4);
+-
+-    return 0;
+-}
+-
+-U_BOOT_CMD(
+-	ldo4,	2,	1,	do_ldo4,
+-	"get/set ldo4 value",
+-	ldo4_help_text
+-);
+-#endif
+-
+-static char ddr_help_text[] =
+-	"rdmr -- read mr[5-8] registers\n"
+-	"ddr read -- read eeprom values [ mrs, subid, size ]\n"
+-	"ddr clear -- clean up eeprom\n";
+-
+-unsigned int lpddr4_get_mr(void);
+-void do_ddr_rdmr(void) {
+-   unsigned int data = lpddr4_get_mr();
+-   printf("mr[5-8]: [0x%x]\n", data);
+-}
+-
+-u32 cl_eeprom_get_ddrinfo(void);
+-u8 cl_eeprom_get_subind(void);
+-void do_ddr_read(void) {
+-   u32 ddrinfo = cl_eeprom_get_ddrinfo();
+-   u8 subind = cl_eeprom_get_subind();
+-   printf("eeprom: [0x%x][0x%x]\n", ddrinfo, subind);
+-}
+-
+-void cl_eeprom_clr_ddrinfo(void);
+-void do_ddr_clear(void) {
+-   cl_eeprom_clr_ddrinfo();
+-}
+-
+-int do_ddr(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
+-{
+-    if (argc != 2) {
+-        return CMD_RET_USAGE;
+-    }
+-
+-	if (strcmp(argv[1], "rdmr") == 0) {
+-		do_ddr_rdmr();
+-	} else if (strcmp(argv[1], "read") == 0 ) {
+-		do_ddr_read();
+-	} else if (strcmp(argv[1], "clear") == 0 ) {
+-		do_ddr_clear();
+-    } else
+-        return CMD_RET_USAGE;
+-
+-   return 0;
+-}
+-
+-#ifdef CONFIG_DRAM_D2D4
+-#define SUPPORTED_CONF "D2,D4"
+-#else
+-#define SUPPORTED_CONF "D1,D8"
+-#endif
+-
+-U_BOOT_CMD(
+-	ddr,	2,	1,	do_ddr,
+-	"rdmr/read/clear\nSupported configurations : [ "SUPPORTED_CONF" ]" ,
+-	ddr_help_text
+-);
+-#endif
+diff --git a/board/compulab/plat/imx8mp/ddr/Makefile b/board/compulab/plat/imx8mp/ddr/Makefile
+index d5c3c878a41..78574f89a73 100644
+--- a/board/compulab/plat/imx8mp/ddr/Makefile
++++ b/board/compulab/plat/imx8mp/ddr/Makefile
+@@ -1,17 +1,11 @@
+-ifeq ($(CONFIG_SPL_BUILD),y)
+ ifeq ($(CONFIG_DRAM_D2D4),y)
+-obj-$(CONFIG_MICRON_4G) += lpddr4_timing_ff000010.o
+-obj-$(CONFIG_SAMSUNG_4G) += lpddr4_timing_01061010_4G.o
+-# This is the cfg default; must be enabled unconditionally
+-# obj-$(CONFIG_SAMSUNG_2G) += lpddr4_timing_01061010_2G.o
+-obj-y += lpddr4_timing_01061010_2G.o
++obj-$(CONFIG_SPL_BUILD) += lpddr4_timing_ff000010.o
++obj-$(CONFIG_SPL_BUILD) += lpddr4_timing_01061010_4G.o
++obj-$(CONFIG_SPL_BUILD) += lpddr4_timing_01061010_2G.o
+ else
+-obj-$(CONFIG_MICRON_8G) += lpddr4_timing_ff060018.o
+-# This is the cfg defaukt; must be enabled unconditionally
+-# obj-$(CONFIG_SAMSUNG_1G) += lpddr4_timing_01061010_1G.o
+-obj-y += lpddr4_timing_01061010_1G.o
+-obj-$(CONFIG_SAMSUNG_1G) += lpddr4_timing_01061010_1G_4000.o
+-endif
++obj-$(CONFIG_SPL_BUILD) += lpddr4_timing_ff060018.o
++obj-$(CONFIG_SPL_BUILD) += lpddr4_timing_01061010_1G.o
++obj-$(CONFIG_SPL_BUILD) += lpddr4_timing_01061010_1G_4000.o
+ endif
+ obj-$(CONFIG_SPL_BUILD) += ddr.o
+ obj-y += ddr_common.o
+diff --git a/board/compulab/plat/imx8mp/ddr/ddr.h b/board/compulab/plat/imx8mp/ddr/ddr.h
+index 492c8a07de8..4d46c94bfaf 100644
+--- a/board/compulab/plat/imx8mp/ddr/ddr.h
++++ b/board/compulab/plat/imx8mp/ddr/ddr.h
+@@ -52,14 +52,11 @@ static const struct lpddr4_desc lpddr4_array[] = {
+ 		.timing = &ucm_dram_timing_01061010_2G
+ #endif
+ 	},
+-#ifdef CONFIG_SAMSUNG_4G
+ 	{ .name = "Samsung",	.id = 0x01061010, .subind = 0x4, .size = 4096, .count = 1,
+ #ifdef CONFIG_SPL_BUILD
+ 		.timing = &ucm_dram_timing_01061010_4G
+ #endif
+ 	},
+-#endif
+-#ifdef CONFIG_MICRON_4G
+ 	{ .name = "Micron",	.id = 0xff000010, .subind = 0x4, .size = 4096, .count = 1,
+ #ifdef CONFIG_SPL_BUILD
+ 		.timing = &ucm_dram_timing_ff000010
+@@ -70,8 +67,6 @@ static const struct lpddr4_desc lpddr4_array[] = {
+ 		.timing = &ucm_dram_timing_ff000010
+ #endif
+ 	},
+-#endif
+-#ifdef CONFIG_SAMSUNG_2G
+ 	{ .name = "Nanya",	.id = 0x05000010, .subind = 0x2, .size = 2048, .count = 1,
+ #ifdef CONFIG_SPL_BUILD
+ 		.timing = &ucm_dram_timing_01061010_2G
+@@ -82,14 +77,12 @@ static const struct lpddr4_desc lpddr4_array[] = {
+ 		.timing = &ucm_dram_timing_01061010_2G
+ #endif
+ 	},
+-#endif
+ #else
+ 	{ .name = "deadbeaf",	.id = 0xdeadbeaf, .subind = 0x1, .size = 1024, .count = 1,
+ #ifdef CONFIG_SPL_BUILD
+ 		.timing = &ucm_dram_timing_01061010_1G
+ #endif
+ 	},
+-#ifdef CONFIG_SAMSUNG_1G
+ 	{ .name = "Samsung",	.id = 0x01050008, .subind = 0x1, .size = 1024, .count = 1,
+ #ifdef CONFIG_SPL_BUILD
+ 		.timing = &ucm_dram_timing_01061010_1G
+@@ -100,15 +93,12 @@ static const struct lpddr4_desc lpddr4_array[] = {
+ 		.timing = &ucm_dram_timing_01061010_1G_4000
+ #endif
+ 	},
+-#endif
+-#ifdef CONFIG_MICRON_8G
+ 	{ .name = "Micron",	.id = 0xff060018, .subind = 0x8, .size = 8192, .count = 1,
+ #ifdef CONFIG_SPL_BUILD
+ 		.timing = &ucm_dram_timing_ff060018
+ #endif
+ 	},
+ #endif
+-#endif
+ };
+ 
+ unsigned int lpddr4_get_mr(void);
+diff --git a/board/compulab/plat/imx8mp/spl/spl.c b/board/compulab/plat/imx8mp/spl/spl.c
+index 1864193357f..dd05af40eb6 100644
+--- a/board/compulab/plat/imx8mp/spl/spl.c
++++ b/board/compulab/plat/imx8mp/spl/spl.c
+@@ -166,7 +166,6 @@ int board_mmc_getcd(struct mmc *mmc)
+ }
+ 
+ #if CONFIG_IS_ENABLED(DM_PMIC_PCA9450)
+-#ifdef TARGET_UCM_IMX8M_PLUS
+ /* Forward declarations */
+ u8 cl_eeprom_get_ldo4(void);
+ static void power_init_ldo4(struct udevice *dev) {
+@@ -192,9 +191,6 @@ static void power_init_ldo4(struct udevice *dev) {
+ 	ldo4 = (( ldo4 > 33 ) ? 33 : ldo4);
+ 	printf("pca9450@25 [ldo4][%s] = %dv%d\n", ( mode ? "u" : "d" ), (ldo4/10) , (ldo4%10));
+ }
+-#else
+-static void power_init_ldo4(struct udevice *dev) { return; }
+-#endif
+ 
+ int power_init_board(void)
+ {
+@@ -284,5 +280,5 @@ void board_init_f(ulong dummy)
+ 
+ void reset_misc(void) {
+ 	puts("resetting ...\n");
+-	reset_cpu();
++	reset_cpu(WDOG1_BASE_ADDR);
+ }
+diff --git a/board/compulab/som-imx8m-plus/Kconfig b/board/compulab/som-imx8m-plus/Kconfig
+index 111015d5f9e..903c326cb29 100644
+--- a/board/compulab/som-imx8m-plus/Kconfig
++++ b/board/compulab/som-imx8m-plus/Kconfig
+@@ -10,6 +10,7 @@ config SYS_CONFIG_NAME
+ 	default "som-imx8m-plus"
+ 
+ config DEFAULT_DTB
++	string
+ 	default "sbc-som-imx8m-plus.dtb"
+ 
+ config DEFAULT_FDT_FILE
+@@ -19,19 +20,19 @@ config DEFAULT_DEVICE_TREE
+ 	default "som-imx8m-plus"
+ 
+ config SYS_I2C_EEPROM_BUS
+-	int "SOM eeprom bus address"
++	int
+ 	default 1
+ 
+ config SYS_I2C_EEPROM_ADDR
+-	hex "SOM eeprom dev address"
++	hex
+ 	default 0x50
+ 
+ config SYS_I2C_EEPROM_BUS_SB
+-	hex "SB eeprom bus address"
++	hex
+ 	default 0x2
+ 
+ config SYS_I2C_EEPROM_ADDR_SB
+-	hex "SB eeprom dev address"
++	hex
+ 	default 0x54
+ 
+ endif
+diff --git a/board/compulab/ucm-imx8m-mini/Kconfig b/board/compulab/ucm-imx8m-mini/Kconfig
+index ed4f21608a0..2c638cb15f8 100644
+--- a/board/compulab/ucm-imx8m-mini/Kconfig
++++ b/board/compulab/ucm-imx8m-mini/Kconfig
+@@ -9,9 +9,9 @@ config SYS_VENDOR
+ config SYS_CONFIG_NAME
+ 	default "ucm-imx8m-mini"
+ 
+-config DEFAULT_DTB
+-	string "U-Boot Default Device Tree File"
++config DEFAULT_FDT
++	string
+ 	depends on TARGET_UCM_IMX8M_MINI
+-	default "sbc-ucm-imx8m-mini.dtb"
++	default "ucm-imx8m-mini.dtb"
+ 
+ endif
+diff --git a/board/compulab/ucm-imx8m-plus/Kconfig b/board/compulab/ucm-imx8m-plus/Kconfig
+index f5dbba27615..b85924612cd 100644
+--- a/board/compulab/ucm-imx8m-plus/Kconfig
++++ b/board/compulab/ucm-imx8m-plus/Kconfig
+@@ -10,28 +10,36 @@ config SYS_CONFIG_NAME
+ 	default "ucm-imx8m-plus"
+ 
+ config DEFAULT_DTB
+-	default "sbc-ucm-imx8m-plus.dtb"
++	string
++	default "ucm-imx8m-plus.dtb"
++
+ 
+ config DEFAULT_FDT_FILE
++	string
+ 	default "ucm-imx8m-plus.dtb"
+ 
+ config DEFAULT_DEVICE_TREE
++	string
+ 	default "ucm-imx8m-plus"
+ 
+ config SYS_I2C_EEPROM_BUS
+-	int "SOM eeprom bus address"
++	int
+ 	default 1
+ 
+ config SYS_I2C_EEPROM_ADDR
+-	hex "SOM eeprom dev address"
++	hex
+ 	default 0x50
+ 
+ config SYS_I2C_EEPROM_BUS_SB
+-	hex "SB eeprom bus address"
+-	default 0x4
++	hex
++	default 0x1
+ 
+ config SYS_I2C_EEPROM_ADDR_SB
+-	hex "SB eeprom dev address"
++	hex
+ 	default 0x54
+ 
++config COMPULAB_DEBUG_UART1
++	bool "System Debug UART1"
++	default false
++
+ endif
+-- 
+2.34.1
+

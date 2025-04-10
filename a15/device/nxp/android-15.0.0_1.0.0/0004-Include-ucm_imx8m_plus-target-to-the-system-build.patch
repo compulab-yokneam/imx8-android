@@ -1,0 +1,35 @@
+From 61c9eb789b4a736fae06a7bf5be9e08b681ef601 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sun, 23 Mar 2025 10:35:33 +0200
+Subject: [PATCH 4/7] Include ucm_imx8m_plus target to the system build
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ imx8m/AndroidProducts.mk | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/imx8m/AndroidProducts.mk b/imx8m/AndroidProducts.mk
+index 50c312cb..7e3fd59d 100644
+--- a/imx8m/AndroidProducts.mk
++++ b/imx8m/AndroidProducts.mk
+@@ -31,7 +31,8 @@ PRODUCT_MAKEFILES := \
+   $(LOCAL_DIR)/evk_8mm/evk_8mm.mk \
+   $(LOCAL_DIR)/ucm_imx8m_mini/ucm_imx8m_mini.mk \
+   $(LOCAL_DIR)/evk_8mn/evk_8mn.mk \
+-  $(LOCAL_DIR)/evk_8mp/evk_8mp.mk
++  $(LOCAL_DIR)/evk_8mp/evk_8mp.mk \
++  $(LOCAL_DIR)/ucm_imx8m_plus/ucm_imx8m_plus.mk
+ 
+ COMMON_LUNCH_CHOICES := \
+   evk_8mq-nxp_stable-user \
+@@ -43,4 +44,6 @@ COMMON_LUNCH_CHOICES := \
+   evk_8mn-nxp_stable-user \
+   evk_8mn-nxp_stable-userdebug \
+   evk_8mp-nxp_stable-user \
+-  evk_8mp-nxp_stable-userdebug
++  evk_8mp-nxp_stable-userdebug \
++  ucm_imx8m_plus-nxp_stable-user \
++  ucm_imx8m_plus-nxp_stable-userdebug
+-- 
+2.34.1
+

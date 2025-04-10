@@ -1,0 +1,66 @@
+From 32c00c7c7c302c8edd34038e0042348f131d7a58 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sat, 30 Dec 2023 17:11:30 +0200
+Subject: [PATCH 029/155] compulab: imx8mp: Remove a legacy stuff
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ board/compulab/plat/Kconfig        |  8 --------
+ board/compulab/plat/imx8mp/Kconfig | 22 ----------------------
+ 2 files changed, 30 deletions(-)
+
+diff --git a/board/compulab/plat/Kconfig b/board/compulab/plat/Kconfig
+index f5e092ca54b..509cc814b99 100644
+--- a/board/compulab/plat/Kconfig
++++ b/board/compulab/plat/Kconfig
+@@ -113,14 +113,6 @@ config ADDON_SMART_SETUP_DEFAULT_ON
+ 
+ endchoice
+ 
+-config ATF_LOAD_ADDR
+-	hex
+-	default 0x00970000
+-
+-config TEE_LOAD_ADDR
+-	hex
+-	default 0x56000000
+-
+ endmenu
+ 
+ source "board/compulab/ucm-imx8m-mini/Kconfig"
+diff --git a/board/compulab/plat/imx8mp/Kconfig b/board/compulab/plat/imx8mp/Kconfig
+index 4ab3325b26a..d9ad1458cf5 100644
+--- a/board/compulab/plat/imx8mp/Kconfig
++++ b/board/compulab/plat/imx8mp/Kconfig
+@@ -35,28 +35,6 @@ config MICRON_8G
+ 
+ endchoice
+ 
+-config COMPULAB_DEBUG_UART1
+-	bool "System Debug UART1"
+-	default n
+-
+-config ATF_LOAD_ADDR
+-	hex "bl31.bin load address"
+-	default 0x00970000
+-
+-config LOADADDR
+-	hex
+-	default 0x40400000
+-
+-config TEE_LOAD_ADDR
+-	hex "tee.bin load address"
+-	default 0x56000000
+-
+-config IMX_CONFIG
+-	default "board/compulab/plat/imx8mp/imximage-8mp-sd.cfg"
+-
+-config SPL_FIT_SOURCE
+-	default "board/compulab/plat/imx8mp/u-boot.its"
+-
+ config COMPULAB_IMX8MP_HDMI
+ 	bool "i.MX8MP HDMI support for CompuLab SOM"
+ 	default y
+-- 
+2.34.1
+

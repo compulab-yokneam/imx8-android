@@ -1,0 +1,38 @@
+From 2781b2fd797e55e13201a90c93c7022168fc9c55 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Fri, 29 Dec 2023 18:53:38 +0200
+Subject: [PATCH 022/155] compulab: imx8mp: ddr: Rename lpddr4_mr_read() into
+ _lpddr4_mr_read()
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+
+%% original patch: 0004-compulab-imx8mp-ddr-Rename-lpddr4_mr_read-into-_lpdd.patch
+---
+ board/compulab/plat/imx8mp/ddr/ddr_common.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/board/compulab/plat/imx8mp/ddr/ddr_common.c b/board/compulab/plat/imx8mp/ddr/ddr_common.c
+index 85c9b4fba6d..55e09e47cf6 100644
+--- a/board/compulab/plat/imx8mp/ddr/ddr_common.c
++++ b/board/compulab/plat/imx8mp/ddr/ddr_common.c
+@@ -6,7 +6,7 @@
+ #include <asm/arch/ddr.h>
+ #include "ddr.h"
+ 
+-static unsigned int lpddr4_mr_read(unsigned int mr_rank, unsigned int mr_addr)
++static unsigned int _lpddr4_mr_read(unsigned int mr_rank, unsigned int mr_addr)
+ {
+ 	unsigned int tmp;
+ 	reg32_write(DRC_PERF_MON_MRR0_DAT(0), 0x1);
+@@ -41,7 +41,7 @@ unsigned int lpddr4_get_mr(void)
+ 	do {
+ 		for ( i = 0 ; i < ARRAY_SIZE(regs) ; i++ ) {
+ 			unsigned int data = 0;
+-			data = lpddr4_mr_read(0xF, regs[i]);
++			data = _lpddr4_mr_read(0xF, regs[i]);
+ 			ddr_info <<= 8;
+ 			ddr_info += (data & 0xFF);
+ 		}
+-- 
+2.34.1
+

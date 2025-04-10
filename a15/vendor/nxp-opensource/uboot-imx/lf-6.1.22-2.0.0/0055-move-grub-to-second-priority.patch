@@ -1,0 +1,35 @@
+From b31d60094885246c9f900d7ae2632f460cde6f18 Mon Sep 17 00:00:00 2001
+From: yaakov entin <yaakov.entin@compulab.co.il>
+Date: Sun, 21 Jan 2024 14:08:35 +0200
+Subject: [PATCH 055/155] move grub to second priority
+
+---
+ .gitignore                  | 1 +
+ configs/ucm-imx93_defconfig | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/.gitignore b/.gitignore
+index 3a4d056edfc..4ca23194049 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -108,3 +108,4 @@ __pycache__
+ 
+ # moveconfig database
+ /moveconfig.db
++build/
+diff --git a/configs/ucm-imx93_defconfig b/configs/ucm-imx93_defconfig
+index 6c57bc5d5f9..18c649d66c9 100644
+--- a/configs/ucm-imx93_defconfig
++++ b/configs/ucm-imx93_defconfig
+@@ -25,7 +25,7 @@ CONFIG_FIT_VERBOSE=y
+ CONFIG_OF_BOARD_SETUP=y
+ CONFIG_OF_SYSTEM_SETUP=y
+ CONFIG_DISTRO_DEFAULTS=y
+-CONFIG_BOOTCOMMAND="run distro_bootcmd;run bsp_bootcmd"
++CONFIG_BOOTCOMMAND="run bsp_bootcmd; run distro_bootcmd"
+ CONFIG_ARCH_MISC_INIT=y
+ CONFIG_BOARD_EARLY_INIT_F=y
+ CONFIG_BOARD_LATE_INIT=y
+-- 
+2.34.1
+

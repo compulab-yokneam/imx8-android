@@ -1,0 +1,25 @@
+From c5e3df5e5b77026ad9346d587615bfa4f9cb8017 Mon Sep 17 00:00:00 2001
+From: yaakov entin <yaakov.entin@compulab.co.il>
+Date: Tue, 4 Jun 2024 12:10:27 +0300
+Subject: [PATCH 094/155] mcm-imx93: update env fdtfile
+
+---
+ board/compulab/mcm-imx93/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/board/compulab/mcm-imx93/Kconfig b/board/compulab/mcm-imx93/Kconfig
+index 796c31fdab6..daeea082d9a 100644
+--- a/board/compulab/mcm-imx93/Kconfig
++++ b/board/compulab/mcm-imx93/Kconfig
+@@ -13,7 +13,7 @@ config DEFAULT_DEVICE_TREE
+ 	default "mcm-imx93"
+ 
+ config DEFAULT_FDT_FILE
+-	default "mcm-imx93.dtb"
++	default "sbc-mcm-imx93.dtb"
+ 
+ config ENV_IS_IN_MMC
+ 	bool
+-- 
+2.34.1
+

@@ -1,0 +1,53 @@
+From 46320896e72f71cb5e906e9fc020ca9f511a2eb0 Mon Sep 17 00:00:00 2001
+From: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+Date: Sun, 31 Mar 2024 19:44:05 +0300
+Subject: [PATCH 114/155] SDP fix
+
+Signed-off-by: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+---
+ arch/arm/mach-imx/spl.c          | 2 +-
+ configs/ucm-imx8m-mini_defconfig | 8 ++++----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm/mach-imx/spl.c b/arch/arm/mach-imx/spl.c
+index 4293e69582c..6d7d5a30c6f 100644
+--- a/arch/arm/mach-imx/spl.c
++++ b/arch/arm/mach-imx/spl.c
+@@ -186,7 +186,7 @@ u32 spl_boot_device(void)
+ #ifdef CONFIG_SPL_USB_GADGET
+ int g_dnl_bind_fixup(struct usb_device_descriptor *dev, const char *name)
+ {
+-	put_unaligned(0x0151, &dev->idProduct);
++	put_unaligned(CONFIG_USB_GADGET_PRODUCT_NUM, &dev->idProduct);
+ 
+ 	return 0;
+ }
+diff --git a/configs/ucm-imx8m-mini_defconfig b/configs/ucm-imx8m-mini_defconfig
+index 0fa83d334d2..88cd5e77ed5 100644
+--- a/configs/ucm-imx8m-mini_defconfig
++++ b/configs/ucm-imx8m-mini_defconfig
+@@ -138,9 +138,8 @@ CONFIG_SYS_SPL_MALLOC_SIZE=0x80000
+ CONFIG_SYS_SPL_MALLOC=y
+ CONFIG_TEE=y
+ CONFIG_TEXT_BASE=0x40200000
+-CONFIG_USB_GADGET_DOWNLOAD=y
+-CONFIG_USB_GADGET_PRODUCT_NUM=0x0152
+-CONFIG_USB_GADGET_VENDOR_NUM=0x1fc9
++CONFIG_USB_GADGET_PRODUCT_NUM=0xb4a4
++CONFIG_USB_GADGET_VENDOR_NUM=0x0525
+ CONFIG_USB_MAX_CONTROLLER_COUNT=2
+ CONFIG_USE_ETHPRIME=y
+ CONFIG_VIDEO_LOGO=y
+@@ -166,7 +165,8 @@ CONFIG_DM_PWM=y
+ CONFIG_PWM_IMX=y
+ CONFIG_IMX_TMU=y
+ CONFIG_USB_STORAGE=y
+-CONFIG_DM_USB=n
++CONFIG_DM_USB=y
++CONFIG_DM_USB_GADGET=n
+ 
+ CONFIG_SPL_LIBCOMMON_SUPPORT=y
+ CONFIG_SPL_LIBGENERIC_SUPPORT=y
+-- 
+2.34.1
+

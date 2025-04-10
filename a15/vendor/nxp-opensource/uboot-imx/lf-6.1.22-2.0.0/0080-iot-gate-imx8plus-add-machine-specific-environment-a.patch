@@ -1,0 +1,28 @@
+From 4318fe5361f74382330d27605112b87b07689166 Mon Sep 17 00:00:00 2001
+From: Ilya Ledvich <ilya@compulab.co.il>
+Date: Sun, 19 May 2024 14:13:03 +0300
+Subject: [PATCH 080/155] iot-gate-imx8plus: add machine specific environment
+ add-on
+
+Signed-off-by: Ilya Ledvich <ilya@compulab.co.il>
+---
+ include/configs/iot-gate-imx8plus.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/include/configs/iot-gate-imx8plus.h b/include/configs/iot-gate-imx8plus.h
+index d5a4a854157..26429aa19b1 100644
+--- a/include/configs/iot-gate-imx8plus.h
++++ b/include/configs/iot-gate-imx8plus.h
+@@ -7,6 +7,9 @@
+ #ifndef __IOT_GATE_IMX8PLUS_H
+ #define __IOT_GATE_IMX8PLUS_H
+ 
++#define MACHINE_EXTRA_ENV_SETTINGS      \
++        "boot_opt=net.ifnames=0\0"
++
+ #include "compulab-imx8m-plus.h"
+ 
+ #define CONFIG_IMX6_PWM_PER_CLK 66000000
+-- 
+2.34.1
+

@@ -1,0 +1,42 @@
+From b5f340c96582456611f4016c4112ed31c6f35786 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sun, 23 Mar 2025 15:11:34 +0200
+Subject: [PATCH 155/155] ucm-imx8m-plus: Add SBEV-UCMiMX8PLUS support
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ include/configs/ucm-imx8m-plus_android.h | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/include/configs/ucm-imx8m-plus_android.h b/include/configs/ucm-imx8m-plus_android.h
+index 502b6da27b3..b4e2cb1f788 100644
+--- a/include/configs/ucm-imx8m-plus_android.h
++++ b/include/configs/ucm-imx8m-plus_android.h
+@@ -12,13 +12,20 @@
+ #undef CFG_EXTRA_ENV_SETTINGS
+ #undef CONFIG_BOOTCOMMAND
+ 
++#ifdef CONFIG_SBEV_UCMIMX8PLUS
++#define VIDEO_LINK "video_link=1"
++#else
++#define VIDEO_LINK "video_link=0"
++#endif
++
+ #define CFG_EXTRA_ENV_SETTINGS		\
+-	"splashpos=m,m\0"			\
+-	"splashimage=0x50000000\0"		\
+-	"fdt_high=0xffffffffffffffff\0"		\
++	VIDEO_LINK"\0"			\
++	"splashpos=m,m\0"		\
++	"splashimage=0x50000000\0"	\
++	"fdt_high=0xffffffffffffffff\0"	\
+ 	"initrd_high=0xffffffffffffffff\0"	\
+ 	"emmc_dev=2\0"\
+-	"sd_dev=1\0" \
++	"sd_dev=1\0"\
+ 
+ /* Enable mcu firmware flash */
+ #ifdef CONFIG_FLASH_MCUFIRMWARE_SUPPORT
+-- 
+2.34.1
+
