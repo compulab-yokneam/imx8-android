@@ -53,17 +53,15 @@ git -C ${MY_ANDROID}/vendor/nxp-opensource/kernel_imx am ${C}/vendor/nxp-opensou
 git -C ${MY_ANDROID}/device/nxp checkout -b compulab-imx8 android-15.0.0_1.2.0
 git -C ${MY_ANDROID}/device/nxp am ${C}/device/nxp/*.patch
 
-# Apply the u-boot changes in order to pass the andriod build process
-```
+# Create the image
+* Set a desire machine configuration
+** `ucm-imx8m-plus`
+*** `export MACHINE=ucm_imx8m_plus SOC=imx8mp`
+
+*** Apply the u-boot changes in order to pass the andriod build process
+[source,console]
 sed -i '/BINMAN/d' ${MY_ANDROID}/vendor/nxp-opensource/uboot-imx/board/compulab/plat/Kconfig
 sed -i 's/ifdef CONFIG_SPL_OS_BOOT/if 1/g' ${MY_ANDROID}/vendor/nxp-opensource/uboot-imx/board/compulab/plat/imx8mp/ddr/ddr.h
-```
-
-# Create the image
-Set a desire machine configuration:
-
-* `ucm-imx8m-plus`
-** `export MACHINE=ucm_imx8m_plus SOC=imx8mp`
 
 * Goto Android build directory and issue:
 [source,console]
@@ -81,7 +79,7 @@ It is up to developers to prepare the host machine; it requires:
 * Install these packages: ``shareutils, swing``
 
 * Create U-boot binary
-```
+[source,console]
 cd ${MY_ANDROID}/vendor/nxp-opensource/uboot-imx
 export BUILD=$(pwd)/../uboot-imx-build.d
 # roll back the android sed changes
@@ -90,12 +88,10 @@ make O=${BUILD} ucm-imx8m-plus_android_defconfig
 make O=${BUILD} flash.bin
 export COMPULAB_UBOOT=$(readlink -e ${BUILD}/flash.bin)
 cd -
-```
 
 * Copy the U-boot file to the Android output folder
-```
+[source,console]
 cp -v ${COMPULAB_UBOOT} ${MY_ANDROID}/out/target/product/ucm_imx8m_plus/u-boot-imx8mp.imx
-```
 
 # Create a bootable SD-card
 
