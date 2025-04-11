@@ -1,0 +1,52 @@
+From a2fe0a538da5fe0972072484427de0d0be82be2e Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sun, 30 Mar 2025 15:46:35 +0300
+Subject: [PATCH 156/157] fix: compulab: Address compilation issues with
+ gcc-14.2.0-nolibc
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ board/compulab/common/common.c | 1 +
+ board/compulab/common/fdt.c    | 1 +
+ board/compulab/common/mmc.c    | 1 +
+ 3 files changed, 3 insertions(+)
+
+diff --git a/board/compulab/common/common.c b/board/compulab/common/common.c
+index a425778fdee..29f0d7e1310 100644
+--- a/board/compulab/common/common.c
++++ b/board/compulab/common/common.c
+@@ -11,6 +11,7 @@
+ #include <asm/bootm.h>
+ #include <asm/gpio.h>
+ #include <asm/setup.h>
++#include <linux/delay.h>
+ 
+ #include "common.h"
+ #include "eeprom.h"
+diff --git a/board/compulab/common/fdt.c b/board/compulab/common/fdt.c
+index 61538277e2e..2647a17f5df 100644
+--- a/board/compulab/common/fdt.c
++++ b/board/compulab/common/fdt.c
+@@ -8,6 +8,7 @@
+ #include "mmc.h"
+ #include "eeprom.h"
+ #include <env_internal.h>
++#include <fdt_support.h>
+ 
+ void fdt_set_sn(void *blob)
+ {
+diff --git a/board/compulab/common/mmc.c b/board/compulab/common/mmc.c
+index b2922122b2e..b2771d446d9 100644
+--- a/board/compulab/common/mmc.c
++++ b/board/compulab/common/mmc.c
+@@ -5,6 +5,7 @@
+ #include <asm/io.h>
+ #include <asm/setup.h>
+ #include <mmc.h>
++#include <env.h>
+ #include "mmc.h"
+ 
+ static int env_dev = -1;
+-- 
+2.34.1
+

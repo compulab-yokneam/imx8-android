@@ -1,0 +1,55 @@
+From e3744144be893d5f9b43660efc24d69fa7348f5b Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sun, 30 Mar 2025 15:47:45 +0300
+Subject: [PATCH 157/157] fix: generic: Address compilation issues with
+ gcc-14.2.0-nolibc
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ drivers/gpio/pca953x_gpio.c         | 1 +
+ drivers/video/nxp/imx/imx8mp_lvds.c | 3 +--
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpio/pca953x_gpio.c b/drivers/gpio/pca953x_gpio.c
+index c81d2963dc8..946cda00664 100644
+--- a/drivers/gpio/pca953x_gpio.c
++++ b/drivers/gpio/pca953x_gpio.c
+@@ -29,6 +29,7 @@
+ #include <dm/device_compat.h>
+ #include <dt-bindings/gpio/gpio.h>
+ #include <linux/bitops.h>
++#include <linux/delay.h>
+ 
+ #define PCA953X_INPUT           0
+ #define PCA953X_OUTPUT          1
+diff --git a/drivers/video/nxp/imx/imx8mp_lvds.c b/drivers/video/nxp/imx/imx8mp_lvds.c
+index 2e223a92a74..c20fbaecefb 100644
+--- a/drivers/video/nxp/imx/imx8mp_lvds.c
++++ b/drivers/video/nxp/imx/imx8mp_lvds.c
+@@ -19,6 +19,7 @@
+ #include <power-domain.h>
+ #include <regmap.h>
+ #include <syscon.h>
++#include <panel.h>
+ 
+ #define DRIVER_NAME "imx8mp-ldb"
+ 
+@@ -96,7 +97,6 @@ static int imx8mp_lvds_phy_power_on(struct udevice *dev)
+ 	struct imx8mp_ldb_priv *priv = dev_get_priv(dev);
+ 	
+ 	unsigned int val;
+-	u32 ldb_ctrl;
+ 	bool bg_en;
+ 
+  	media_blk_write(priv, LVDS_CTRL, HS_DISABLE);
+@@ -211,7 +211,6 @@ static int imx8mp_ldb_probe(struct udevice *dev)
+ 
+ static int imx8mp_ldb_bind(struct udevice *dev)
+ {
+-	struct imx8mp_ldb_priv *priv = dev_get_priv(dev);
+ 	ofnode lvds_ch_node;
+ 	int ret = 0;
+ 
+-- 
+2.34.1
+
