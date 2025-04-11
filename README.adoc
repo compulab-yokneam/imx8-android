@@ -72,11 +72,9 @@ lunch ${MACHINE}-nxp_stable-userdebug
 
 ## CompuLab imx8mp u-boot external build how to
 
-### Prerequisites
-It is up to developers to prepare the host machine; it requires:
-
-* https://github.com/compulab-yokneam/meta-bsp-imx8mp/blob/kirkstone/Documentation/toolchain.md#linaro-toolchain-how-to)[Setup Cross Compiler]
-* Install these packages: ``shareutils, swing``
+* Prerequisites
+** https://github.com/compulab-yokneam/Documentation/blob/master/ucm-imx8m-plus/toolchain.md[Setup Cross Compiler]
+** Install these packages: ``shareutils, swing``
 
 * Create U-boot binary
 [source,console]
