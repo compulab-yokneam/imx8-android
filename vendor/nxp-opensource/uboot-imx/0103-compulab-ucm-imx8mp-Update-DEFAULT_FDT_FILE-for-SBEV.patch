@@ -1,0 +1,27 @@
+From cc5f566f947b0eb0cbafa2cfab1a8114b282b852 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Thu, 20 Jun 2024 11:25:24 +0300
+Subject: [PATCH 103/155] compulab: ucm-imx8mp: Update DEFAULT_FDT_FILE for
+ SBEV
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ board/compulab/ucm-imx8m-plus/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/board/compulab/ucm-imx8m-plus/Kconfig b/board/compulab/ucm-imx8m-plus/Kconfig
+index 2cbb0458eff..bd66809ff4c 100644
+--- a/board/compulab/ucm-imx8m-plus/Kconfig
++++ b/board/compulab/ucm-imx8m-plus/Kconfig
+@@ -12,7 +12,7 @@ config SYS_CONFIG_NAME
+ config DEFAULT_FDT_FILE
+ 	string
+ 	default "ucm-imx8m-plus.dtb" if !SBEV_UCMIMX8PLUS
+-	default "ucm-imx8m-plus-sbev.dtb" if SBEV_UCMIMX8PLUS
++	default "sbev-ucmimx8plus.dtb" if SBEV_UCMIMX8PLUS
+ 
+ config DEFAULT_DEVICE_TREE
+ 	default "ucm-imx8m-plus"
+-- 
+2.34.1
+

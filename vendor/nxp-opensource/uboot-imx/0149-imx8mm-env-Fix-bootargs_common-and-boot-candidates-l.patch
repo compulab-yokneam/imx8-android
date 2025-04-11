@@ -1,0 +1,82 @@
+From 9914f7633b78a56a1f84ef7fe8e9cbbd014e53d4 Mon Sep 17 00:00:00 2001
+From: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+Date: Sun, 16 Feb 2025 20:36:47 +0200
+Subject: [PATCH 149/155] imx8mm:env: Fix bootargs_common and boot candidates
+ list
+
+Signed-off-by: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+---
+ include/configs/cpl-imx8m-mini.h | 19 ++++++++++++-------
+ include/configs/iot-gate-imx8.h  |  6 ++++--
+ 2 files changed, 16 insertions(+), 9 deletions(-)
+
+diff --git a/include/configs/cpl-imx8m-mini.h b/include/configs/cpl-imx8m-mini.h
+index a4eb6a5da6c..ec354b44dbb 100644
+--- a/include/configs/cpl-imx8m-mini.h
++++ b/include/configs/cpl-imx8m-mini.h
+@@ -51,6 +51,8 @@
+ 	"bootcmd_mfg=run mfgtool_args;  if iminfo ${initrd_addr}; then "\
+ 					   "booti ${loadaddr} ${initrd_addr} ${fdt_addr};"\
+ 					"else echo \"Run fastboot ...\"; fastboot 0; fi\0" \
++
++#define ENV_CONSOLE console=ttymxc2,115200 earlycon=ec_imx6q,0x30880000,115200
+ /* Initial environment variables */
+ #define CFG_EXTRA_ENV_SETTINGS		\
+ 	CFG_MFG_ENV_SETTINGS \
+@@ -64,17 +66,15 @@
+ 	"fdt_file="CONFIG_DEFAULT_FDT"\0" \
+ 	"initrd_addr=0x43800000\0"		\
+ 	"initrd_high=0xffffffffffffffff\0" \
+-	"mmcdev="__stringify(CONFIG_SYS_MMC_ENV_DEV)"\0" \
+-	"mmcpart=" __stringify(CONFIG_SYS_MMC_IMG_LOAD_PART) "\0" \
+-	"mmcroot=" CONFIG_MMCROOT " rootwait rw\0" \
+ 	"mmcautodetect=yes\0" \
+ 	"root_opt=rootwait rw\0" \
++	"bootargs_common="__stringify(ENV_CONSOLE)" net.ifnames=0\0" \
+ 	"emmc_ul=setenv iface mmc; setenv dev 2; setenv part 1;" \
+-	"setenv bootargs console=${console} root=/dev/mmcblk2p2 ${root_opt};\0" \
++	"setenv bootargs ${bootargs_common} root=/dev/mmcblk2p2 ${root_opt};\0" \
+ 	"sd_ul=setenv iface mmc; setenv dev 1; setenv part 1;" \
+-	"setenv bootargs console=${console} root=/dev/mmcblk1p2 ${root_opt};\0" \
++	"setenv bootargs ${bootargs_common} root=/dev/mmcblk1p2 ${root_opt};\0" \
+ 	"usb_ul=usb start; setenv iface usb; setenv dev 0; setenv part 1;" \
+-	"setenv bootargs console=${console} root=/dev/sda2 ${root_opt};\0" \
++	"setenv bootargs ${bootargs_common}  root=/dev/sda2 ${root_opt};\0" \
+ 	"ulbootscript=load ${iface} ${dev}:${part} ${loadaddr} ${script};\0" \
+ 	"ulimage=load ${iface} ${dev}:${part} ${loadaddr} ${image}\0" \
+ 	"ulfdt=if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
+@@ -101,8 +101,13 @@
+ 		"else " \
+ 			"booti; " \
+ 		"fi;\0"
++
++#ifndef BOOT_CANDIDATE_LIST
++#define BOOT_CANDIDATE_LIST sd_ul usb_ul emmc_ul
++#endif
++
+ #define CONFIG_BOOTCOMMAND \
+-	"for src in sd_ul usb_ul emmc_ul; do " \
++	"for src in "__stringify(BOOT_CANDIDATE_LIST)"; do " \
+ 		"run ${src}; " \
+ 		"if run ulbootscript; then " \
+ 			"run bootscript; " \
+diff --git a/include/configs/iot-gate-imx8.h b/include/configs/iot-gate-imx8.h
+index b3d6082a667..3f3d1e2a3d3 100644
+--- a/include/configs/iot-gate-imx8.h
++++ b/include/configs/iot-gate-imx8.h
+@@ -4,8 +4,10 @@
+  * SPDX-License-Identifier:	GPL-2.0+
+  */
+ 
+-#ifndef __UCM_IMX8M_MINI_H
+-#define __UCM_IMX8M_MINI_H
++#ifndef __IOT-GATE-IMX8_H
++#define __IOT-GATE-IMX8_H
++
++#define BOOT_CANDIDATE_LIST usb_ul emmc_ul
+ 
+ #include "cpl-imx8m-mini.h"
+ 
+-- 
+2.34.1
+

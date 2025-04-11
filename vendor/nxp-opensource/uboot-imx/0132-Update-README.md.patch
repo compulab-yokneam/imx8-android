@@ -1,0 +1,24 @@
+From b495de5471064c86be58090b22a415b60d49d973 Mon Sep 17 00:00:00 2001
+From: vraevsky <valentin@compulab.co.il>
+Date: Mon, 11 Nov 2024 17:15:09 +0200
+Subject: [PATCH 132/155] Update README.md
+
+---
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/README.md b/README.md
+index 7f7a52d1a5f..904f3d0b903 100644
+--- a/README.md
++++ b/README.md
+@@ -22,6 +22,7 @@ export BUILD=$(pwd)/build
+ | Machine | Command Line |
+ |---|---|
+ |ucm-imx8m-plus|```export MACHINE=ucm-imx8m-plus```|
++|ucm-imx8m-plus (eval V2)|```export MACHINE=ucm-imx8m-plus-sbev```|
+ |mcm-imx8m-plus|```export MACHINE=mcm-imx8m-plus```|
+ |som-imx8m-plus|```export MACHINE=som-imx8m-plus```|
+ |iot-gate-imx8plus|```export MACHINE=iot-gate-imx8plus```|
+-- 
+2.34.1
+

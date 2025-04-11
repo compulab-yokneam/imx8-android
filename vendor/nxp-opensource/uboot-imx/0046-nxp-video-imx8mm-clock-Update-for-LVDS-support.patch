@@ -1,0 +1,39 @@
+From ae04ed8bd88129c098bdde381bc6aed152bdc6d7 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sun, 14 Jan 2024 15:44:11 +0200
+Subject: [PATCH 046/155] nxp: video: imx8mm: clock: Update for LVDS support
+
+1) Set VIDEO_PLL_RATE to 400000000U.
+2) Enable MEDIA_LDB_CLK_ROOT.
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ arch/arm/mach-imx/imx8m/clock_imx8mm.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/mach-imx/imx8m/clock_imx8mm.c b/arch/arm/mach-imx/imx8m/clock_imx8mm.c
+index 763c61ff7ff..c380767d49f 100644
+--- a/arch/arm/mach-imx/imx8m/clock_imx8mm.c
++++ b/arch/arm/mach-imx/imx8m/clock_imx8mm.c
+@@ -305,7 +305,7 @@ int intpll_configure(enum pll_clocks pll, ulong freq)
+ 	return 0;
+ }
+ 
+-#define VIDEO_PLL_RATE 594000000U
++#define VIDEO_PLL_RATE 400000000U
+ 
+ void mxs_set_lcdclk(uint32_t base_addr, uint32_t freq)
+ {
+@@ -359,6 +359,9 @@ void enable_display_clk(unsigned char enable)
+ 
+ 		/* 27Mhz MIPI DPHY PLL ref from video PLL */
+ 		clock_set_target_val(MEDIA_MIPI_PHY1_REF_CLK_ROOT, CLK_ROOT_ON | CLK_ROOT_SOURCE_SEL(7) |CLK_ROOT_POST_DIV(CLK_ROOT_POST_DIV22));
++
++		/* 519.75Mhz LVDS PLL ref from video PLL */
++		clock_set_target_val(MEDIA_LDB_CLK_ROOT, CLK_ROOT_ON | CLK_ROOT_SOURCE_SEL(7) |CLK_ROOT_POST_DIV(CLK_ROOT_POST_DIV2));
+ 		clock_enable(CCGR_DISPMIX, true);
+ 	} else {
+ 		clock_enable(CCGR_DISPMIX, false);
+-- 
+2.34.1
+

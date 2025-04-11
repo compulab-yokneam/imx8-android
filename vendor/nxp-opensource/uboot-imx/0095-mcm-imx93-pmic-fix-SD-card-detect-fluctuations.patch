@@ -1,0 +1,26 @@
+From 684822d6eb08770f145f964c5a7ee66aae3b3628 Mon Sep 17 00:00:00 2001
+From: yaakov entin <yaakov.entin@compulab.co.il>
+Date: Tue, 4 Jun 2024 13:08:49 +0300
+Subject: [PATCH 095/155] mcm-imx93: pmic: fix SD card detect fluctuations
+
+---
+ board/compulab/mcm-imx93/spl.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/board/compulab/mcm-imx93/spl.c b/board/compulab/mcm-imx93/spl.c
+index 1a0e0122e99..4b8ae2481d0 100644
+--- a/board/compulab/mcm-imx93/spl.c
++++ b/board/compulab/mcm-imx93/spl.c
+@@ -106,6 +106,9 @@ int power_init_board(void)
+ 
+ 	/* set WDOG_B_CFG to cold reset */
+ 	pmic_reg_write(dev, PCA9450_RESET_CTRL, 0xA1);
++
++	/* fix SD card detect fluctuations - When switch detects short circuit current turn off and restart in 100ms */
++	pmic_reg_write(dev, PCA9450_LOADSW_CTRL, 0x95);
+ 	return 0;
+ }
+ #endif
+-- 
+2.34.1
+

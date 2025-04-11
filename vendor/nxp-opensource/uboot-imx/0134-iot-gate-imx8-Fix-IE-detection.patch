@@ -1,0 +1,96 @@
+From 30e65c8221e9ee9e90c19e4a8bd7dbe98c65bf1c Mon Sep 17 00:00:00 2001
+From: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+Date: Mon, 11 Nov 2024 22:08:28 +0200
+Subject: [PATCH 134/155] iot-gate-imx8: Fix IE detection
+
+Signed-off-by: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+---
+ arch/arm/dts/iot-gate-imx8.dts               | 47 ++++++++++++++++++--
+ board/compulab/iot-gate-imx8/iot-gate-imx8.c |  3 +-
+ 2 files changed, 45 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm/dts/iot-gate-imx8.dts b/arch/arm/dts/iot-gate-imx8.dts
+index 6b6b2d69c73..34548b847ee 100644
+--- a/arch/arm/dts/iot-gate-imx8.dts
++++ b/arch/arm/dts/iot-gate-imx8.dts
+@@ -29,20 +29,59 @@
+ 		regulator-boot-on;
+ 		enable-active-high;
+ 	};
++
++	reg_usdhc2_vqmmc: regulator-usdhc2_1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "usdhc2_1v8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++	};
+ };
+ 
+-&usbotg1 {
++&i2c4 {/* Expansion connector I2C */
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c4>;
++	status = "okay";
++
++	gpio@22 {
++		compatible = "nxp,pca9555";
++		reg = <0x22>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++};
++
++&usdhc2 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctl_usb_gpio>;
++	mmc-ddr-1_8v;
++	non-removable;
++	vqmmc-supply = <&reg_usdhc2_vqmmc>;
++};
++
++&usbotg1 {
++	vbus-supply = <&reg_vusb_5v>;
+ 	dr_mode = "host";
+ 	status = "okay";
+ };
+ 
+ &iomuxc {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_hog>;
++
+ 	sb-iotgimx8 {
+-		pinctl_usb_gpio: usb_gpio_grp {
++		pinctrl_hog: hoggrp {
++			fsl,pins = <
++				/* USB VBUS enable GPIO */
++				MX8MM_IOMUXC_SAI3_RXFS_GPIO4_IO28	0x00
++			>;
++		};
++
++		pinctrl_i2c4: i2c4grp {
+ 			fsl,pins = <
+-				MX8MM_IOMUXC_SAI3_RXFS_GPIO4_IO28		0x00
++				MX8MM_IOMUXC_I2C4_SCL_I2C4_SCL		0x400001c3
++				MX8MM_IOMUXC_I2C4_SDA_I2C4_SDA		0x400001c3
+ 			>;
+ 		};
+ 	};
+diff --git a/board/compulab/iot-gate-imx8/iot-gate-imx8.c b/board/compulab/iot-gate-imx8/iot-gate-imx8.c
+index 3badd3124fe..4d13b017cf7 100644
+--- a/board/compulab/iot-gate-imx8/iot-gate-imx8.c
++++ b/board/compulab/iot-gate-imx8/iot-gate-imx8.c
+@@ -112,7 +112,8 @@ static void iot_gate_imx8_select_dtb(void)
+ 	char *fdt_src;
+ 	const char *env_fdt_file = env_get(IOT_GATE_IMX8_ENV_FDT_FILE);
+ 
+-	if (env_fdt_file == NULL) {
++// Variable fdt_file unset or empty -- choose FDT, basing on the HW options
++	if (NULL == env_fdt_file || 0 == env_fdt_file[0]) {
+ 		env_fdt_file = iot_gate_imx8_dtb[iot_gate_imx8_ext_id];
+ 		env_set(IOT_GATE_IMX8_ENV_FDT_FILE, env_fdt_file);
+ 		fdt_src = "det"; // peripheral determines FDT name
+-- 
+2.34.1
+

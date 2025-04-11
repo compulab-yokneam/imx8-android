@@ -1,0 +1,26 @@
+From 8abf2243e78afb30eb31e9b3900bf8dec47251ac Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sat, 13 Jan 2024 16:05:08 +0200
+Subject: [PATCH 040/155] compulab: ucm-imx93: config: Enable
+ CONFIG_VIDEO_IMX93_LVDS
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ configs/ucm-imx93_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/configs/ucm-imx93_defconfig b/configs/ucm-imx93_defconfig
+index 95362466ad1..6c57bc5d5f9 100644
+--- a/configs/ucm-imx93_defconfig
++++ b/configs/ucm-imx93_defconfig
+@@ -143,6 +143,7 @@ CONFIG_VIDEO=y
+ CONFIG_VIDEO_LOGO=y
+ CONFIG_SYS_WHITE_ON_BLACK=y
+ CONFIG_VIDEO_LCD_STARTEK_ILI9881C=y
++CONFIG_VIDEO_IMX93_LVDS=y
+ CONFIG_VIDEO_IMX_DW_DSI=y
+ CONFIG_VIDEO_IMX_LCDIFV3=y
+ CONFIG_SPLASH_SCREEN=y
+-- 
+2.34.1
+

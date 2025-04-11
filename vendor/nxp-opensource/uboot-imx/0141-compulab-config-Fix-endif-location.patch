@@ -1,0 +1,30 @@
+From 20d78d6b057566c23bf0ee3f269ab54503a0d3a9 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Fri, 27 Dec 2024 18:55:53 +0200
+Subject: [PATCH 141/155] compulab: config: Fix endif location
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ include/configs/compulab-imx8m-plus.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/configs/compulab-imx8m-plus.h b/include/configs/compulab-imx8m-plus.h
+index 3f7caf33651..8f2c8d7ba96 100644
+--- a/include/configs/compulab-imx8m-plus.h
++++ b/include/configs/compulab-imx8m-plus.h
+@@ -161,7 +161,6 @@
+ 				"fi; " \
+ 			"fi; " \
+ 		"done; "
+-#endif
+ 
+ #define CONFIG_MMCROOT			"/dev/mmcblk1p2"  /* USDHC2 */
+ 
+@@ -185,3 +184,4 @@
+ #undef CONFIG_SYS_PROMPT
+ #define CONFIG_SYS_PROMPT CONFIG_SYS_BOARD"=> "
+ #endif
++#endif
+-- 
+2.34.1
+

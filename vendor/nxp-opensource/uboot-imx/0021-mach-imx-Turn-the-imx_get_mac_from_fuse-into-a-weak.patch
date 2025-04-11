@@ -1,0 +1,29 @@
+From 2f7e80ccfd8bc8d011cd8852b71716d16a41b8eb Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Fri, 29 Dec 2023 18:51:01 +0200
+Subject: [PATCH 021/155] mach-imx: Turn the imx_get_mac_from_fuse into a weak
+ ()
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+
+%% original patch: 0003-mach-imx-Turn-the-imx_get_mac_from_fuse-into-a-weak.patch
+---
+ arch/arm/mach-imx/mac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/mach-imx/mac.c b/arch/arm/mach-imx/mac.c
+index 9bb63d25b48..02de001f307 100644
+--- a/arch/arm/mach-imx/mac.c
++++ b/arch/arm/mach-imx/mac.c
+@@ -23,7 +23,7 @@ struct imx_mac_fuse {
+ #define MAC_FUSE_MX6_OFFSET	0x620
+ #define MAC_FUSE_MX7_OFFSET	0x640
+ 
+-void imx_get_mac_from_fuse(int dev_id, unsigned char *mac)
++__weak void imx_get_mac_from_fuse(int dev_id, unsigned char *mac)
+ {
+ 	struct imx_mac_fuse *fuse;
+ 	u32 offset;
+-- 
+2.34.1
+

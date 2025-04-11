@@ -1,0 +1,37 @@
+From d76c32aa87a55adedc71ee24f5e7cf747a93a069 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sun, 14 Jan 2024 15:49:48 +0200
+Subject: [PATCH 052/155] compulab: ucm-imx8mp: config: Enable USB network
+ adapters
+
+1) +CONFIG_USB_ETHER_ASIX
+2) +CONFIG_USB_ETHER_RTL8152
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ configs/ucm-imx8m-plus_defconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/configs/ucm-imx8m-plus_defconfig b/configs/ucm-imx8m-plus_defconfig
+index 86284ad3a3a..c5a6e3282c5 100644
+--- a/configs/ucm-imx8m-plus_defconfig
++++ b/configs/ucm-imx8m-plus_defconfig
+@@ -165,8 +165,10 @@ CONFIG_USB_XHCI_HCD=y
+ CONFIG_USB_XHCI_DWC3=y
+ CONFIG_USB_DWC3=y
+ CONFIG_USB_HOST_ETHER=y
++CONFIG_USB_ETHER_ASIX=y
+ CONFIG_USB_ETHER_ASIX88179=y
+ CONFIG_USB_ETHER_MCS7830=y
++CONFIG_USB_ETHER_RTL8152=y
+ CONFIG_USB_ETHER_SMSC95XX=y
+ CONFIG_USB_GADGET=y
+ CONFIG_USB_GADGET_MANUFACTURER="FSL"
+@@ -195,4 +197,3 @@ CONFIG_EFI_IGNORE_OSINDICATIONS=y
+ CONFIG_EFI_CAPSULE_FIRMWARE_RAW=y
+ CONFIG_EFI_CAPSULE_AUTHENTICATE=y
+ CONFIG_EFI_SECURE_BOOT=y
+-CONFIG_SPL_STACK=0x96dff0
+-- 
+2.34.1
+

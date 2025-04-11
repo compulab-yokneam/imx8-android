@@ -1,0 +1,29 @@
+From b8a266654a783ee515aad4d3730f66f124ddbd3e Mon Sep 17 00:00:00 2001
+From: Ilya Ledvich <ilya@compulab.co.il>
+Date: Sun, 19 May 2024 14:08:54 +0300
+Subject: [PATCH 078/155] iot-gate-imx8plus: force bsp_bootcmd as a default
+ boot command
+
+Use bsp_bootcmd as a default boot command in order to avoid using distro_bootcmd
+
+Signed-off-by: Ilya Ledvich <ilya@compulab.co.il>
+---
+ configs/iot-gate-imx8plus_defconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configs/iot-gate-imx8plus_defconfig b/configs/iot-gate-imx8plus_defconfig
+index 1bde9efef84..6e3dbdc254b 100644
+--- a/configs/iot-gate-imx8plus_defconfig
++++ b/configs/iot-gate-imx8plus_defconfig
+@@ -38,7 +38,7 @@ CONFIG_LEGACY_IMAGE_FORMAT=y
+ CONFIG_OF_BOARD_SETUP=y
+ CONFIG_OF_SYSTEM_SETUP=y
+ CONFIG_DISTRO_DEFAULTS=y
+-CONFIG_BOOTCOMMAND="run distro_bootcmd;run bsp_bootcmd"
++CONFIG_BOOTCOMMAND="run bsp_bootcmd"
+ CONFIG_ARCH_MISC_INIT=y
+ CONFIG_BOARD_EARLY_INIT_F=y
+ CONFIG_BOARD_LATE_INIT=y
+-- 
+2.34.1
+

@@ -1,0 +1,41 @@
+From c5f8eb70882b16005163e1100909a28191c63ee6 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sat, 13 Jan 2024 16:02:17 +0200
+Subject: [PATCH 038/155] nxp: video: imx_lcdifv3: Add LVDS enable method
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ drivers/video/nxp/imx/imx_lcdifv3.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/drivers/video/nxp/imx/imx_lcdifv3.c b/drivers/video/nxp/imx/imx_lcdifv3.c
+index 67be16b692c..9f83e8c4d35 100644
+--- a/drivers/video/nxp/imx/imx_lcdifv3.c
++++ b/drivers/video/nxp/imx/imx_lcdifv3.c
+@@ -27,6 +27,7 @@
+ #include <dm.h>
+ #include <dm/device-internal.h>
+ #include <dm/device_compat.h>
++#include <display.h>
+ 
+ #define	PS2KHZ(ps)	(1000000000UL / (ps))
+ #define HZ2PS(hz)	(1000000000UL / ((hz) / 1000))
+@@ -349,6 +350,15 @@ static int lcdifv3_video_probe(struct udevice *dev)
+ 
+ 	lcdifv3_of_parse_thres(dev);
+ 
++#if IS_ENABLED(CONFIG_VIDEO_IMX93_LVDS)
++	/* This is the LVDS method */
++	ret = display_enable(priv->disp_dev, 32, &timings);
++	if (ret) {
++		debug("%s: display enable error %d\n", __func__, ret);
++		return ret;
++	}
++#endif
++
+ 	if (priv->disp_dev) {
+ #if IS_ENABLED(CONFIG_VIDEO_BRIDGE)
+ 		if (device_get_uclass_id(priv->disp_dev) == UCLASS_VIDEO_BRIDGE) {
+-- 
+2.34.1
+

@@ -1,0 +1,26 @@
+From 536eeec7e5b67ad5a4ae8f51b4a53ce5d1874c54 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sun, 14 Jan 2024 15:31:37 +0200
+Subject: [PATCH 044/155] nxp: video: imx_lcdifv3: Add fsl,imx8mp-lcdif2
+ support
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ drivers/video/nxp/imx/imx_lcdifv3.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/video/nxp/imx/imx_lcdifv3.c b/drivers/video/nxp/imx/imx_lcdifv3.c
+index 99f015759b0..6ef4398649f 100644
+--- a/drivers/video/nxp/imx/imx_lcdifv3.c
++++ b/drivers/video/nxp/imx/imx_lcdifv3.c
+@@ -442,6 +442,7 @@ static int lcdifv3_video_remove(struct udevice *dev)
+ 
+ static const struct udevice_id lcdifv3_video_ids[] = {
+ 	{ .compatible = "fsl,imx8mp-lcdif1" },
++	{ .compatible = "fsl,imx8mp-lcdif2" },
+ 	{ .compatible = "fsl,imx93-lcdif" },
+ 	{ /* sentinel */ }
+ };
+-- 
+2.34.1
+

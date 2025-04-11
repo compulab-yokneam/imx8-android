@@ -1,0 +1,34 @@
+From 21c9e7b469e705cf5f3f2db2b7b4fe2a90160cb3 Mon Sep 17 00:00:00 2001
+From: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+Date: Sun, 31 Mar 2024 19:44:31 +0300
+Subject: [PATCH 115/155] Some trivial fixes
+
+Signed-off-by: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+---
+ configs/ucm-imx8m-mini_defconfig | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/configs/ucm-imx8m-mini_defconfig b/configs/ucm-imx8m-mini_defconfig
+index 88cd5e77ed5..1703f49613d 100644
+--- a/configs/ucm-imx8m-mini_defconfig
++++ b/configs/ucm-imx8m-mini_defconfig
+@@ -39,7 +39,7 @@ CONFIG_CMD_DHCP=y
+ CONFIG_CMD_MII=y
+ CONFIG_CMD_PING=y
+ CONFIG_CMD_CACHE=y
+-CONFIG_CMD_REGULATOR=
++CONFIG_CMD_REGULATOR=y
+ CONFIG_CMD_EXT2=y
+ CONFIG_CMD_EXT4=y
+ CONFIG_CMD_FAT=y
+@@ -116,7 +116,6 @@ CONFIG_SHA384=y
+ CONFIG_SPL_BSS_MAX_SIZE=0x2000
+ CONFIG_SPL_BSS_START_ADDR=0x910000
+ CONFIG_SPL_DRIVERS_MISC=y
+-CONFIG_SPL_GPIO=y
+ CONFIG_SPL_HAS_BSS_LINKER_SECTION=y
+ CONFIG_SPL_I2C=y
+ CONFIG_SPL_MMC=y
+-- 
+2.34.1
+

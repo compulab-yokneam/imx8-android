@@ -1,0 +1,27 @@
+From 107ce16ffe5b175eb06f35a8920496dd715db238 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Tue, 2 Jul 2024 11:05:25 +0300
+Subject: [PATCH 108/155] compulab-imx8m-plus: config: remove tty1 from the
+ default console list
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ include/configs/compulab-imx8m-plus.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/configs/compulab-imx8m-plus.h b/include/configs/compulab-imx8m-plus.h
+index 7c99cb120ca..954c5edbdd9 100644
+--- a/include/configs/compulab-imx8m-plus.h
++++ b/include/configs/compulab-imx8m-plus.h
+@@ -53,7 +53,7 @@
+ 	"bsp_script=boot.scr\0" \
+ 	"image=Image\0" \
+ 	"splashimage=0x50000000\0" \
+-	"console=ttymxc1,115200 console=tty1\0" \
++	"console=ttymxc1,115200\0" \
+ 	"fdt_addr_r=0x43000000\0"			\
+ 	"fdto_addr_r=0x43800000\0"			\
+ 	"fdt_addr=0x43000000\0"			\
+-- 
+2.34.1
+

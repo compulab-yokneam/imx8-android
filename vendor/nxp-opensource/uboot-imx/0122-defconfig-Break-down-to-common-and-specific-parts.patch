@@ -1,0 +1,54 @@
+From 4303caabbd3708bf8b348fca3a2d95fcaa063bda Mon Sep 17 00:00:00 2001
+From: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+Date: Tue, 13 Aug 2024 23:08:32 +0300
+Subject: [PATCH 122/155] defconfig: Break down to common and specific parts
+
+Signed-off-by: Kirill Kapranov <kirill.kapranov@compulab.co.il>
+---
+ configs/{ucm-imx8m-mini_defconfig => cl-imx8m-mini_defconfig} | 4 ----
+ configs/ucm-imx8m-mini.config                                 | 4 ++++
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+ rename configs/{ucm-imx8m-mini_defconfig => cl-imx8m-mini_defconfig} (96%)
+ create mode 100644 configs/ucm-imx8m-mini.config
+
+diff --git a/configs/ucm-imx8m-mini_defconfig b/configs/cl-imx8m-mini_defconfig
+similarity index 96%
+rename from configs/ucm-imx8m-mini_defconfig
+rename to configs/cl-imx8m-mini_defconfig
+index 97073401096..e85cc6d9346 100644
+--- a/configs/ucm-imx8m-mini_defconfig
++++ b/configs/cl-imx8m-mini_defconfig
+@@ -6,20 +6,16 @@ CONFIG_ENV_SIZE=0x1000
+ CONFIG_ENV_OFFSET=0x4400
+ CONFIG_SPL_GPIO=y
+ CONFIG_DM_GPIO=y
+-CONFIG_TARGET_UCM_IMX8M_MINI=y
+-CONFIG_DEFAULT_DTB="ucm-imx8m-mini.dtb"
+ CONFIG_SPL_SERIAL_SUPPORT=y
+ CONFIG_SPL=y
+ CONFIG_CSF_SIZE=0x2000
+ CONFIG_SPL_TEXT_BASE=0x7E1000
+-CONFIG_LOCALVERSION="-ucm-imx8m-mini-2.0"
+ CONFIG_FIT=y
+ CONFIG_FIT_EXTERNAL_OFFSET=0x3000
+ CONFIG_SPL_LOAD_FIT=y
+ CONFIG_OF_BOARD_SETUP=y
+ CONFIG_OF_SYSTEM_SETUP=y
+ CONFIG_CONSOLE_MUX=y
+-CONFIG_DEFAULT_FDT_FILE="ucm-imx8m-mini.dtb"
+ CONFIG_BOARD_LATE_INIT=y
+ CONFIG_ARCH_MISC_INIT=y
+ CONFIG_BOARD_EARLY_INIT_F=y
+diff --git a/configs/ucm-imx8m-mini.config b/configs/ucm-imx8m-mini.config
+new file mode 100644
+index 00000000000..d9742031364
+--- /dev/null
++++ b/configs/ucm-imx8m-mini.config
+@@ -0,0 +1,4 @@
++CONFIG_TARGET_UCM_IMX8M_MINI=y
++CONFIG_LOCALVERSION="-ucm-imx8m-mini-2.0"
++CONFIG_DEFAULT_DTB="ucm-imx8m-mini.dtb"
++CONFIG_DEFAULT_FDT_FILE="ucm-imx8m-mini.dtb"
+-- 
+2.34.1
+

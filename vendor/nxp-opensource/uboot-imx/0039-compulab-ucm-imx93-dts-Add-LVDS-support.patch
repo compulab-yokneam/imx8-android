@@ -1,0 +1,133 @@
+From 5376fe2e87aee018ed97ebb6db8667d921c66d62 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sat, 13 Jan 2024 16:03:47 +0200
+Subject: [PATCH 039/155] compulab: ucm-imx93: dts: Add LVDS support
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ arch/arm/dts/ucm-imx93-lvds.dtsi   | 79 ++++++++++++++++++++++++++++++
+ arch/arm/dts/ucm-imx93-u-boot.dtsi | 12 +++++
+ arch/arm/dts/ucm-imx93.dts         |  4 ++
+ 3 files changed, 95 insertions(+)
+ create mode 100644 arch/arm/dts/ucm-imx93-lvds.dtsi
+
+diff --git a/arch/arm/dts/ucm-imx93-lvds.dtsi b/arch/arm/dts/ucm-imx93-lvds.dtsi
+new file mode 100644
+index 00000000000..02aea261859
+--- /dev/null
++++ b/arch/arm/dts/ucm-imx93-lvds.dtsi
+@@ -0,0 +1,79 @@
++/ {
++	lvds0_panel {
++		compatible = "simple-panel";
++		power-supply = <&lvds_power_supply>;
++		enable-gpios = <&pca9555 6 GPIO_ACTIVE_HIGH>;
++
++		display-timings {
++			native-mode = <&timing0>;
++			timing0: timing0 {
++				clock-frequency = <69142857>;
++				hactive = <1024>;
++				vactive = <600>;
++				hfront-porch = <160>;
++				hback-porch = <160>;
++				hsync-len = <1>;
++				vback-porch = <12>;
++				vfront-porch = <23>;
++				vsync-len = <1>;
++
++				hsync-active = <0>;
++				vsync-active = <0>;
++				de-active = <1>;
++				pixelclk-active = <0>;
++			};
++		};
++
++		port {
++			panel_lvds_in: endpoint {
++				remote-endpoint = <&lvds_out>;
++			};
++		};
++	};
++
++	lvds_power_supply: lvds-power-supply {
++		compatible = "regulator-fixed";
++		regulator-name = "lvds-power-supply";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		enable-active-high;
++		regulator-always-on;
++	};
++};
++
++&dphy {
++	status = "disabled";
++};
++
++&dsi {
++	status = "disabled";
++};
++
++&lcdif {
++	assigned-clock-rates = <484000000>, <69142857>, <400000000>, <133333333>;
++	status = "okay";
++};
++
++&ldb {
++	status = "okay";
++
++	lvds-channel@0 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		fsl,data-mapping = "spwg";
++		fsl,data-width = <24>;
++		status = "okay";
++
++		port@1 {
++			reg = <1>;
++
++			lvds_out: endpoint {
++				remote-endpoint = <&panel_lvds_in>;
++			};
++		};
++	};
++};
++
++&ldb_phy {
++	status = "okay";
++};
+diff --git a/arch/arm/dts/ucm-imx93-u-boot.dtsi b/arch/arm/dts/ucm-imx93-u-boot.dtsi
+index a21028bdd27..16e2984ad3b 100644
+--- a/arch/arm/dts/ucm-imx93-u-boot.dtsi
++++ b/arch/arm/dts/ucm-imx93-u-boot.dtsi
+@@ -195,3 +195,15 @@
+ &dphy {
+ 	/delete-property/ power-domains;
+ };
++
++&ldb_phy {
++	/delete-property/ power-domains;
++};
++
++&ldb {
++	/delete-property/ power-domains;
++};
++
++&media_blk_ctrl {
++	/delete-property/ power-domains;
++};
+diff --git a/arch/arm/dts/ucm-imx93.dts b/arch/arm/dts/ucm-imx93.dts
+index c243c16d121..e4cc1b566bb 100644
+--- a/arch/arm/dts/ucm-imx93.dts
++++ b/arch/arm/dts/ucm-imx93.dts
+@@ -521,3 +521,7 @@
+ &wdog3 {
+ 	status = "okay";
+ };
++
++#if IS_ENABLED(CONFIG_VIDEO_IMX93_LVDS)
++#include "ucm-imx93-lvds.dtsi"
++#endif
+-- 
+2.34.1
+

@@ -1,0 +1,55 @@
+From 65675d460eaa59d1937ccc68d0e795e7e7dad64a Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Wed, 20 Dec 2023 19:23:29 +0200
+Subject: [PATCH 008/155] ucm-imx93: disable ELE for 500MB mem
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ arch/arm/mach-imx/imx9/soc.c         | 9 +++++++++
+ board/compulab/ucm-imx93/ucm-imx93.c | 3 +++
+ 2 files changed, 12 insertions(+)
+
+diff --git a/arch/arm/mach-imx/imx9/soc.c b/arch/arm/mach-imx/imx9/soc.c
+index 950bb493b5b..a07c16a1eb8 100644
+--- a/arch/arm/mach-imx/imx9/soc.c
++++ b/arch/arm/mach-imx/imx9/soc.c
+@@ -712,6 +712,15 @@ int disable_npu_nodes(void *blob)
+ 	return delete_fdt_nodes(blob, nodes_path_npu, ARRAY_SIZE(nodes_path_npu));
+ }
+ 
++int disable_ele_nodes(void *blob)
++{
++	static const char * const nodes_path[] = {
++		"/soc@0/ele-mu",
++		"/reserved-memory/ele-reserved@a4120000"
++	};
++	return delete_fdt_nodes(blob, nodes_path, ARRAY_SIZE(nodes_path));
++}
++
+ int disable_m33_nodes(void *blob)
+ {
+ 	static const char * const nodes_path[] = {
+diff --git a/board/compulab/ucm-imx93/ucm-imx93.c b/board/compulab/ucm-imx93/ucm-imx93.c
+index 4c4d2ea220b..a613021650e 100644
+--- a/board/compulab/ucm-imx93/ucm-imx93.c
++++ b/board/compulab/ucm-imx93/ucm-imx93.c
+@@ -280,6 +280,7 @@ int ft_board_setup(void *blob, struct bd_info *bd)
+ 	if (error) {
+ 		return error;
+ 	}
++	/* todo - below is bad code because it rely on linux device tree which is fragile. eliminate ASAP! */
+ 	if (sdram_size < 0x80000000) {
+ 		printf("disable ethosu because its address is mapped above 1GB\n");
+ 		disable_npu_nodes(blob);
+@@ -287,6 +288,8 @@ int ft_board_setup(void *blob, struct bd_info *bd)
+ 	if (sdram_size < 0x40000000) {
+ 		printf("disable M33 because its shared address is mapped above 500MB, you can enable it after changing this address in M33 code and in Linux device tree\n");
+ 		disable_m33_nodes(blob);
++		printf("disable ELE because its shared address is mapped above 500MB\n");
++		disable_ele_nodes(blob);
+ 	}
+ 	return 0;
+ }
+-- 
+2.34.1
+

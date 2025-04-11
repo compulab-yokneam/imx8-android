@@ -1,0 +1,40 @@
+From c82ed3a89146a2ea513a3afc7b89630d8846a3c4 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sat, 30 Dec 2023 17:13:07 +0200
+Subject: [PATCH 030/155] compulab: ucm-imx8m-plus: Remove a legacy stuff
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ board/compulab/ucm-imx8m-plus/Kconfig | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/board/compulab/ucm-imx8m-plus/Kconfig b/board/compulab/ucm-imx8m-plus/Kconfig
+index b85924612cd..ec814c73fe3 100644
+--- a/board/compulab/ucm-imx8m-plus/Kconfig
++++ b/board/compulab/ucm-imx8m-plus/Kconfig
+@@ -13,13 +13,10 @@ config DEFAULT_DTB
+ 	string
+ 	default "ucm-imx8m-plus.dtb"
+ 
+-
+ config DEFAULT_FDT_FILE
+-	string
+ 	default "ucm-imx8m-plus.dtb"
+ 
+ config DEFAULT_DEVICE_TREE
+-	string
+ 	default "ucm-imx8m-plus"
+ 
+ config SYS_I2C_EEPROM_BUS
+@@ -38,8 +35,4 @@ config SYS_I2C_EEPROM_ADDR_SB
+ 	hex
+ 	default 0x54
+ 
+-config COMPULAB_DEBUG_UART1
+-	bool "System Debug UART1"
+-	default false
+-
+ endif
+-- 
+2.34.1
+

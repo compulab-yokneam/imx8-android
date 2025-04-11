@@ -1,0 +1,28 @@
+From b19847cb6b63a6d7287c502dc81089c38db3e79b Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sat, 29 Jun 2024 15:28:49 +0300
+Subject: [PATCH 107/155] compulab: ucm-imx8mp: Update SYS_I2C_EEPROM_BUS_SB
+ for SBEV
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ board/compulab/ucm-imx8m-plus/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/board/compulab/ucm-imx8m-plus/Kconfig b/board/compulab/ucm-imx8m-plus/Kconfig
+index bd66809ff4c..04fe575e2fc 100644
+--- a/board/compulab/ucm-imx8m-plus/Kconfig
++++ b/board/compulab/ucm-imx8m-plus/Kconfig
+@@ -27,7 +27,8 @@ config SYS_I2C_EEPROM_ADDR
+ 
+ config SYS_I2C_EEPROM_BUS_SB
+ 	hex
+-	default 0x1
++	default 0x1 if !SBEV_UCMIMX8PLUS
++	default 0x2 if SBEV_UCMIMX8PLUS
+ 
+ config SYS_I2C_EEPROM_ADDR_SB
+ 	hex
+-- 
+2.34.1
+

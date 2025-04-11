@@ -1,0 +1,41 @@
+From e1951a8ea9c62bddb74e0c7c62b3818e9173de82 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sun, 14 Jan 2024 15:42:24 +0200
+Subject: [PATCH 048/155] compulab: ucm-imx8mp: config: Enable
+ CONFIG_VIDEO_IMX8MP_LVDS
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ configs/ucm-imx8m-plus_defconfig      | 2 ++
+ include/configs/compulab-imx8m-plus.h | 1 +
+ 2 files changed, 3 insertions(+)
+
+diff --git a/configs/ucm-imx8m-plus_defconfig b/configs/ucm-imx8m-plus_defconfig
+index eca3a67f7b0..86284ad3a3a 100644
+--- a/configs/ucm-imx8m-plus_defconfig
++++ b/configs/ucm-imx8m-plus_defconfig
+@@ -174,7 +174,9 @@ CONFIG_USB_GADGET_VENDOR_NUM=0x1fc9
+ CONFIG_USB_GADGET_PRODUCT_NUM=0x0152
+ CONFIG_VIDEO=y
+ CONFIG_VIDEO_LOGO=y
++CONFIG_SYS_WHITE_ON_BLACK=y
+ CONFIG_VIDEO_LCD_STARTEK_ILI9881C=y
++CONFIG_VIDEO_IMX8MP_LVDS=y
+ CONFIG_VIDEO_IMX_SEC_DSI=y
+ CONFIG_VIDEO_IMX_LCDIFV3=y
+ CONFIG_SPLASH_SCREEN=y
+diff --git a/include/configs/compulab-imx8m-plus.h b/include/configs/compulab-imx8m-plus.h
+index f5dc9d106d7..20a1e9cefbf 100644
+--- a/include/configs/compulab-imx8m-plus.h
++++ b/include/configs/compulab-imx8m-plus.h
+@@ -38,6 +38,7 @@
+ #define CFG_EXTRA_ENV_SETTINGS		\
+ 	CFG_MFG_ENV_SETTINGS \
+ 	BOOTENV \
++	"video_link=1\0" \
+ 	"stdout=serial,vidconsole\0" \
+ 	"stderr=serial,vidconsole\0" \
+ 	"stdin=serial,usbkbd\0" \
+-- 
+2.34.1
+

@@ -1,0 +1,33 @@
+From 1def1c1bca15e1580fa83e2be0351276dcbd07b9 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sun, 14 Jan 2024 15:31:15 +0200
+Subject: [PATCH 043/155] nxp: video: imx_lcdifv3: Remove display enable use
+ condition
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ drivers/video/nxp/imx/imx_lcdifv3.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/video/nxp/imx/imx_lcdifv3.c b/drivers/video/nxp/imx/imx_lcdifv3.c
+index 9f83e8c4d35..99f015759b0 100644
+--- a/drivers/video/nxp/imx/imx_lcdifv3.c
++++ b/drivers/video/nxp/imx/imx_lcdifv3.c
+@@ -350,14 +350,12 @@ static int lcdifv3_video_probe(struct udevice *dev)
+ 
+ 	lcdifv3_of_parse_thres(dev);
+ 
+-#if IS_ENABLED(CONFIG_VIDEO_IMX93_LVDS)
+ 	/* This is the LVDS method */
+ 	ret = display_enable(priv->disp_dev, 32, &timings);
+ 	if (ret) {
+ 		debug("%s: display enable error %d\n", __func__, ret);
+ 		return ret;
+ 	}
+-#endif
+ 
+ 	if (priv->disp_dev) {
+ #if IS_ENABLED(CONFIG_VIDEO_BRIDGE)
+-- 
+2.34.1
+

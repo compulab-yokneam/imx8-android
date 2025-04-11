@@ -1,0 +1,26 @@
+From 41728b290dcf3fdb346990914afff9bc9d890685 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Fri, 27 Dec 2024 18:55:28 +0200
+Subject: [PATCH 140/155] ompulab: dts: Fix the mipi panel reset gpio number
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ arch/arm/dts/compulab-imx8m-plus-lcdif1.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/dts/compulab-imx8m-plus-lcdif1.dtsi b/arch/arm/dts/compulab-imx8m-plus-lcdif1.dtsi
+index 2d870caaf61..b5ac6868336 100644
+--- a/arch/arm/dts/compulab-imx8m-plus-lcdif1.dtsi
++++ b/arch/arm/dts/compulab-imx8m-plus-lcdif1.dtsi
+@@ -6,7 +6,7 @@
+ 
+ 	ili9881c_panel {
+ 		compatible = "startek,ili9881c";
+-		reset-gpio = <&pca9555 2 GPIO_ACTIVE_LOW>;
++		reset-gpio = <&pca9555 4 GPIO_ACTIVE_LOW>;
+ 		dsi-lanes = <4>;
+ 		panel-width-mm = <63>;
+ 		panel-height-mm = <115>;
+-- 
+2.34.1
+

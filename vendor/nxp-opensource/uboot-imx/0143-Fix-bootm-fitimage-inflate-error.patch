@@ -1,0 +1,40 @@
+From 3ca4d9ebb6e82316f117b4d61badbd295387b142 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Thu, 16 Jan 2025 16:48:35 +0200
+Subject: [PATCH 143/155] Fix bootm fitimage inflate() error
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ lib/gunzip.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/lib/gunzip.c b/lib/gunzip.c
+index 932e3e8036d..65dc00cd341 100644
+--- a/lib/gunzip.c
++++ b/lib/gunzip.c
+@@ -16,6 +16,7 @@
+ #include <u-boot/crc.h>
+ #include <watchdog.h>
+ #include <u-boot/zlib.h>
++#include <env.h>
+ 
+ #define HEADER0			'\x1f'
+ #define HEADER1			'\x8b'
+@@ -293,7 +294,13 @@ int zunzip(void *dst, int dstlen, unsigned char *src, unsigned long *lenp,
+ 	s.next_in = src + offset;
+ 	s.avail_in = *lenp - offset;
+ 	s.next_out = dst;
+-	s.avail_out = dstlen;
++	/* fix fitimage inflate issue */
++	s.avail_out = -1;
++	{
++        int use_dst_size  = env_get_yesno("use_dst_size");
++        if (use_dst_size == 1)
++            s.avail_out = dstlen;
++	}
+ 	do {
+ 		r = inflate(&s, Z_FINISH);
+ 		if (stoponerr == 1 && r != Z_STREAM_END &&
+-- 
+2.34.1
+

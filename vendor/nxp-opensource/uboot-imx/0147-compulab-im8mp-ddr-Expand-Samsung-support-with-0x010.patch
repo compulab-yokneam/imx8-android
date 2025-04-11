@@ -1,0 +1,39 @@
+From 0bb9c8240c59fc0d77c685e90edb19d69f04b165 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Tue, 11 Feb 2025 13:08:31 +0200
+Subject: [PATCH 147/155] compulab: im8mp: ddr: Expand Samsung support with
+ 0x01080010; 4G
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ board/compulab/plat/imx8mp/ddr/ddr.h | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/board/compulab/plat/imx8mp/ddr/ddr.h b/board/compulab/plat/imx8mp/ddr/ddr.h
+index 2e72e6ef4da..5ec7c31b3e8 100644
+--- a/board/compulab/plat/imx8mp/ddr/ddr.h
++++ b/board/compulab/plat/imx8mp/ddr/ddr.h
+@@ -96,6 +96,11 @@ static const struct lpddr4_desc lpddr4_array[] = {
+ 	{ .name = "Samsung",	.id = 0x01061010, .subind = 0x2, .size = 2048, .count = 1,
+ #ifdef CONFIG_SPL_BUILD
+ 		.timing = &ucm_dram_timing_01061010_2G
++#endif
++	},
++	{ .name = "Samsung",	.id = 0x01080010, .subind = 0x4, .size = 4096, .count = 1,
++#ifdef CONFIG_SPL_BUILD
++		.timing = &ucm_dram_timing_01061010_4G
+ #endif
+ 	},
+ 	{ .name = "Samsung",	.id = 0x01080010, .subind = 0x2, .size = 2048, .count = 1,
+@@ -103,7 +108,7 @@ static const struct lpddr4_desc lpddr4_array[] = {
+ 		.timing = &ucm_dram_timing_01061010_2G
+ #endif
+ 	},
+-#else
++#else /* CONFIG_DRAM_D2D4 */
+ 	{ .name = "deadbeaf",	.id = 0xdeadbeaf, .subind = 0x1, .size = 1024, .count = 1,
+ #ifdef CONFIG_SPL_BUILD
+ 		.timing = &ucm_dram_timing_01061010_1G
+-- 
+2.34.1
+

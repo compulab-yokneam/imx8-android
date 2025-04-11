@@ -1,0 +1,51 @@
+From 5a4fed61edb01e74d6523ff1e3d7440f6a044019 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Mon, 24 Mar 2025 08:38:12 +0200
+Subject: [PATCH 5/7] ucm_imx8m_mini: Use gki-imx provided modules
+
+Turn the TARGET_USE_KERNEL_MODULES to false.
+In this case the build process makes use of the gki-imx provided
+modules.
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ imx8m/ucm_imx8m_mini/SharedBoardConfig.mk | 2 ++
+ imx8m/ucm_imx8m_mini/ucm_imx8m_mini.mk    | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/imx8m/ucm_imx8m_mini/SharedBoardConfig.mk b/imx8m/ucm_imx8m_mini/SharedBoardConfig.mk
+index c791fa2a..c2686452 100644
+--- a/imx8m/ucm_imx8m_mini/SharedBoardConfig.mk
++++ b/imx8m/ucm_imx8m_mini/SharedBoardConfig.mk
+@@ -7,6 +7,7 @@ LOADABLE_KERNEL_MODULE ?= true
+ 
+ # Define the board system modules list.
+ # Use the kernel created modules instead of provided by imx-gki.
++ifeq ($(TARGET_USE_KERNEL_MODULES),true)
+ BOARD_SYSTEM_KERNEL_MODULES += \
+     ${KERNEL_OUT}/arch/arm64/geniezone/gzvm.ko \
+     ${KERNEL_OUT}/kernel/kheaders.ko \
+@@ -84,6 +85,7 @@ BOARD_SYSTEM_KERNEL_MODULES += \
+     ${KERNEL_OUT}/net/ieee802154/ieee802154_socket.ko \
+     ${KERNEL_OUT}/net/mac802154/mac802154.ko \
+     ${KERNEL_OUT}/net/nfc/nfc.ko
++endif
+ 
+ ifeq ($(LOADABLE_KERNEL_MODULE),true)
+ BOARD_VENDOR_KERNEL_MODULES += \
+diff --git a/imx8m/ucm_imx8m_mini/ucm_imx8m_mini.mk b/imx8m/ucm_imx8m_mini/ucm_imx8m_mini.mk
+index d1ae3a85..41fc1e0a 100644
+--- a/imx8m/ucm_imx8m_mini/ucm_imx8m_mini.mk
++++ b/imx8m/ucm_imx8m_mini/ucm_imx8m_mini.mk
+@@ -22,7 +22,7 @@ PRODUCT_DEVICE := ucm_imx8m_mini
+ PRODUCT_MODEL := UCM_IMX8M_MINI
+ 
+ TARGET_BOOTLOADER_BOARD_NAME := CLAB
+-TARGET_USE_KERNEL_MODULES := true
++TARGET_USE_KERNEL_MODULES := false
+ 
+ PRODUCT_CHARACTERISTICS := tablet
+ 
+-- 
+2.34.1
+

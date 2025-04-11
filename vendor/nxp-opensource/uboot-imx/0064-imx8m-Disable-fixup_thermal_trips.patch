@@ -1,0 +1,26 @@
+From 50dbe6ad08129d0eae849d02582d7ab89bd8ccc3 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Tue, 19 Mar 2024 18:35:04 +0200
+Subject: [PATCH 064/155] imx8m: Disable fixup_thermal_trips()
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ arch/arm/mach-imx/imx8m/soc.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm/mach-imx/imx8m/soc.c b/arch/arm/mach-imx/imx8m/soc.c
+index 51c8eb10673..1b891ff2b87 100644
+--- a/arch/arm/mach-imx/imx8m/soc.c
++++ b/arch/arm/mach-imx/imx8m/soc.c
+@@ -1498,6 +1498,8 @@ static int fixup_thermal_trips(void *blob, const char *name)
+ 	int minc, maxc;
+ 	int node, trip;
+ 
++	return 0;
++
+ 	node = fdt_path_offset(blob, "/thermal-zones");
+ 	if (node < 0)
+ 		return node;
+-- 
+2.34.1
+

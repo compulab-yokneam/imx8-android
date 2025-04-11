@@ -1,0 +1,35 @@
+From 283d9dbbe88893c866c05091847559ae02304e4f Mon Sep 17 00:00:00 2001
+From: yaakov entin <yaakov.entin@compulab.co.il>
+Date: Mon, 12 Feb 2024 15:47:39 +0200
+Subject: [PATCH 058/155] ucm-imx93: remove temperature grade info
+
+---
+ arch/arm/mach-imx/imx9/soc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/mach-imx/imx9/soc.c b/arch/arm/mach-imx/imx9/soc.c
+index a07c16a1eb8..6a5c25829d7 100644
+--- a/arch/arm/mach-imx/imx9/soc.c
++++ b/arch/arm/mach-imx/imx9/soc.c
+@@ -601,7 +601,8 @@ int print_cpuinfo(void)
+ 		       mxc_get_clock(MXC_ARM_CLK) / 1000000);
+ 	}
+ 
+-	puts("CPU:   ");
++	puts("CPU:  ");
++#if 0
+ 	switch (get_cpu_temp_grade(&minc, &maxc)) {
+ 	case TEMP_AUTOMOTIVE:
+ 		puts("Automotive temperature grade ");
+@@ -620,7 +621,7 @@ int print_cpuinfo(void)
+ 		break;
+ 	}
+ 	printf("(%dC to %dC)", minc, maxc);
+-
++#endif
+ #if defined(CONFIG_IMX_TMU)
+ 	struct udevice *udev;
+ 	int ret, temp;
+-- 
+2.34.1
+

@@ -1,0 +1,77 @@
+From c37ad9d21a121107d68628514995058f57c48f89 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sat, 22 Mar 2025 12:17:52 +0200
+Subject: [PATCH 2/7] Include ucm_imx8m_mini target to the system build
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ common/tools/imx-make.sh             | 1 +
+ common/tools/imx-sdcard-partition.sh | 2 +-
+ imx8m/AndroidProducts.mk             | 3 +++
+ imx8m/BoardConfigCommon.mk           | 3 +++
+ 4 files changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/common/tools/imx-make.sh b/common/tools/imx-make.sh
+index f0a0d137..3efbab16 100755
+--- a/common/tools/imx-make.sh
++++ b/common/tools/imx-make.sh
+@@ -201,6 +201,7 @@ if [ ${build_android_flag} -eq 1 ] || [ ${build_whole_android_flag} -eq 1 ]; the
+         if [ ${TARGET_PRODUCT} = "evk_8mp" ] || [ ${TARGET_PRODUCT} = "evk_8mn" ] \
+         || [ ${TARGET_PRODUCT} = "evk_8ulp" ] || [ ${TARGET_PRODUCT} = "mek_8q" ] \
+         || [ ${TARGET_PRODUCT} = "evk_8mm" ] || [ ${TARGET_PRODUCT} = "evk_8mq" ] \
++        || [ ${TARGET_PRODUCT} = "ucm_imx8m_mini" ] \
+         || [ ${TARGET_PRODUCT} = "evk_95" ]; then
+             if [ ${enable_gki} -eq 1 ]; then
+                 mv ${OUT}/boot.img ${OUT}/boot-imx.img
+diff --git a/common/tools/imx-sdcard-partition.sh b/common/tools/imx-sdcard-partition.sh
+index d1a37150..e80bc1cd 100755
+--- a/common/tools/imx-sdcard-partition.sh
++++ b/common/tools/imx-sdcard-partition.sh
+@@ -303,7 +303,7 @@ function flash_partition
+             elif [ "$(echo ${1} | grep "product")" != "" ]; then
+                 img_name=${product_file}
+             elif [ ${support_dtbo} -eq 1 ] && [ $(echo ${1} | grep "boot") != "" ] 2>/dev/null; then
+-                img_name="boot.img"
++                img_name="boot-imx.img"
+             elif [ "$(echo ${1} | grep -E "dtbo|vbmeta|recovery")" != "" -a "${dtb_feature}" != "" ]; then
+                 img_name="${1%_*}-${soc_name}-${dtb_feature}.img"
+             elif [ "$(echo ${1} | grep "super")" != "" ]; then
+diff --git a/imx8m/AndroidProducts.mk b/imx8m/AndroidProducts.mk
+index 59f449f8..50c312cb 100644
+--- a/imx8m/AndroidProducts.mk
++++ b/imx8m/AndroidProducts.mk
+@@ -29,6 +29,7 @@
+ PRODUCT_MAKEFILES := \
+   $(LOCAL_DIR)/evk_8mq/evk_8mq.mk \
+   $(LOCAL_DIR)/evk_8mm/evk_8mm.mk \
++  $(LOCAL_DIR)/ucm_imx8m_mini/ucm_imx8m_mini.mk \
+   $(LOCAL_DIR)/evk_8mn/evk_8mn.mk \
+   $(LOCAL_DIR)/evk_8mp/evk_8mp.mk
+ 
+@@ -37,6 +38,8 @@ COMMON_LUNCH_CHOICES := \
+   evk_8mq-nxp_stable-userdebug \
+   evk_8mm-nxp_stable-user \
+   evk_8mm-nxp_stable-userdebug \
++  ucm_imx8m_mini-nxp_stable-user \
++  ucm_imx8m_mini-nxp_stable-userdebug \
+   evk_8mn-nxp_stable-user \
+   evk_8mn-nxp_stable-userdebug \
+   evk_8mp-nxp_stable-user \
+diff --git a/imx8m/BoardConfigCommon.mk b/imx8m/BoardConfigCommon.mk
+index ec87c671..642eb091 100644
+--- a/imx8m/BoardConfigCommon.mk
++++ b/imx8m/BoardConfigCommon.mk
+@@ -143,7 +143,10 @@ TARGET_COPY_OUT_VENDOR_DLKM := vendor_dlkm
+ BOARD_USES_SYSTEM_DLKMIMAGE := true
+ BOARD_SYSTEM_DLKMIMAGE_FILE_SYSTEM_TYPE := erofs
+ TARGET_COPY_OUT_SYSTEM_DLKM := system_dlkm
++TARGET_USE_KERNEL_MODULES ?= false
++ifeq ($(TARGET_USE_KERNEL_MODULES),false)
+ BOARD_SYSTEM_KERNEL_MODULES += $(wildcard vendor/nxp-opensource/imx-gki/system_dlkm_staging/flatten/lib/modules/*.ko)
++endif
+ 
+ BOARD_FLASH_BLOCK_SIZE := 4096
+ 
+-- 
+2.34.1
+

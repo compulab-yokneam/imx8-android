@@ -1,0 +1,42 @@
+From 4011b96f7ff087178e3c9b869d05a706df8ebba9 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Tue, 25 Jun 2024 23:03:48 +0300
+Subject: [PATCH 105/155] compulab: imx8mp: som: Enable USB in uboot
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ arch/arm/dts/som-imx8m-plus.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/arch/arm/dts/som-imx8m-plus.dts b/arch/arm/dts/som-imx8m-plus.dts
+index fa3c6a59ba7..3dd29165d71 100644
+--- a/arch/arm/dts/som-imx8m-plus.dts
++++ b/arch/arm/dts/som-imx8m-plus.dts
+@@ -403,6 +403,10 @@
+ 	status = "okay";
+ };
+ 
++&usb3_0 {
++	status = "okay";
++};
++
+ &usb_dwc3_0 {
+ 	dr_mode = "otg";
+ 	hnp-disable;
+@@ -416,7 +420,13 @@
+ 	status = "okay";
+ };
+ 
++&usb3_1 {
++	status = "okay";
++};
++
+ &usb_dwc3_1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usb1_vbus>;
+ 	dr_mode = "host";
+ 	status = "okay";
+ };
+-- 
+2.34.1
+

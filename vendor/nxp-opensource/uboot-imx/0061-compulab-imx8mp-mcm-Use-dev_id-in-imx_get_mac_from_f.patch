@@ -1,0 +1,27 @@
+From b4359020db5812ea451c165746fda0a12643f979 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sun, 17 Mar 2024 21:06:57 +0200
+Subject: [PATCH 061/155] compulab: imx8mp: mcm: Use dev_id in
+ imx_get_mac_from_fuse()
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ board/compulab/mcm-imx8m-plus/mcm-imx8m-plus.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/board/compulab/mcm-imx8m-plus/mcm-imx8m-plus.c b/board/compulab/mcm-imx8m-plus/mcm-imx8m-plus.c
+index 3b3ec6a9120..2ed6c99af11 100644
+--- a/board/compulab/mcm-imx8m-plus/mcm-imx8m-plus.c
++++ b/board/compulab/mcm-imx8m-plus/mcm-imx8m-plus.c
+@@ -33,7 +33,7 @@ DECLARE_GLOBAL_DATA_PTR;
+ #include "../common/eeprom.h"
+ void imx_get_mac_from_fuse(int dev_id, unsigned char *mac)
+ {
+-	cl_eeprom_read_n_mac_addr(mac, /*dev_id*/ 0, CONFIG_SYS_I2C_EEPROM_BUS);
++	cl_eeprom_read_n_mac_addr(mac, dev_id, CONFIG_SYS_I2C_EEPROM_BUS);
+ 	debug("%s: MAC%d: %02x.%02x.%02x.%02x.%02x.%02x\n",
+ 	      __func__, dev_id, mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+ 	return;
+-- 
+2.34.1
+

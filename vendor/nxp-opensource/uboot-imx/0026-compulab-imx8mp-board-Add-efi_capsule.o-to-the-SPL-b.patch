@@ -1,0 +1,28 @@
+From e941395b4e5aa72be350b629362377d26185955a Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Fri, 29 Dec 2023 18:59:09 +0200
+Subject: [PATCH 026/155] compulab: imx8mp: board: Add efi_capsule.o to the SPL
+ build
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+
+%% original patch: 0008-compulab-imx8mp-board-Add-efi_capsule.o-to-the-SPL-b.patch
+---
+ board/compulab/plat/imx8mp/board/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/board/compulab/plat/imx8mp/board/Makefile b/board/compulab/plat/imx8mp/board/Makefile
+index 951cd799dbb..30668929bd4 100644
+--- a/board/compulab/plat/imx8mp/board/Makefile
++++ b/board/compulab/plat/imx8mp/board/Makefile
+@@ -3,6 +3,7 @@ ccflags-y += -I$(srctree)/board/compulab/plat/imx8mp/
+ ccflags-y += -I$(srctree)/board/freescale/
+ 
+ obj-y += board.o
++obj-y += efi_capsule.o
+ ifndef CONFIG_SPL_BUILD
+ obj-y += cmd.o
+ endif
+-- 
+2.34.1
+

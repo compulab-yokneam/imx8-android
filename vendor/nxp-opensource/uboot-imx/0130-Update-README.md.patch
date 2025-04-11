@@ -1,0 +1,38 @@
+From c00535d62be4f86961a677c673234083c1280d01 Mon Sep 17 00:00:00 2001
+From: vraevsky <valentin@compulab.co.il>
+Date: Sat, 2 Nov 2024 15:59:42 +0200
+Subject: [PATCH 130/155] Update README.md
+
+Add u-boot-initial-env build procedure.
+---
+ README.md | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/README.md b/README.md
+index b6d7d93787e..7f7a52d1a5f 100644
+--- a/README.md
++++ b/README.md
+@@ -40,12 +40,17 @@ cd u-boot-compulab
+ make O=${BUILD} ${MACHINE}_defconfig
+ ```
+ 
+-* Build
++* Build flash.bin file:
+ ```
+ nice make -j`nproc` O=${BUILD} flash.bin
+ ```
+ 
+-* Result
++* Create u-boot-initial-env file:
+ ```
+-ls -al ${BUILD}/flash.bin
++make O=${BUILD} u-boot-initial-env
++```
++
++* Results
++```
++ls -al ${BUILD}/{flash.bin,u-boot-initial-env}
+ ```
+-- 
+2.34.1
+

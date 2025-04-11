@@ -1,0 +1,26 @@
+From 1d76d3519a29596a0220e16a9f7f45798a0e9b8e Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Mon, 13 May 2024 08:30:40 +0300
+Subject: [PATCH 070/155] compulab: ucm-imx8m-plus: dts: Limit ldo4 max to 1v8
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ arch/arm/dts/ucm-imx8m-plus.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/dts/ucm-imx8m-plus.dts b/arch/arm/dts/ucm-imx8m-plus.dts
+index 1e12456d86a..70cede75615 100644
+--- a/arch/arm/dts/ucm-imx8m-plus.dts
++++ b/arch/arm/dts/ucm-imx8m-plus.dts
+@@ -341,7 +341,7 @@
+ 				reg = <9>;
+ 				regulator-compatible = "ldo4";
+ 				regulator-min-microvolt = <800000>;
+-				regulator-max-microvolt = <3300000>;
++				regulator-max-microvolt = <1800000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
+-- 
+2.34.1
+

@@ -1,0 +1,40 @@
+From 627a9d6bcc2cd748d04f7cff4e11d29dc760e766 Mon Sep 17 00:00:00 2001
+From: vraevsky <valentin@compulab.co.il>
+Date: Mon, 5 Aug 2024 19:07:53 +0300
+Subject: [PATCH 109/155] Update README.md
+
+---
+ README.md | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
+
+diff --git a/README.md b/README.md
+index a761614f78e..b6d7d93787e 100644
+--- a/README.md
++++ b/README.md
+@@ -1,8 +1,5 @@
+ # Disclaimer
+ 
+-| !IMPORTANT! | This is a development branch, that is not relelased by CompuLab yet|
+-|---|---|
+-
+ # Configuring the build
+ 
+ ## Prerequisites
+@@ -25,10 +22,10 @@ export BUILD=$(pwd)/build
+ | Machine | Command Line |
+ |---|---|
+ |ucm-imx8m-plus|```export MACHINE=ucm-imx8m-plus```|
+-|~~mcm-imx8m-plus~~|~~```export MACHINE=mcm-imx8m-plus```~~|
+-|~~som-imx8m-plus~~|~~```export MACHINE=som-imx8m-plus```~~|
+-|~~iot-gate-imx8plus~~|~~```export MACHINE=iot-gate-imx8plus```~~|
+-|~~iotdin-imx8p~~|~~```export MACHINE=iotdin-imx8p```~~|
++|mcm-imx8m-plus|```export MACHINE=mcm-imx8m-plus```|
++|som-imx8m-plus|```export MACHINE=som-imx8m-plus```|
++|iot-gate-imx8plus|```export MACHINE=iot-gate-imx8plus```|
++|iotdin-imx8p|```export MACHINE=iotdin-imx8p```|
+ 
+ * Clone the source code:
+ ```
+-- 
+2.34.1
+

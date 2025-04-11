@@ -1,0 +1,85 @@
+From a6cd8ee152c7439830ca65ecc7b87c4591735b48 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Wed, 15 Jan 2025 19:14:21 +0200
+Subject: [PATCH 142/155] Add redundant environment configuration support.
+
+1) Disable the CompuLab get env dev/part calculation logic.
+2) Define environment location on device emmc dev=2 part=2
+    boot loader device: mmc dev 2 2
+    linux device: /dev/mmcblk2boot1
+3) Define redundant environment offset after the 1-st one:
+    1-st 0x3F0000 0x4000
+    2-nd 0x3F4000 0x4000
+4) Add fw_env.redenv.conf. This file must be copied to /etc/fw_env.conf
+
+How to enable:
+make <machine>_defconfig redenv.config
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ board/compulab/common/Makefile | 2 ++
+ board/compulab/common/fdt.c    | 2 ++
+ configs/redenv.config          | 6 ++++++
+ tools/env/fw_env.redenv.config | 4 ++++
+ 4 files changed, 14 insertions(+)
+ create mode 100644 configs/redenv.config
+ create mode 100644 tools/env/fw_env.redenv.config
+
+diff --git a/board/compulab/common/Makefile b/board/compulab/common/Makefile
+index 7dfe91d32f7..7091669a982 100644
+--- a/board/compulab/common/Makefile
++++ b/board/compulab/common/Makefile
+@@ -8,7 +8,9 @@
+ 
+ obj-y				+= fdt.o
+ obj-y				+= common.o
++ifndef CONFIG_SYS_REDUNDAND_ENVIRONMENT
+ obj-y				+= mmc.o
++endif
+ obj-y				+= ../../freescale/common/mmc.o
+ ifneq "$(or $(CONFIG_SYS_I2C),$(CONFIG_DM_I2C))" ""
+ obj-y				+= eeprom.o
+diff --git a/board/compulab/common/fdt.c b/board/compulab/common/fdt.c
+index 23f8de821e3..61538277e2e 100644
+--- a/board/compulab/common/fdt.c
++++ b/board/compulab/common/fdt.c
+@@ -50,6 +50,7 @@ void fdt_set_sn(void *blob)
+ 
+ int fdt_set_env_addr(void *blob)
+ {
++#ifndef CONFIG_SYS_REDUNDAND_ENVIRONMENT
+ 	char tmp[32];
+ 	int nodeoff = fdt_add_subnode(blob, 0, "fw_env");
+ 	int env_dev = get_env_dev();
+@@ -90,5 +91,6 @@ int fdt_set_env_addr(void *blob)
+ 	dst = 0;
+ 	fdt_setprop(blob, nodeoff, "default_env", env_to_export, strlen(env_to_export));
+ #endif 
++#endif
+ 	return 0;
+ }
+diff --git a/configs/redenv.config b/configs/redenv.config
+new file mode 100644
+index 00000000000..7a9f8daff6b
+--- /dev/null
++++ b/configs/redenv.config
+@@ -0,0 +1,6 @@
++CONFIG_SYS_MMC_ENV_DEV=2
++CONFIG_SYS_MMC_ENV_PART=2
++CONFIG_ENV_OFFSET_REDUND=0x3F4000
++CONFIG_SYS_REDUNDAND_ENVIRONMENT=y
++CONFIG_BOOTCOUNT_LIMIT=y
++CONFIG_BOOTCOUNT_ENV=y
+diff --git a/tools/env/fw_env.redenv.config b/tools/env/fw_env.redenv.config
+new file mode 100644
+index 00000000000..ac03aa71778
+--- /dev/null
++++ b/tools/env/fw_env.redenv.config
+@@ -0,0 +1,4 @@
++# Block devices for CompuLab imx8m-plus redundunt environment
++# emmc dev 2 part 2
++/dev/mmcblk2boot1	0x3f0000 0x4000
++/dev/mmcblk2boot1	0x3f4000 0x4000
+-- 
+2.34.1
+

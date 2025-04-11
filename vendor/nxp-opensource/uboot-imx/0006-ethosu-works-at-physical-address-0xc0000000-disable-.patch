@@ -1,0 +1,44 @@
+From 0eda290fe6263693c03fd22b1be0ab4a526907cc Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Wed, 20 Dec 2023 19:18:02 +0200
+Subject: [PATCH 006/155] ethosu works at physical address 0xc0000000, disable
+ it on small memories
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ arch/arm/mach-imx/imx9/soc.c         | 2 +-
+ board/compulab/ucm-imx93/ucm-imx93.c | 5 +++++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/mach-imx/imx9/soc.c b/arch/arm/mach-imx/imx9/soc.c
+index c988d0b2e3d..5ebdaf1e649 100644
+--- a/arch/arm/mach-imx/imx9/soc.c
++++ b/arch/arm/mach-imx/imx9/soc.c
+@@ -703,7 +703,7 @@ static int delete_fdt_nodes(void *blob, const char *const nodes_path[], int size
+ 	return 0;
+ }
+ 
+-static int disable_npu_nodes(void *blob)
++int disable_npu_nodes(void *blob)
+ {
+ 	static const char * const nodes_path_npu[] = {
+ 		"/ethosu",
+diff --git a/board/compulab/ucm-imx93/ucm-imx93.c b/board/compulab/ucm-imx93/ucm-imx93.c
+index 877bb37384b..8e3f4b39de1 100644
+--- a/board/compulab/ucm-imx93/ucm-imx93.c
++++ b/board/compulab/ucm-imx93/ucm-imx93.c
+@@ -272,6 +272,11 @@ static int fdt_set_env_addr(void *blob)
+ 
+ int ft_board_setup(void *blob, struct bd_info *bd)
+ {
++	phys_size_t sdram_size;
++	board_phys_sdram_size(&sdram_size);
++	if (sdram_size < 0x80000000) { // ethosu operates only at physical address 0xc0000000
++		disable_npu_nodes(blob);
++	}
+ 	fdt_set_env_addr(blob);
+ 	fdt_set_sn(blob);
+ 	return 0;
+-- 
+2.34.1
+

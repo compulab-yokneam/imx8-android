@@ -1,0 +1,106 @@
+# CompuLab Android 15
+
+# NXP Resources
+
+* i.MX Android proprietary Source Code: https://www.nxp.com/webapp/Download?colCode=15.0.0_1.2.0_ANDROID_SOURCE&appType=license[imx-android-15.0.0_1.2.0.tar.gz]
+* Documentation: https://www.nxp.com/docs/en/user-guide/ANDROID_USERS_GUIDE.pdf[Android User Guide]
+
+* Create a bsp directory:
+[source,console]
+mkdir -p /path/to/bsp
+export BSP=/path/to/bsp
+
+* Untar the Android source archive:
+[source,console]
+tar -C ${BSP} -xf /path/to/imx-android-15.0.0_1.2.0.tar.gz
+
+* Setup Source:
+[source,console]
+cd ${BSP}
+source ${BSP}/imx-android-15.0.0_1.2.0/imx_android_setup.sh
+export MY_ANDROID=${BSP}/android_build
+
+* Follow the instructions of the `https://github.com/compulab-yokneam/imx8-android/blob/android-15.0.0_1.2.0/doc/ANDROID_USERS_GUIDE.pdf[Android User Guide]` and make sure that the build environment is ready
+
+IMPORTANT: It is up to developers to make sure that NXP procedure works and an NXP example image can be created.
+
+# CompuLab Sources
+* Clone this repository
+[source,console]
+mkdir ${BSP}/compulab-imx8
+git clone --single-branch --branch android-15.0.0_1.2.0 https://github.com/compulab-yokneam/imx8-android.git ${BSP}/compulab-imx8
+export C=${BSP}/compulab-imx8
+
+
+# Apply the patches:
+* U-boot
+[source,console]
+git -C ${MY_ANDROID}/vendor/nxp-opensource/uboot-imx checkout -b compulab-imx8 lf-6.1.22-2.0.0
+git -C ${MY_ANDROID}/vendor/nxp-opensource/uboot-imx am ${C}/vendor/nxp-opensource/uboot-imx/*.patch
+
+* ATF (for imx8mm only)
+[source,console]
+git -C ${MY_ANDROID}/vendor/nxp-opensource/arm-trusted-firmware checkout -b compulab-imx8 android-14.0.0_2.0.0
+git -C ${MY_ANDROID}/vendor/nxp-opensource/arm-trusted-firmware am ${C}/vendor/nxp-opensource/imx-atf/*.patch
+
+* Kernel
+[source,console]
+git -C ${MY_ANDROID}/vendor/nxp-opensource/kernel_imx checkout -b compulab-imx8 android-15.0.0_1.2.0
+git -C ${MY_ANDROID}/vendor/nxp-opensource/kernel_imx am ${C}/vendor/nxp-opensource/kernel_imx/*.patch
+
+* Board
+[source,console]
+git -C ${MY_ANDROID}/device/nxp checkout -b compulab-imx8 android-15.0.0_1.2.0
+git -C ${MY_ANDROID}/device/nxp am ${C}/device/nxp/*.patch
+
+# Apply the u-boot changes in order to pass the andriod build process
+```
+sed -i '/BINMAN/d' ${MY_ANDROID}/vendor/nxp-opensource/uboot-imx/board/compulab/plat/Kconfig
+sed -i 's/ifdef CONFIG_SPL_OS_BOOT/if 1/g' ${MY_ANDROID}/vendor/nxp-opensource/uboot-imx/board/compulab/plat/imx8mp/ddr/ddr.h
+```
+
+# Create the image
+Set a desire machine configuration:
+
+* `ucm-imx8m-plus`
+** `export MACHINE=ucm_imx8m_plus SOC=imx8mp`
+
+* Goto Android build directory and issue:
+[source,console]
+cd ${MY_ANDROID}
+source build/envsetup.sh
+lunch ${MACHINE}-nxp_stable-userdebug
+./imx-make.sh -j16 2>&1 | tee build-log.txt
+
+## CompuLab imx8mp u-boot external build how to
+
+### Prerequisites
+It is up to developers to prepare the host machine; it requires:
+
+* https://github.com/compulab-yokneam/meta-bsp-imx8mp/blob/kirkstone/Documentation/toolchain.md#linaro-toolchain-how-to)[Setup Cross Compiler]
+* Install these packages: ``shareutils, swing``
+
+* Create U-boot binary
+```
+cd ${MY_ANDROID}/vendor/nxp-opensource/uboot-imx
+export BUILD=$(pwd)/../uboot-imx-build.d
+# roll back the android sed changes
+git checout .
+make O=${BUILD} ucm-imx8m-plus_android_defconfig
+make O=${BUILD} flash.bin
+export COMPULAB_UBOOT=$(readlink -e ${BUILD}/flash.bin)
+cd -
+```
+
+* Copy the U-boot file to the Android output folder
+```
+cp -v ${COMPULAB_UBOOT} ${MY_ANDROID}/out/target/product/ucm_imx8m_plus/u-boot-imx8mp.imx
+```
+
+# Create a bootable SD-card
+
+* Issue these commands for a 32G-card:
+
+[source,console]
+cd ${MY_ANDROID}
+sudo ./device/nxp/common/tools/imx-sdcard-partition.sh  -f ${SOC} -c 28 -D out/target/product/ucm_imx8m_plus /dev/sdX
