@@ -31,6 +31,9 @@ mkdir ${BSP}/compulab-imx8
 git clone --single-branch --branch android-15.0.0_1.2.0 https://github.com/compulab-yokneam/imx8-android.git ${BSP}/compulab-imx8
 export C=${BSP}/compulab-imx8
 
+* Deploy a missing sensor folder
+[source,console]
+cp -a ${C}/vendor/nxp/fsl-proprietary/sensor ${MY_ANDROID}/vendor/nxp/fsl-proprietary/
 
 # Apply the patches:
 * U-boot
