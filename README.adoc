@@ -59,13 +59,17 @@ git -C ${MY_ANDROID}/device/nxp am ${C}/device/nxp/*.patch
 # Create the image
 * Set a desire machine configuration
 ** `ucm-imx8m-plus`
-*** `export MACHINE=ucm_imx8m_plus SOC=imx8mp UBOOT_CONFIG=ucm-imx8m-plus-android_defconfig`
+*** `mipi panel`
+**** `export MACHINE=ucm_imx8m_plus SOC=imx8mp UBOOT_CONFIG=ucm-imx8m-plus-android_defconfig`
+*** `lvds panel`
+**** `export MACHINE=ucm_imx8m_plus SOC=imx8mp-lvds UBOOT_CONFIG=ucm-imx8m-plus-android_defconfig`
 
 ** `ucm-imx8m-plus-sbev`
-*** `export MACHINE=ucm_imx8m_plus SOC=imx8mp-sbev UBOOT_CONFIG=ucm-imx8m-plus-sbev_android_defconfig`
+*** `lvds panel`
+**** `export MACHINE=ucm_imx8m_plus SOC=imx8mp-sbev UBOOT_CONFIG=ucm-imx8m-plus-sbev_android_defconfig`
 
 
-*** Apply the u-boot changes in order to pass the andriod build process
+* Apply the u-boot changes in order to pass the andriod build process
 [source,console]
 sed -i '/BINMAN/d' ${MY_ANDROID}/vendor/nxp-opensource/uboot-imx/board/compulab/plat/Kconfig
 sed -i 's/ifdef CONFIG_SPL_OS_BOOT/if 1/g' ${MY_ANDROID}/vendor/nxp-opensource/uboot-imx/board/compulab/plat/imx8mp/ddr/ddr.h
