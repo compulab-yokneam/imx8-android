@@ -1,0 +1,38 @@
+From 6427273b39eb02ade637baea46d8317d1c70ab62 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Tue, 13 May 2025 16:12:18 +0300
+Subject: [PATCH] ucm_imx8m_plus: Add imx8mp-lvds config
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ imx8m/ucm_imx8m_plus/BoardConfig.mk | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/imx8m/ucm_imx8m_plus/BoardConfig.mk b/imx8m/ucm_imx8m_plus/BoardConfig.mk
+index 3b3d8a0f..3c977bd5 100644
+--- a/imx8m/ucm_imx8m_plus/BoardConfig.mk
++++ b/imx8m/ucm_imx8m_plus/BoardConfig.mk
+@@ -163,16 +163,20 @@ endif
+ ifeq ($(TARGET_USE_DYNAMIC_PARTITIONS),true)
+   ifeq ($(IMX_NO_PRODUCT_PARTITION),true)
+     TARGET_BOARD_DTS_CONFIG := imx8mp:../compulab/ucm-imx8m-plus-mipi.dtb
++    TARGET_BOARD_DTS_CONFIG += imx8mp-lvds:../compulab/ucm-imx8m-plus-lvds.dtb
+   else
+     TARGET_BOARD_DTS_CONFIG := imx8mp:../compulab/ucm-imx8m-plus-mipi.dtb
++    TARGET_BOARD_DTS_CONFIG += imx8mp-lvds:../compulab/ucm-imx8m-plus-lvds.dtb
+     TARGET_BOARD_DTS_CONFIG += imx8mp-sbev:../compulab/sbev-ucmimx8plus.dtb
+   endif
+ else # no dynamic parition feature
+   ifeq ($(IMX_NO_PRODUCT_PARTITION),true)
+     TARGET_BOARD_DTS_CONFIG := imx8mp:../compulab/ucm-imx8m-plus-mipi.dtb
++    TARGET_BOARD_DTS_CONFIG += imx8mp-lvds:../compulab/ucm-imx8m-plus-lvds.dtb
+     TARGET_BOARD_DTS_CONFIG += imx8mp-sbev:../compulab/sbev-ucmimx8plus.dtb
+   else
+     TARGET_BOARD_DTS_CONFIG := imx8mp:../compulab/ucm-imx8m-plus-mipi.dtb
++    TARGET_BOARD_DTS_CONFIG += imx8mp-lvds:../compulab/ucm-imx8m-plus-lvds.dtb
+     TARGET_BOARD_DTS_CONFIG += imx8mp-sbev:../compulab/sbev-ucmimx8plus.dtb
+   endif
+ endif
+-- 
+2.34.1
+
