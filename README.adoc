@@ -100,7 +100,7 @@ cd -
 
 * Copy the U-boot file to the Android output folder
 [source,console]
-cp -v ${COMPULAB_UBOOT} ${MY_ANDROID}/out/target/product/ucm_imx8m_plus/u-boot-imx8mp.imx
+cp -v ${COMPULAB_UBOOT} ${MY_ANDROID}/out/target/product/ucm_imx8m_plus/u-boot-${SOC}.imx
 
 # Create a bootable SD-card
 
