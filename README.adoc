@@ -62,11 +62,11 @@ git -C ${MY_ANDROID}/device/nxp am ${C}/device/nxp/*.patch
 *** `mipi panel`
 **** `export MACHINE=ucm_imx8m_plus SOC=imx8mp UBOOT_CONFIG=ucm-imx8m-plus-android_defconfig`
 *** `lvds panel`
-**** `export MACHINE=ucm_imx8m_plus SOC=imx8mp-lvds UBOOT_CONFIG=ucm-imx8m-plus-android_defconfig`
+**** `export MACHINE=ucm_imx8m_plus SOC=imx8mp dtb_opt="-d lvds" UBOOT_CONFIG=ucm-imx8m-plus-android_defconfig`
 
 ** `ucm-imx8m-plus-sbev`
 *** `lvds panel`
-**** `export MACHINE=ucm_imx8m_plus SOC=imx8mp-sbev UBOOT_CONFIG=ucm-imx8m-plus-sbev_android_defconfig`
+**** `export MACHINE=ucm_imx8m_plus SOC=imx8mp dtb_opt="-d sbev" UBOOT_CONFIG=ucm-imx8m-plus-sbev_android_defconfig`
 
 
 * Apply the u-boot changes in order to pass the andriod build process
@@ -108,4 +108,4 @@ cp -v ${COMPULAB_UBOOT} ${MY_ANDROID}/out/target/product/ucm_imx8m_plus/u-boot-$
 
 [source,console]
 cd ${MY_ANDROID}
-sudo ./device/nxp/common/tools/imx-sdcard-partition.sh  -f ${SOC} -c 28 -D out/target/product/ucm_imx8m_plus /dev/sdX
+sudo ./device/nxp/common/tools/imx-sdcard-partition.sh  -f ${SOC} ${dtb_opt} -c 28 -D out/target/product/ucm_imx8m_plus /dev/sdX
