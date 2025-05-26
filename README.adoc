@@ -62,7 +62,7 @@ git -C ${MY_ANDROID}/device/nxp am ${C}/device/nxp/*.patch
 *** `mipi panel`
 **** `export MACHINE=ucm_imx8m_plus SOC=imx8mp UBOOT_CONFIG=ucm-imx8m-plus-android_defconfig`
 *** `lvds panel`
-**** `export MACHINE=ucm_imx8m_plus SOC=imx8mp dtb_opt="-d lvds" UBOOT_CONFIG=ucm-imx8m-plus-android_defconfig`
+**** `export MACHINE=ucm_imx8m_plus SOC=imx8mp dtb_opt="-d lvds" UBOOT_CONFIG=ucm-imx8m-plus_android_defconfig`
 
 ** `ucm-imx8m-plus-sbev`
 *** `lvds panel`
